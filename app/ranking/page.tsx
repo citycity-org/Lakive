@@ -64,7 +64,7 @@ const PROP_TYPES = [
 
 // ── Sort dimensions ───────────────────────────────────────────────────────────
 const SORT_DIMS = [
-  { id:'score',    label:'Base Score',  lowerBetter:false },
+  { id:'score',    label:'Lakive City Score',  lowerBetter:false },
   { id:'hpiYears', label:'HEY',         lowerBetter:true  },
   { id:'rpi',      label:'RPI',         lowerBetter:true  },
   { id:'tai',      label:'Tax Index',   lowerBetter:false },

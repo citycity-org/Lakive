@@ -1,25 +1,43 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const CITY_NAMES: Record<string, string> = {
-  vancouver: 'Vancouver',
-  toronto: 'Toronto',
-  calgary: 'Calgary',
-  montreal: 'Montréal',
-  ottawa: 'Ottawa',
+  vancouver:      'Vancouver',
+  toronto:        'Toronto',
+  calgary:        'Calgary',
+  montreal:       'Montréal',
+  ottawa:         'Ottawa',
+  seattle:        'Seattle',
+  'san-francisco':'San Francisco',
+  'new-york':     'New York City',
+  boston:         'Boston',
 }
 
 const OCCUPATION_NAMES: Record<string, string> = {
-  nurse: 'Registered Nurse',
-  software_eng: 'Software Engineer',
-  teacher: 'Secondary Teacher',
-  electrician: 'Electrician',
-  truck_driver: 'Truck Driver',
-  accountant: 'Accountant',
-  police: 'Police Officer',
-  chef: 'Chef',
-  retail: 'Retail Associate',
-  engineer: 'Civil Engineer',
+  nurse:         'Registered Nurse',
+  doctor:        'Family Doctor',
+  pharmacist:    'Pharmacist',
+  software_eng:  'Software Engineer',
+  data_analyst:  'Data Analyst',
+  it_support:    'IT Support',
+  electrician:   'Electrician',
+  engineer:      'Civil Engineer',
+  plumber:       'Plumber',
+  carpenter:     'Carpenter',
+  teacher:       'Secondary School Teacher',
+  accountant:    'Accountant',
+  lawyer:        'Lawyer',
+  police:        'Police Officer',
+  firefighter:   'Firefighter',
+  social_worker: 'Social Worker',
+  truck_driver:  'Truck Driver',
+  mechanic:      'Auto Mechanic',
+  chef:          'Chef',
+  retail:        'Retail Associate',
+  self_employed: 'Self-Employed / Business Owner',
+  freelancer:    'Freelancer',
+  unemployed:    'Not Currently Employed',
+  retired:       'Retired / Financially Independent',
 }
 
 const CARD_TYPES = [
@@ -32,10 +50,17 @@ const CARD_TYPES = [
 // hpiYears benchmarks per city (2BR condo, avg across occupations)
 const CITY_HPI: Record<string, number> = {
   vancouver: 16.2, toronto: 15.1, calgary: 8.5, montreal: 10.0, ottawa: 9.8,
+  seattle: 12.5, 'san-francisco': 18.0, 'new-york': 16.8, boston: 13.2,
 }
 // City score benchmarks
 const CITY_SCORE: Record<string, number> = {
   vancouver: 71, toronto: 73, calgary: 84, montreal: 76, ottawa: 78,
+  seattle: 75, 'san-francisco': 62, 'new-york': 65, boston: 70,
+}
+// RPI benchmarks per city
+const CITY_RPI: Record<string, number> = {
+  vancouver: 43.6, toronto: 41.2, calgary: 24.1, montreal: 30.2, ottawa: 28.4,
+  seattle: 21.3, 'san-francisco': 38.5, 'new-york': 44.2, boston: 35.8,
 }
 
 const PLATFORMS = [
@@ -63,6 +88,9 @@ function ShareContent() {
   const [occupation, setOccupation] = useState('nurse')
   const [activeCard, setActiveCard] = useState('compare')
   const [activePlatform, setActivePlatform] = useState('xiaohongshu')
+  const [downloading, setDownloading] = useState(false)
+  const [toast, setToast] = useState('')
+  const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -73,8 +101,74 @@ function ShareContent() {
   const cityName = CITY_NAMES[city] || 'Vancouver'
   const occupationName = OCCUPATION_NAMES[occupation] || 'Registered Nurse'
 
+  const showToast = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 2500)
+  }
+
+  const handleDownload = async () => {
+    if (!cardRef.current) return
+    setDownloading(true)
+    try {
+      // Dynamically load html2canvas
+      const html2canvas = (await import('html2canvas' as any)).default
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+      const link = document.createElement('a')
+      link.download = `lakive-${activeCard}-${city}-${activePlatform}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } catch {
+      showToast('Screenshot failed — try right-clicking the card to save.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  const shareUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/calculate?city=${city}&occupation=${occupation}`
+    : `https://lakive.com/calculate?city=${city}&occupation=${occupation}`
+
+  const shareText = `${cityName} vs the rest — see how a ${occupationName} compares across Canadian cities. Powered by Lakive.`
+
+  const SOCIAL_SHARE_URLS: Record<string, string> = {
+    'X':         `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+    'Facebook':  `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    'LinkedIn':  `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+    'Reddit':    `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`,
+    'Pinterest': `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}`,
+    'Email':     `mailto:?subject=${encodeURIComponent('City comparison from Lakive')}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`,
+  }
+
+  const handleSocialShare = (platformName: string) => {
+    const url = SOCIAL_SHARE_URLS[platformName]
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer,width=600,height=500')
+    } else {
+      // Xiaohongshu, WeChat, TikTok, Instagram — no web share intent
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast(`Link copied! Paste into ${platformName}.`)
+      }).catch(() => {
+        showToast(`Open ${platformName} and share: lakive.com`)
+      })
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#F5F7FB]">
+      {/* Toast notification */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+          background: '#1E2235', color: 'white', padding: '10px 20px',
+          borderRadius: 10, fontSize: 13, fontWeight: 500, zIndex: 999,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)', whiteSpace: 'nowrap',
+        }}>{toast}</div>
+      )}
 
       {/* Hero */}
       <div className="px-6 py-6"
@@ -123,6 +217,7 @@ function ShareContent() {
           <div className="p-5 flex justify-center" style={{ background: '#E8EAF2' }}>
 
             {/* Share card — Spotify Wrapped style */}
+            <div ref={cardRef} style={{ display: 'inline-block' }}>
             {(() => {
               const altCity = city === 'calgary' ? 'vancouver' : 'calgary'
               const altName = CITY_NAMES[altCity] ?? 'Calgary'
@@ -131,7 +226,7 @@ function ShareContent() {
               const cheaper = cityHpi <= altHpi ? city : altCity
               const diff    = Math.abs(cityHpi - altHpi).toFixed(1)
               const maxHpi  = Math.max(cityHpi, altHpi)
-              const cityRpi = city === 'vancouver' ? 43.6 : city === 'toronto' ? 41.2 : city === 'calgary' ? 24.1 : city === 'montreal' ? 30.2 : 28.4
+              const cityRpi = CITY_RPI[city] ?? 30.0
               const score   = CITY_SCORE[city] ?? 75
 
               return (
@@ -294,6 +389,7 @@ function ShareContent() {
                 </div>
               )
             })()}
+            </div>
           </div>
         </div>
 
@@ -324,9 +420,12 @@ function ShareContent() {
 
           {/* Download button */}
           <div className="px-4 pb-4">
-            <button className="w-full py-3.5 rounded-xl text-white font-semibold text-sm"
-              style={{ background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)' }}>
-              ⬇ Download Share Card
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="w-full py-3.5 rounded-xl text-white font-semibold text-sm disabled:opacity-60"
+              style={{ background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)', cursor: downloading ? 'wait' : 'pointer' }}>
+              {downloading ? '⏳ Generating...' : '⬇ Download Share Card'}
             </button>
           </div>
         </div>
@@ -339,6 +438,7 @@ function ShareContent() {
           <div className="p-4 grid grid-cols-5 gap-3">
             {SHARE_PLATFORMS.map(platform => (
               <button key={platform.name}
+                onClick={() => handleSocialShare(platform.name)}
                 className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl border border-[#E5E7EB] hover:border-[#5B5CF0] hover:bg-[#EEF4FF] transition-all">
                 <span className="text-xl">{platform.icon}</span>
                 <span className="text-xs text-[#6B7280]">{platform.name}</span>

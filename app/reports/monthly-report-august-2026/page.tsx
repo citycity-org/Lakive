@@ -127,7 +127,7 @@ function CityScoreTable() {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
         <thead>
           <tr style={{ background: NAVY }}>
-            {['City','Avg Score','EOI / TAI','HPI (yrs to buy)','Avg RPI','Key Signal'].map(h => (
+            {['City','Lakive City Score','EOI / TAI','HPI (yrs to buy)','Avg RPI','Key Signal'].map(h => (
               <th key={h} style={{ padding: '9px 12px', textAlign: h === 'City' || h === 'Key Signal' ? 'left' : 'center', color: '#fff', fontWeight: 700 }}>{h}</th>
             ))}
           </tr>
@@ -422,7 +422,7 @@ export default function MonthlyReportAugust2026() {
           <OccTable />
 
           {[
-            { city: 'Calgary', score: 74, rpi: 34, text: 'Calgary holds its position as top-scoring city for a fifth consecutive data version. In the context of the BoC inflation warning, the no-PST advantage is more meaningful than ever — a nurse earning $95,000 saves approximately $4,200 annually in provincial tax compared to an Ontario equivalent. At current mortgage rates, that saving covers 4–5 months of carrying costs on a Calgary starter home. If the BoC raises in October, Calgary\'s lower benchmark price ($595,000 vs. Toronto\'s $1.1M+) means the absolute dollar impact on monthly payments is proportionally smaller.' },
+            { city: 'Calgary', score: 74, rpi: 34, text: 'Calgary holds its position as top-scoring city for a fifth consecutive data version. In the context of the BoC inflation warning, the no-PST advantage is more meaningful than ever — Alberta\'s no-PST environment and provincial income tax structure can meaningfully reduce the effective cost of living relative to Ontario for many households, a structural advantage that compounds over time. At current mortgage rates, Calgary\'s lower benchmark price ($595,000 vs. Toronto\'s $1.1M+) means the absolute dollar impact of any rate increase on monthly payments is proportionally smaller.' },
             { city: 'Ottawa', score: 68, rpi: 37, text: 'Ottawa continues to rank second nationally. Federal employment — which accounts for roughly 22% of the Ottawa CMA labour force — provides a structural floor against private-sector hiring volatility. For workers in healthcare, technology, and public administration, Ottawa offers the most recession-resistant employment base of any covered city. The tariff exposure is lower than Vancouver and Toronto, and wage growth in federal contracts tends to track CPI adjustments, offering partial inflation hedging.' },
             { city: 'Toronto', score: 60, rpi: 49, text: 'Toronto holds at 60 but the risk profile is elevated heading into Q4. The Rent Pressure Index of 49 — the second-highest of any covered city — and HPI of 9–13 years for most occupations leave little buffer if rates rise. The tech EOI of 92 remains a genuine advantage, and the August labour market data showed continued tech hiring. The critical unknown is whether US firms with Canadian tech operations absorb tariff costs or begin slowing hiring — Lakive will monitor Q3 tech employment specifically.' },
             { city: 'Vancouver', score: 59, rpi: 52, text: 'Vancouver carries the highest risk-adjusted affordability pressure of any covered city. The RPI of 52 is the national high, CREA benchmark prices remain above $1.2M, and the city\'s trade-exposed economy — forestry, commodities, Pacific container traffic — is more directly affected by US tariff regimes than any other Lakive city. For high-income specialists in tech and medicine, the quality-of-life premium justifies the cost. For most other workers, the October BoC decision matters more in Vancouver than anywhere else.' },
@@ -430,7 +430,7 @@ export default function MonthlyReportAugust2026() {
           ].map(c => (
             <div key={c.city} style={{ margin: '20px 0' }}>
               <h3 style={{ fontSize: 16, fontWeight: 800, color: NAVY, margin: '0 0 6px' }}>
-                {c.city} <span style={{ color: GREY, fontWeight: 500 }}>— Avg Score {c.score} · RPI {c.rpi}</span>
+                {c.city} <span style={{ color: GREY, fontWeight: 500 }}>— Lakive City Score {c.score} · RPI {c.rpi}</span>
               </h3>
               <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>{c.text}</p>
             </div>

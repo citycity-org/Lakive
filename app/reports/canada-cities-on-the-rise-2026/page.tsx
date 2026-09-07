@@ -620,6 +620,14 @@ export default function CanadaCitiesReport2026() {
           </div>
         </div>
 
+        {/* Methodology version note */}
+        <div style={{background:'#FFF9EB',borderRadius:10,padding:'12px 18px',marginBottom:20,border:'1px solid #FDE68A',display:'flex',gap:10,alignItems:'flex-start'}}>
+          <span style={{fontSize:14,marginTop:1}}>⚠️</span>
+          <p style={{fontSize:12.5,color:'#92400E',lineHeight:1.65,margin:0}}>
+            <strong>Methodology note —</strong> This report was published using Lakive Model v1.x. Some metric names have since evolved. Historical calculations remain unchanged.
+          </p>
+        </div>
+
         {/* METHODOLOGY */}
         <div style={{borderTop:'1px solid #e5e7eb',paddingTop:22,marginTop:32}}>
           <h3 style={{fontSize:13.5,fontWeight:700,color:'#374151',margin:'0 0 10px'}}>Methodology</h3>

@@ -125,7 +125,7 @@ function CityScoreTable() {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
         <thead>
           <tr style={{ background: NAVY }}>
-            {['City','Avg Score','EOI / TAI','HPI (yrs to buy)','Avg RPI','Key Signal'].map(h => (
+            {['City','Lakive City Score','EOI / TAI','HPI (yrs to buy)','Avg RPI','Key Signal'].map(h => (
               <th key={h} style={{ padding: '9px 12px', textAlign: h === 'City' || h === 'Key Signal' ? 'left' : 'center', color: '#fff', fontWeight: 700 }}>{h}</th>
             ))}
           </tr>
@@ -276,6 +276,14 @@ export default function MonthlyReportJuly2026() {
           <ChangesTable />
         </div>
 
+        {/* Methodology note */}
+        <div style={{ background: '#FFF9EB', borderRadius: 10, padding: '12px 18px', marginBottom: 20, border: '1px solid #FDE68A', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+          <span style={{ fontSize: 14, marginTop: 1 }}>⚠️</span>
+          <p style={{ fontSize: 12.5, color: '#92400E', lineHeight: 1.65, margin: 0 }}>
+            <strong>Methodology note —</strong> This report was published using Lakive Model v1.x. Some metric names have since evolved. Historical calculations remain unchanged.
+          </p>
+        </div>
+
         {/* Executive Summary */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={1} title="Executive Summary" />
@@ -407,7 +415,7 @@ export default function MonthlyReportJuly2026() {
           <OccTable />
 
           {[
-            { city: 'Calgary', score: 74, rpi: 34, text: 'Calgary remains the top-scoring city in Lakive\'s model for the 4th consecutive data version. The no-PST advantage (TAI: 90) compounds over time — a nurse earning $95,000 takes home roughly $4,200 more annually in Calgary than an equivalent earner in Ontario. Combined with an HPI of 4.5 years for nurses, Calgary offers the fastest path to ownership of any major Canadian city.' },
+            { city: 'Calgary', score: 74, rpi: 34, text: 'Calgary remains the top-scoring city in Lakive\'s model for the 4th consecutive data version. Alberta\'s no-PST environment and provincial income tax structure can reduce the effective cost of living relative to Ontario for many households — a structural advantage that compounds over time. Combined with an HPI of 4.5 years for nurses, Calgary offers the fastest path to ownership of any major Canadian city.' },
             { city: 'Ottawa', score: 68, rpi: 37, text: 'Ottawa scores second nationally, with the highest Public Sector Stability Index (PSI: 82) of any covered city. Federal healthcare and technology employment is concentrated and recession-resistant. Housing Years Index for nurses (6.5 yrs) and software engineers (6.2 yrs) sits well below national averages. The best under-the-radar option for workers who want Toronto-level opportunity without Toronto-level pressure.' },
             { city: 'Toronto', score: 60, rpi: 49, text: 'Toronto carries the highest Employment Opportunity Index (EOI: 92) of any Lakive city — driven by concentration in finance, technology, and professional services. The trade-off is a Rent Pressure Index of 49 and HPI ranging from 9–13 years for most professional occupations. Software engineers score 88/100, the best tech score in Canada, but the housing math is unforgiving for median earners.' },
             { city: 'Vancouver', score: 59, rpi: 52, text: 'Vancouver holds the highest Environmental Quality Index (EQI: 90) but the weakest affordability metrics. The RPI of 52 is the highest of any covered city. Ownership timelines for trades and healthcare workers (12–13 years) price out most non-specialist earners. Best suited to high-income tech and healthcare workers who can absorb the cost premium.' },
@@ -415,7 +423,7 @@ export default function MonthlyReportJuly2026() {
           ].map(c => (
             <div key={c.city} style={{ margin: '20px 0' }}>
               <h3 style={{ fontSize: 16, fontWeight: 800, color: NAVY, margin: '0 0 6px' }}>
-                {c.city} <span style={{ color: GREY, fontWeight: 500 }}>— Avg Score {c.score} · RPI {c.rpi}</span>
+                {c.city} <span style={{ color: GREY, fontWeight: 500 }}>— Lakive City Score {c.score} · RPI {c.rpi}</span>
               </h3>
               <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>{c.text}</p>
             </div>
