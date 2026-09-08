@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'About Lakive — From Data to Belonging',
   description: 'To empower people to make smarter life decisions through transparent, trustworthy, and human-centered city intelligence.',
+  alternates: { canonical: 'https://lakive.com/about' },
 }
 
 export default function AboutPage() {

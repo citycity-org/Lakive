@@ -5,6 +5,7 @@ import Image from 'next/image'
 export const metadata: Metadata = {
   title: 'The Workcation Mirage · Lakive Research',
   description: 'What global city rankings miss about settling in Canada. A Lakive Research report comparing IWG workcation scores against occupation-specific housing affordability across five Canadian cities.',
+  alternates: { canonical: 'https://lakive.com/reports/workcation-mirage' },
 }
 
 const BLUE  = '#185FA5'

@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vancouver Is a Top-10 Livable City — But Can Local Workers Afford to Stay?',
     description: 'EIU ranks Vancouver #9 globally. But a nurse here needs 13.1 years of income to buy a benchmark home. Lakive breaks down affordability by occupation.',
-    url: 'https://www.lakive.com/reports/vancouver-livability-worker-affordability-2026',
+    url: 'https://lakive.com/reports/vancouver-livability-worker-affordability-2026',
     type: 'article',
     images: [
       {
-        url: 'https://www.lakive.com/og/vancouver-issue-brief-2026.png',
+        url: 'https://lakive.com/og/vancouver-issue-brief-2026.png',
         width: 1200,
         height: 630,
         alt: 'Vancouver Is a Top-10 Livable City — But Can Local Workers Afford to Stay?',
@@ -22,8 +22,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vancouver Is a Top-10 Livable City — But Can Local Workers Afford to Stay?',
     description: 'EIU ranks Vancouver #9 globally. But a nurse here needs 13.1 years of income to buy a benchmark home. Lakive breaks down affordability by occupation.',
-    images: ['https://www.lakive.com/og/vancouver-issue-brief-2026.png'],
+    images: ['https://lakive.com/og/vancouver-issue-brief-2026.png'],
   },
+  alternates: { canonical: 'https://lakive.com/reports/vancouver-livability-worker-affordability-2026' },
 }
 
 type Occupation = {

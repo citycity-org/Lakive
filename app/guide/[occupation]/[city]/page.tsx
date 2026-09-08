@@ -42,12 +42,12 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url: `https://www.lakive.com/guide/${occupation}/${city}`,
+      url: `https://lakive.com/guide/${occupation}/${city}`,
       siteName: 'Lakive',
       type: 'article',
     },
     twitter: { card: 'summary_large_image', title, description },
-    alternates: { canonical: `https://www.lakive.com/guide/${occupation}/${city}` },
+    alternates: { canonical: `https://lakive.com/guide/${occupation}/${city}` },
   }
 }
 
@@ -187,10 +187,10 @@ export default async function GuidePage(
     headline: `${occ.name} in ${cty.displayName}: Housing & Career Guide (2026)`,
     description: `Housing affordability and career guide for ${occ.name}s in ${cty.displayName}, Canada. Years to own: ${formatYears(hpi)}. Rent burden: ${rpi}%.`,
     author: { '@type': 'Organization', name: 'Lakive' },
-    publisher: { '@type': 'Organization', name: 'Lakive', url: 'https://www.lakive.com' },
-    url: `https://www.lakive.com/guide/${occupation}/${city}`,
+    publisher: { '@type': 'Organization', name: 'Lakive', url: 'https://lakive.com' },
+    url: `https://lakive.com/guide/${occupation}/${city}`,
     dateModified: '2026-07-01',
-    mainEntityOfPage: `https://www.lakive.com/guide/${occupation}/${city}`,
+    mainEntityOfPage: `https://lakive.com/guide/${occupation}/${city}`,
   }
 
   return (

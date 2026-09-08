@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata = {
   title: 'Market Pulse · Lakive',
   description: 'Real-time macro indicators — Bank of Canada rate, CPI, unemployment — and their impact on housing affordability in Canada and the United States.',
+  alternates: { canonical: 'https://lakive.com/pulse' },
 }
 
 export default function PulsePage() {

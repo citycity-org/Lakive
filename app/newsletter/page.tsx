@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Newsletter · Lakive City Intelligence',
   description: 'Quarterly and monthly city intelligence reports — personalised to your city and occupation. Free.',
+  alternates: { canonical: 'https://lakive.com/newsletter' },
 }
 
 // ── Sample report data (Calgary × Software Engineer) ──────────────────────

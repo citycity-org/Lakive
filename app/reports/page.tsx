@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'City Fit Reports · Lakive',
   description: 'Data-driven reports on how cities fit real people — by occupation, income, housing goals, family situation, and long-term financial outcomes.',
+  alternates: { canonical: 'https://lakive.com/reports' },
 }
 
 // ── Report catalogue ──────────────────────────────────────────────────────
