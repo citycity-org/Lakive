@@ -53,17 +53,6 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      // Permanently redirect www → non-www (fixes 103 GSC duplicate canonical issues)
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.lakive.com' }],
-        destination: 'https://lakive.com/:path*',
-        permanent: true,
-      },
-    ]
-  },
   async headers() {
     return [
       {
