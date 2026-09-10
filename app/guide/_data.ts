@@ -215,6 +215,57 @@ export const CITIES: Record<string, CityData> = {
     immigrantNote: 'Strong settlement infrastructure due to federal government presence. Less intense competition for housing than Toronto.',
   },
 
+  'edmonton': {
+    name: 'Edmonton', displayName: 'Edmonton', province: 'Alberta', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 6.8, avgRent2BR: 1650,
+    taxNote: 'Alberta has no PST and lower provincial income tax (10–15%) — the same structural advantage as Calgary, but Edmonton\'s lower home prices make the math even more favourable.',
+    sectorNote: 'Provincial capital and oil & gas headquarters (Syncrude, Suncor, Imperial Oil). Growing tech ecosystem, University of Alberta research, and government employment provide stability.',
+    immigrantNote: 'Strong immigration growth driven by Alberta\'s economic expansion. Large South Asian and Filipino communities. PNP streams actively target skilled trades and healthcare workers.',
+  },
+  'winnipeg': {
+    name: 'Winnipeg', displayName: 'Winnipeg', province: 'Manitoba', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 5.8, avgRent2BR: 1450,
+    taxNote: 'Manitoba PST is 7% (same rate as BC). Provincial income tax of 10.8–17.4%. One of Canada\'s most affordable cities for home ownership relative to income.',
+    sectorNote: 'Transportation and logistics hub (CN Rail, Air Canada MRO), agriculture and food processing, manufacturing, and a stable government/healthcare sector.',
+    immigrantNote: 'Manitoba PNP (MPNP) is one of Canada\'s most accessible provincial streams. Large Filipino, Ukrainian, and South Asian communities with established settlement networks.',
+  },
+  'halifax': {
+    name: 'Halifax', displayName: 'Halifax', province: 'Nova Scotia', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 8.2, avgRent2BR: 1950,
+    taxNote: 'Nova Scotia has the highest HST in Atlantic Canada at 15%. Provincial income tax of 8.79–21%. Home prices have risen sharply since 2020 but remain below central Canadian levels.',
+    sectorNote: 'Ocean technology, defence and military (CFB Halifax, largest Canadian naval base), Dalhousie University research, tourism, and a growing tech sector with remote-work arrivals.',
+    immigrantNote: 'Atlantic Immigration Program (AIP) offers streamlined pathways for skilled workers. Halifax actively recruits newcomers. Smaller but tight-knit international communities.',
+    eiuRank: 82, eiuYear: 2026,
+  },
+  'quebec-city': {
+    name: 'Québec City', displayName: 'Québec City', province: 'Quebec', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 6.5, avgRent2BR: 1400,
+    taxNote: 'Quebec has the highest combined provincial income tax in Canada (up to 25.75%), offset by subsidized daycare and very low home prices compared to other major cities.',
+    sectorNote: 'Provincial government capital (largest employer), insurance and financial services (Desjardins HQ), high-tech defence manufacturing, and tourism anchored by Old Quebec UNESCO site.',
+    immigrantNote: 'French language proficiency is essential — nearly all employment requires functional French. Quebec Skilled Worker Program (QSWP) awards significant points for French-speaking candidates.',
+  },
+  'hamilton': {
+    name: 'Hamilton', displayName: 'Hamilton', province: 'Ontario', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 9.2, avgRent2BR: 1900,
+    taxNote: 'Ontario HST 13%. Home prices are significantly lower than Toronto (60–70% of Toronto benchmark) while accessing the same Ontario labour market. No municipal land transfer tax surcharge.',
+    sectorNote: 'Healthcare (Hamilton Health Sciences, McMaster University Medical Centre), steel and advanced manufacturing (ArcelorMittal), growing tech sector, and strong transit corridor to Toronto.',
+    immigrantNote: 'Increasingly popular for newcomers priced out of Toronto. McMaster University creates a pipeline of internationally educated professionals. Good settlement services relative to city size.',
+  },
+  'kitchener-waterloo': {
+    name: 'Kitchener-Waterloo', displayName: 'Kitchener-Waterloo', province: 'Ontario', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 8.5, avgRent2BR: 1800,
+    taxNote: 'Ontario HST 13%. More affordable than Toronto while remaining in the Ontario tech corridor. Proximity to Toronto (90 min by GO train) with meaningfully lower housing costs.',
+    sectorNote: 'Canada\'s leading tech hub outside Toronto. Home to Google, Shopify, OpenText, and hundreds of startups. University of Waterloo and Wilfrid Laurier create elite STEM talent pipelines. Insurance sector (Sun Life, Manulife) adds stability.',
+    immigrantNote: 'Strong international student community from University of Waterloo. Post-Graduation Work Permit pathways are well-established. Tech sector actively sponsors H-1B and LMIA-exempt workers.',
+  },
+  'victoria': {
+    name: 'Victoria', displayName: 'Victoria', province: 'British Columbia', country: 'CA', currency: 'CAD',
+    benchmarkHpi: 13.2, avgRent2BR: 2400,
+    taxNote: 'BC: GST 5% + PST 7%. Provincial income tax of 5.06–20.5%. Victoria\'s home prices are second only to Vancouver in BC, but salaries are lower due to the government-heavy economy.',
+    sectorNote: 'BC provincial government (largest employer), federal military (CFB Esquimalt), University of Victoria research, tourism, and a boutique tech sector primarily serving remote workers.',
+    immigrantNote: 'Smaller immigrant community than Vancouver but growing. Provincial government employment is accessible to newcomers with Canadian credentials. Island location limits labour market breadth.',
+  },
+
   // ── United States ────────────────────────────────────────────────────────────
   'seattle': {
     name: 'Seattle', displayName: 'Seattle', province: 'Washington State', country: 'US', currency: 'USD',
