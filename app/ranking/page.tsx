@@ -314,8 +314,6 @@ const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
     unemployed:    { score:26, hpiYears:35.0, rpi:118,eoi:'Low'  },
     retired:       { score:44, hpiYears:20.5, rpi:76, eoi:'Low'  },
   },
-}
-
   edmonton: {
     electrician:   { score:88, hpiYears:4.2,  rpi:24, eoi:'High' },
     software_eng:  { score:72, hpiYears:5.8,  rpi:28, eoi:'Mid'  },
