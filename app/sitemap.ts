@@ -16,14 +16,19 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
   { url: '/reports/vancouver-livability-worker-affordability-2026', priority: 0.70, changeFrequency: 'yearly' },
   { url: '/reports/canada-cities-on-the-rise-2026',                 priority: 0.70, changeFrequency: 'yearly' },
   { url: '/reports/monthly-report-july-2026',                       priority: 0.65, changeFrequency: 'yearly' },
+  { url: '/reports/monthly-report-august-2026',                     priority: 0.70, changeFrequency: 'yearly' },
   { url: '/reports/workcation-mirage',                              priority: 0.65, changeFrequency: 'yearly' },
+  { url: '/prices',       priority: 0.75, changeFrequency: 'weekly'  },
   { url: '/newsletter', priority: 0.75, changeFrequency: 'monthly' },
   { url: '/about',      priority: 0.60, changeFrequency: 'monthly' },
   { url: '/contact',    priority: 0.55, changeFrequency: 'yearly'  },
 ]
 
-// Active cities
-const CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa']
+// CA cities (for city detail pages)
+const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa']
+
+// All cities including US (for guide pages)
+const CITY_SLUGS = [...CA_CITY_SLUGS, 'seattle', 'san-francisco', 'new-york', 'boston']
 
 // Key occupation slugs (subset for guide pages)
 const OCC_SLUGS = [
@@ -42,8 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }))
 
-  // City detail pages
-  const cityPages = CITY_SLUGS.map(slug => ({
+  // City detail pages (CA only — US cities don't have /city/[slug] pages)
+  const cityPages = CA_CITY_SLUGS.map(slug => ({
     url: `${BASE}/city/${slug}`,
     lastModified: now,
     changeFrequency: 'weekly' as const,
