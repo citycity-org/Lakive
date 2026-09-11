@@ -975,6 +975,15 @@ export default function RankingPage() {
             const isCurrent = id === currentCity
             const compareTo = allCities.find(c=>c.id!==id)?.id ?? 'calgary'
 
+            // Right-side display score follows the active sort dimension
+            const displayVal = sortDim === 'score' ? fit.score
+              : sortDim === 'hpiYears' ? fit.hpiYears
+              : sortDim === 'rpi'      ? fit.rpi
+              : getSortValue(FIT_MATRIX, CITY_BASE, id, occ, sortDim)
+            const displayStr   = String(displayVal)
+            const displaySub   = sortDim === 'score' ? '/ 100' : sortDim === 'hpiYears' ? 'yrs income' : sortDim === 'rpi' ? '% of income' : dim.label
+            const displayColor = sortDim === 'hpiYears' ? hc(displayVal) : sortDim === 'rpi' ? rc(displayVal) : sc(displayVal)
+
             return (
               <div key={id} className="city-card"
                 style={{ background:'rgba(255,255,255,0.03)', border:`1px solid ${isCurrent?'rgba(79,142,247,0.35)':'rgba(255,255,255,0.08)'}`, borderRadius:18, overflow:'hidden' }}>
@@ -1031,10 +1040,10 @@ export default function RankingPage() {
                     </div>
                   </div>
 
-                  {/* Score + chevron */}
+                  {/* Score + chevron — tracks active sort dimension */}
                   <div style={{ textAlign:'center', flexShrink:0 }}>
-                    <div style={{ color:sc(fit.score), fontSize:44, fontWeight:900, fontFamily:'monospace', lineHeight:1, letterSpacing:'-2px' }}>{fit.score}</div>
-                    <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginBottom:8 }}>/ 100</div>
+                    <div style={{ color:displayColor, fontSize:44, fontWeight:900, fontFamily:'monospace', lineHeight:1, letterSpacing:'-2px' }}>{displayStr}</div>
+                    <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginBottom:8 }}>{displaySub}</div>
                     <div style={{ color:'rgba(255,255,255,0.50)', fontSize:12, transform:isOpen?'rotate(180deg)':'none', transition:'transform 0.2s' }}>▾</div>
                   </div>
                 </div>
