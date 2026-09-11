@@ -790,7 +790,7 @@ export default function RankingPage() {
       return { id, city, fit:{ ...fitBase, hpiYears, rpi, score }, insight }
     })
     .sort((a,b) => {
-      if (mode === 'index') return b.fit.score - a.fit.score
+      if (mode === 'index' && sortDim === 'score') return b.fit.score - a.fit.score
       if (isUnemployed) {
         const eoiA = getSortValue(fitMatrix, cityBase, a.id, occ, 'eoi')
         const eoiB = getSortValue(fitMatrix, cityBase, b.id, occ, 'eoi')
