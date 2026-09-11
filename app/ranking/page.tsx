@@ -791,7 +791,7 @@ export default function RankingPage() {
     })
     .sort((a,b) => {
       if (mode === 'index' && sortDim === 'score') return b.fit.score - a.fit.score
-      if (isUnemployed) {
+      if (isUnemployed && sortDim === 'score') {
         const eoiA = getSortValue(fitMatrix, cityBase, a.id, occ, 'eoi')
         const eoiB = getSortValue(fitMatrix, cityBase, b.id, occ, 'eoi')
         if (eoiA !== eoiB) return eoiB - eoiA
@@ -845,12 +845,12 @@ export default function RankingPage() {
               label="Occupation"
               value={occ}
               options={[{ id:'', name:'Select occupation' }, ...OCCUPATIONS.map(o=>({ id:o.id, name:o.name }))]}
-              onChange={v=>{ setOcc(v); setExpanded(null); if (v === 'unemployed') setSortDim('eoi') }}
+              onChange={v=>{ setOcc(v); setExpanded(null); if (!v || v === 'unemployed') setSortDim(d => ['hpiYears','rpi'].includes(d) ? 'score' : d) }}
             />
             <FilterDropdown
               label="Sort by"
               value={sortDim}
-              options={SORT_DIMS.map(d=>({ id:d.id, name:d.label }))}
+              options={SORT_DIMS.filter(d => occ || !['hpiYears','rpi'].includes(d.id)).map(d=>({ id:d.id, name:d.label }))}
               onChange={v=>{ setSortDim(v); setExpanded(null) }}
             />
             <FilterDropdown
