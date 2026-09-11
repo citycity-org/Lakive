@@ -244,6 +244,74 @@ const CITY_BASE: Record<string, {
     transferTax: p => { let t = 0; if (p <= 200000) t = p * 0.01; else if (p <= 2000000) t = 2000 + (p - 200000) * 0.02; else t = 38000 + (p - 2000000) * 0.03; return Math.round(t) },
     transferTaxNote: 'BC Property Transfer Tax: 1% on first $200K, 2% on $200K–$2M, 3% above $2M',
   },
+  seattle: {
+    name: 'Seattle', nameEn: 'Seattle', province: 'Washington', short: 'WA',
+    score: 75, eoi: 88, tai: 95, hai: 80, eqi: 78, tci: 72, psi: 68, edi: 72,
+    medianRent: 2800, basePrice: 750000, propertyTaxRate: 0.0093,
+    industries: ['Tech (Amazon, Microsoft)', 'Aerospace (Boeing)', 'Retail & E-Commerce', 'Biotech & Life Sciences'],
+    winterC: 4, summerC: 24, sunnyDays: 152, aqi: 38, walkScore: 74,
+    population: '4.0M (metro)', avgCommuteMin: 31,
+    taiNote: 'WA sales tax 10.25% (Seattle); no state income tax',
+    taxSummary: 'WA: No state income tax — highest take-home of any US city. Sales tax 10.25%. No city income tax.',
+    transferTax: p => {
+      let t = 0
+      if (p <= 500000) t = p * 0.011
+      else if (p <= 1500000) t = 5500 + (p - 500000) * 0.0128
+      else if (p <= 3000000) t = 18300 + (p - 1500000) * 0.0275
+      else t = 59550 + (p - 3000000) * 0.03
+      return Math.round(t)
+    },
+    transferTaxNote: 'WA REET: 1.1% to $500K, 1.28% to $1.5M, 2.75% to $3M, 3% above',
+  },
+  'san-francisco': {
+    name: 'San Francisco', nameEn: 'San Francisco', province: 'California', short: 'CA',
+    score: 65, eoi: 95, tai: 35, hai: 72, eqi: 70, tci: 78, psi: 60, edi: 75,
+    medianRent: 3500, basePrice: 1200000, propertyTaxRate: 0.0074,
+    industries: ['Tech (Google, Meta, Salesforce)', 'Finance & VC', 'Biotech & Healthcare', 'Tourism & Hospitality'],
+    winterC: 10, summerC: 20, sunnyDays: 259, aqi: 50, walkScore: 88,
+    population: '4.7M (metro)', avgCommuteMin: 32,
+    taiNote: 'CA sales tax 8.625%; state income tax 1–13.3%',
+    taxSummary: 'CA: State income tax 1–13.3% (highest in US). Sales tax 8.625%. Additional SF city taxes apply.',
+    transferTax: p => {
+      let t = 0
+      if (p <= 250000) t = p * 0.005
+      else if (p <= 1000000) t = 1250 + (p - 250000) * 0.0068
+      else if (p <= 5000000) t = 6350 + (p - 1000000) * 0.0075
+      else if (p <= 10000000) t = 36350 + (p - 5000000) * 0.0085
+      else t = 78850 + (p - 10000000) * 0.0275
+      return Math.round(t)
+    },
+    transferTaxNote: 'SF RPTT: 0.5% to $250K, 0.68% to $1M, 0.75% to $5M, 2.75%+ above $10M',
+  },
+  'new-york': {
+    name: 'New York City', nameEn: 'New York City', province: 'New York', short: 'NY',
+    score: 68, eoi: 92, tai: 30, hai: 80, eqi: 62, tci: 92, psi: 55, edi: 82,
+    medianRent: 3200, basePrice: 900000, propertyTaxRate: 0.00462,
+    industries: ['Finance & Banking', 'Media & Advertising', 'Tech & Startups', 'Healthcare & Life Sciences'],
+    winterC: -1, summerC: 28, sunnyDays: 234, aqi: 48, walkScore: 90,
+    population: '20M (metro)', avgCommuteMin: 42,
+    taiNote: 'NY+NYC income tax up to 14.8%; sales tax 8.875%',
+    taxSummary: 'NY: State income tax 4–10.9% + NYC city tax 3.876% = effective rate up to 14.8%. Highest combined income tax in the US. Sales tax 8.875%.',
+    transferTax: p => {
+      // NY state RPTT + NYC mansion tax (>$1M)
+      const state = p <= 500000 ? p * 0.01 : p * 0.01425
+      const mansion = p >= 1000000 ? p * 0.01 : 0
+      return Math.round(state + mansion)
+    },
+    transferTaxNote: 'NY RPTT: 1% to $500K, 1.425% above; NYC mansion tax 1% on $1M+',
+  },
+  boston: {
+    name: 'Boston', nameEn: 'Boston', province: 'Massachusetts', short: 'MA',
+    score: 72, eoi: 85, tai: 60, hai: 82, eqi: 75, tci: 70, psi: 72, edi: 78,
+    medianRent: 2900, basePrice: 750000, propertyTaxRate: 0.00547,
+    industries: ['Biotech & Pharma', 'Higher Education', 'Finance & Asset Management', 'Healthcare & MedTech'],
+    winterC: -3, summerC: 27, sunnyDays: 200, aqi: 40, walkScore: 82,
+    population: '4.9M (metro)', avgCommuteMin: 31,
+    taiNote: 'MA income tax 5%; sales tax 6.25%',
+    taxSummary: 'MA: Flat 5% state income tax (lower than most states). No city income tax. Sales tax 6.25% (meals 6.25%, no clothing tax under $175).',
+    transferTax: p => Math.round(p / 1000 * 4.56),
+    transferTaxNote: 'MA deed excise: $4.56 per $1,000 of purchase price (~0.456%)',
+  },
 }
 
 // ── Fit matrix ────────────────────────────────────────────────────────────────
@@ -368,6 +436,46 @@ const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
     police:       { score: 65, hpiYears: 10.2, rpi: 35, eoi: 'Mid'  },
     retail:       { score: 29, hpiYears: 19.5, rpi: 56, eoi: 'Low'  },
   },
+  seattle: {
+    electrician:  { score: 88, hpiYears: 7.2,  rpi: 21, eoi: 'High' },
+    software_eng: { score: 95, hpiYears: 5.8,  rpi: 18, eoi: 'High' },
+    nurse:        { score: 85, hpiYears: 8.0,  rpi: 23, eoi: 'High' },
+    teacher:      { score: 70, hpiYears: 9.5,  rpi: 26, eoi: 'Mid'  },
+    truck_driver: { score: 78, hpiYears: 8.5,  rpi: 24, eoi: 'High' },
+    accountant:   { score: 80, hpiYears: 8.8,  rpi: 24, eoi: 'High' },
+    police:       { score: 82, hpiYears: 8.2,  rpi: 22, eoi: 'High' },
+    retail:       { score: 42, hpiYears: 18.5, rpi: 45, eoi: 'Mid'  },
+  },
+  'san-francisco': {
+    electrician:  { score: 72, hpiYears: 14.5, rpi: 28, eoi: 'High' },
+    software_eng: { score: 88, hpiYears: 9.5,  rpi: 22, eoi: 'High' },
+    nurse:        { score: 78, hpiYears: 12.5, rpi: 26, eoi: 'High' },
+    teacher:      { score: 52, hpiYears: 18.0, rpi: 35, eoi: 'Mid'  },
+    truck_driver: { score: 45, hpiYears: 22.0, rpi: 42, eoi: 'Mid'  },
+    accountant:   { score: 70, hpiYears: 14.0, rpi: 27, eoi: 'High' },
+    police:       { score: 65, hpiYears: 16.0, rpi: 30, eoi: 'Mid'  },
+    retail:       { score: 22, hpiYears: 32.0, rpi: 60, eoi: 'Low'  },
+  },
+  'new-york': {
+    electrician:  { score: 75, hpiYears: 12.5, rpi: 30, eoi: 'High' },
+    software_eng: { score: 85, hpiYears: 10.2, rpi: 26, eoi: 'High' },
+    nurse:        { score: 78, hpiYears: 11.5, rpi: 29, eoi: 'High' },
+    teacher:      { score: 60, hpiYears: 15.5, rpi: 36, eoi: 'High' },
+    truck_driver: { score: 58, hpiYears: 16.0, rpi: 38, eoi: 'Mid'  },
+    accountant:   { score: 72, hpiYears: 13.5, rpi: 32, eoi: 'High' },
+    police:       { score: 74, hpiYears: 12.0, rpi: 30, eoi: 'High' },
+    retail:       { score: 28, hpiYears: 28.0, rpi: 58, eoi: 'Mid'  },
+  },
+  boston: {
+    electrician:  { score: 80, hpiYears: 9.5,  rpi: 24, eoi: 'High' },
+    software_eng: { score: 86, hpiYears: 8.2,  rpi: 22, eoi: 'High' },
+    nurse:        { score: 84, hpiYears: 8.8,  rpi: 23, eoi: 'High' },
+    teacher:      { score: 65, hpiYears: 12.5, rpi: 30, eoi: 'High' },
+    truck_driver: { score: 60, hpiYears: 13.5, rpi: 33, eoi: 'Mid'  },
+    accountant:   { score: 75, hpiYears: 11.0, rpi: 27, eoi: 'High' },
+    police:       { score: 76, hpiYears: 10.5, rpi: 26, eoi: 'High' },
+    retail:       { score: 35, hpiYears: 22.5, rpi: 48, eoi: 'Mid'  },
+  },
 }
 
 const OCCUPATIONS = [
@@ -472,7 +580,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   const pressureZ  = tieredOccs.filter(o => o.adjScore >= 55 && o.adjScore < 75)
   const highRisk   = tieredOccs.filter(o => o.adjScore < 55)
 
-  const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria']
+  const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston']
   const rankList     = ALL_CITY_IDS
     .filter(id => FIT_MATRIX[id]?.[occ])
     .map(id => {

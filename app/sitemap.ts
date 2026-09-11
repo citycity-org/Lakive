@@ -24,8 +24,8 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
   { url: '/contact',    priority: 0.55, changeFrequency: 'yearly'  },
 ]
 
-// CA cities (for city detail pages)
-const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria']
+// All cities with detail pages (CA + US)
+const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston']
 
 // All cities including US (for guide pages)
 const CITY_SLUGS = [...CA_CITY_SLUGS, 'seattle', 'san-francisco', 'new-york', 'boston']
