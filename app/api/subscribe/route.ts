@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit, getClientIp }   from '@/lib/rate-limit'
+import { createServerClient }       from '@/lib/supabase-server'
 
 const CITY_NAMES_EN: Record<string, string> = {
   vancouver: 'Vancouver', toronto: 'Toronto', calgary: 'Calgary',
@@ -96,6 +97,25 @@ export async function POST(req: NextRequest) {
     const err = await res.json().catch(() => ({}))
     console.error('Resend error:', err)
     return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 })
+  }
+
+  // Also persist subscriber profile to Supabase so cron can read it reliably
+  // (Resend's list-contacts API does not return custom data fields)
+  try {
+    const supabase = createServerClient()
+    await supabase.from('subscriptions').upsert({
+      email,
+      city,
+      occ:           occ      || '',
+      prop_type:     propType || '',
+      frequency,
+      lang,
+      unsubscribed:  false,
+      subscribed_at: new Date().toISOString(),
+    }, { onConflict: 'email' })
+  } catch (err) {
+    console.error('[subscribe] Supabase upsert error:', err)
+    // Non-fatal — Resend contact was already created
   }
 
   // ── Language-aware confirmation email ──────────────────────────────────────

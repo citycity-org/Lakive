@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@/lib/supabase-server'
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NAME MAPPINGS
@@ -700,18 +700,33 @@ interface Contact {
   }
 }
 
-async function fetchResendContacts(apiKey: string, audienceId: string): Promise<Contact[]> {
-  const res = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
-    headers: { Authorization: `Bearer ${apiKey}` },
-  })
-  if (!res.ok) {
-    console.error('Failed to fetch contacts:', await res.text())
+// Fetch subscribers from Supabase (reliable source of custom profile data).
+// Resend's list-contacts API does not return custom data fields, so we store
+// subscriber profiles in the subscriptions table and use Resend only for sending.
+async function fetchResendContacts(_apiKey: string, _audienceId: string): Promise<Contact[]> {
+  const supabase = createServerClient()
+  const { data, error } = await supabase
+    .from('subscriptions')
+    .select('email, city, occ, prop_type, frequency, lang, unsubscribed')
+    .eq('unsubscribed', false)
+
+  if (error) {
+    console.error('Failed to fetch subscribers from Supabase:', error)
     return []
   }
-  const json = await res.json() as { data?: unknown; object?: string } | unknown[]
-  // Resend wraps in { object: 'list', data: [...] }
-  const raw = (json as { data?: unknown })?.data ?? json ?? []
-  return Array.isArray(raw) ? raw : []
+
+  return (data ?? []).map((row, i) => ({
+    id:           String(i),
+    email:        row.email,
+    unsubscribed: row.unsubscribed ?? false,
+    data: {
+      city:      row.city      ?? '',
+      occ:       row.occ       ?? '',
+      propType:  row.prop_type ?? '',
+      frequency: row.frequency ?? 'monthly',
+      lang:      row.lang      ?? 'en',
+    },
+  }))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -731,12 +746,7 @@ const CITY_HPI_DEFAULT: Record<string, number> = {
 
 async function buildHpiCache(contacts: Contact[]): Promise<HpiCache> {
   const cache: HpiCache = {}
-  const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseKey) return cache
-
-  const supabase = createClient(supabaseUrl, supabaseKey)
+  const supabase = createServerClient()
 
   // Collect unique city+occ+propType combos
   const combos = new Set<string>()
