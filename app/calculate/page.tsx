@@ -24,13 +24,21 @@ const CITIES: Record<string, {
   calgary:         { name:'Calgary',       short:'YYC', province:'AB',               basePrice:572500,  medianRent:1750, tai:90, eoi:65, hai:78, eqi:82, tci:48, psi:78, edi:72, taiNote:'GST 5% only',          effectiveTax:0.22 },
   montreal:        { name:'Montréal',      short:'YUL', province:'QC',               basePrice:580000,  medianRent:1900, tai:42, eoi:72, hai:75, eqi:78, tci:72, psi:70, edi:80, taiNote:'GST + QST ~15%',       effectiveTax:0.33 },
   ottawa:          { name:'Ottawa',        short:'YOW', province:'ON',               basePrice:632200,  medianRent:2400, tai:68, eoi:75, hai:82, eqi:80, tci:55, psi:82, edi:85, taiNote:'HST 13%',              effectiveTax:0.29 },
+  // ── Canada (new cities) ───────────────────────────────────────────────────────
+  edmonton:              { name:'Edmonton',           short:'YEG', province:'AB', basePrice:440000,  medianRent:1650, tai:90, eoi:62, hai:80, eqi:78, tci:42, psi:76, edi:68, taiNote:'GST 5% only',      effectiveTax:0.22 },
+  winnipeg:              { name:'Winnipeg',           short:'YWG', province:'MB', basePrice:370000,  medianRent:1450, tai:65, eoi:58, hai:82, eqi:74, tci:38, psi:72, edi:65, taiNote:'GST + PST 7%',     effectiveTax:0.29 },
+  halifax:               { name:'Halifax',            short:'YHZ', province:'NS', basePrice:520000,  medianRent:1950, tai:55, eoi:55, hai:76, eqi:82, tci:40, psi:70, edi:60, taiNote:'HST 15%',          effectiveTax:0.31 },
+  'quebec-city':         { name:'Québec City',        short:'YQB', province:'QC', basePrice:380000,  medianRent:1400, tai:42, eoi:55, hai:80, eqi:80, tci:45, psi:72, edi:58, taiNote:'GST + QST ≈ 15%', effectiveTax:0.33 },
+  hamilton:              { name:'Hamilton',           short:'YHM', province:'ON', basePrice:680000,  medianRent:1900, tai:68, eoi:65, hai:78, eqi:72, tci:50, psi:70, edi:70, taiNote:'HST 13%',          effectiveTax:0.30 },
+  'kitchener-waterloo':  { name:'Kitchener-Waterloo', short:'YKF', province:'ON', basePrice:650000,  medianRent:1800, tai:68, eoi:68, hai:78, eqi:76, tci:48, psi:72, edi:75, taiNote:'HST 13%',          effectiveTax:0.29 },
+  victoria:              { name:'Victoria',           short:'YYJ', province:'BC', basePrice:820000,  medianRent:2400, tai:72, eoi:55, hai:70, eqi:90, tci:55, psi:78, edi:58, taiNote:'GST + PST ~12%',   effectiveTax:0.28 },
   // ── United States (USD) ───────────────────────────────────────────────────────
   seattle:         { name:'Seattle',       short:'SEA', province:'Washington',  currency:'USD', basePrice:800000,  medianRent:2700, tai:95, eoi:88, hai:72, eqi:78, tci:65, psi:72, edi:82, taiNote:'No state income tax', effectiveTax:0.22 },
   'san-francisco': { name:'San Francisco', short:'SFO', province:'California',  currency:'USD', basePrice:1250000, medianRent:3500, tai:35, eoi:95, hai:38, eqi:70, tci:75, psi:55, edi:90, taiNote:'CA top rate 13.3%',  effectiveTax:0.35 },
   'new-york':      { name:'New York City', short:'NYC', province:'New York',    currency:'USD', basePrice:1100000, medianRent:3700, tai:30, eoi:92, hai:40, eqi:62, tci:88, psi:58, edi:92, taiNote:'NY+NYC tax up to 14.8%', effectiveTax:0.36 },
   boston:          { name:'Boston',        short:'BOS', province:'Massachusetts', currency:'USD', basePrice:850000, medianRent:3100, tai:60, eoi:85, hai:58, eqi:75, tci:72, psi:68, edi:82, taiNote:'MA flat 5% state tax', effectiveTax:0.27 },
 }
-const CITY_IDS    = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa']
+const CITY_IDS    = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria']
 const CITY_IDS_US = ['seattle', 'san-francisco', 'new-york', 'boston']
 const ALL_CITY_IDS = [...CITY_IDS, ...CITY_IDS_US]
 
@@ -131,6 +139,7 @@ function getBuyVerdict(cityName:string, hpiYears:number, monthlyMortgage:number,
 // ── Main ───────────────────────────────────────────────────────────────────────
 export default function CalculatePage() {
   const [cityId,    setCityId   ] = useState('vancouver')
+  const [country,   setCountry  ] = useState<'CA'|'US'>('CA')
   const [occId,     setOccId    ] = useState('')
   const [income,    setIncome   ] = useState<number>(0)
   const [propType,  setPropType ] = useState('2br')
@@ -452,9 +461,18 @@ export default function CalculatePage() {
           {/* ── STEP 3: City selection ── */}
           {step === 3 && (
             <div>
-              <div style={{ color:'rgba(255,255,255,0.38)', fontSize:11, fontWeight:700, letterSpacing:'0.07em', marginBottom:20 }}>STEP 3 — Which city are you targeting?</div>
+              <div style={{ color:'rgba(255,255,255,0.38)', fontSize:11, fontWeight:700, letterSpacing:'0.07em', marginBottom:16 }}>STEP 3 — Which city are you targeting?</div>
+              {/* Country tabs */}
+              <div style={{ display:'flex', gap:8, marginBottom:18 }}>
+                {(['CA','US'] as const).map(c => (
+                  <button key={c} onClick={() => { setCountry(c); if (c==='CA' && !CITY_IDS.includes(cityId)) setCityId('vancouver'); if (c==='US' && !CITY_IDS_US.includes(cityId)) setCityId('seattle') }}
+                    style={{ padding:'8px 20px', borderRadius:10, border:`2px solid ${country===c?'#4F8EF7':'rgba(255,255,255,0.10)'}`, background:country===c?'rgba(79,142,247,0.12)':'transparent', color:country===c?'white':'rgba(255,255,255,0.45)', fontSize:13, fontWeight:700, cursor:'pointer', transition:'all 0.15s' }}>
+                    {c === 'CA' ? '🇨🇦 Canada' : '🇺🇸 United States'}
+                  </button>
+                ))}
+              </div>
               <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:28 }}>
-                {ALL_CITY_IDS.map(id => {
+                {(country === 'CA' ? CITY_IDS : CITY_IDS_US).map(id => {
                   const c = CITIES[id]
                   const sel = id === cityId
                   return (
