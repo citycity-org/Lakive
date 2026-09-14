@@ -7,6 +7,7 @@ export interface ShareTarget {
   occupationName: string
   housingType:    string
   incomeValue:    number
+  selectedCityId: string
   cityResults: {
     cityId:   string
     cityName: string
@@ -167,6 +168,7 @@ async function generateInsightCard(
 
   const sorted    = [...shareData.cityResults].sort((a, b) => b.score - a.score).slice(0, 4)
   const best      = sorted[0]
+  const selected  = shareData.cityResults.find(c => c.cityId === shareData.selectedCityId) ?? best
   const occName   = shareData.occupationName
   const occPlural = occName.endsWith('s') ? occName : occName + 's'
 
@@ -190,7 +192,7 @@ async function generateInsightCard(
   photoPath()
   c.clip()
   try {
-    const photo = await loadImage(`/cities/${best.cityId}.jpg`)
+    const photo = await loadImage(`/cities/${selected.cityId}.jpg`)
     const iw = photo.naturalWidth, ih = photo.naturalHeight
     const dw = W - PX, dh = PB
     const s  = Math.max(dw / iw, dh / ih)
@@ -303,9 +305,11 @@ async function generateInsightCard(
   c.fillStyle = 'rgba(255,255,255,0.40)'
   c.fillText('Generated ' + monthYear(), ITX, IPY + 128)
 
-  // ── Headline (two lines, two-tone: "#1" in teal) ────────────────────────────
-  const line1a = `${best.cityName} ranks `
-  const line1b = '#1'
+  // ── Headline (two lines, two-tone: rank in teal) ────────────────────────────
+  const selectedRank = sorted.findIndex(c => c.cityId === selected.cityId) + 1
+  const rankLabel = selectedRank >= 1 && selectedRank <= sorted.length ? `#${selectedRank}` : '#1'
+  const line1a = `${selected.cityName} ranks `
+  const line1b = rankLabel
   const line2  = `for ${occPlural}`
   const maxHW  = PX - P - 40
   let hSize = 72
@@ -529,11 +533,12 @@ export default function ShareModal({ open, onClose, shareData }: Props) {
 
   if (!open) return null
 
-  const sorted = [...shareData.cityResults].sort((a, b) => b.score - a.score)
-  const best   = sorted[0]
+  const sorted   = [...shareData.cityResults].sort((a, b) => b.score - a.score)
+  const selected = shareData.cityResults.find(c => c.cityId === shareData.selectedCityId) ?? sorted[0]
+  const selRank  = sorted.findIndex(c => c.cityId === selected.cityId) + 1
 
   const tweetText = [
-    `${best.cityName} ranks #1 for ${shareData.occupationName}s in ${PROP_NOUN[shareData.housingType] ?? shareData.housingType} affordability (score: ${best.score}/99).`,
+    `${selected.cityName} ranks #${selRank} for ${shareData.occupationName}s in ${PROP_NOUN[shareData.housingType] ?? shareData.housingType} affordability (score: ${selected.score}/99).`,
     '',
     sorted.slice(0, 4).map(city =>
       `${city.score >= 80 ? '🟢' : city.score >= 60 ? '🟡' : '🔴'} ${city.cityName}: ${city.score} pts`

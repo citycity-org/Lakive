@@ -903,6 +903,7 @@ export default function CalculatePage() {
             occupationName: occName,
             housingType:    propType,
             incomeValue:    income,
+            selectedCityId: cityId,
             cityResults:    results.allCities.map(c => ({
               cityId:    c.id,
               cityName:  c.name,
