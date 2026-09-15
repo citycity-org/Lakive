@@ -18,6 +18,8 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
   { url: '/reports/monthly-report-july-2026',                       priority: 0.65, changeFrequency: 'yearly' },
   { url: '/reports/monthly-report-august-2026',                     priority: 0.70, changeFrequency: 'yearly' },
   { url: '/reports/workcation-mirage',                              priority: 0.65, changeFrequency: 'yearly' },
+  { url: '/reports/the-61-billion-paradox',                         priority: 0.80, changeFrequency: 'yearly' },
+  { url: '/reports/the-61-billion-paradox-cn',                      priority: 0.75, changeFrequency: 'yearly' },
   { url: '/prices',       priority: 0.75, changeFrequency: 'weekly'  },
   { url: '/newsletter', priority: 0.75, changeFrequency: 'monthly' },
   { url: '/about',      priority: 0.60, changeFrequency: 'monthly' },

@@ -118,8 +118,48 @@ export default function ReportsPage() {
 
       <div style={{ maxWidth: 1060, margin: '0 auto', padding: '0 24px' }}>
 
-        {/* ── Latest Report ─────────────────────────────────────────────── */}
+        {/* ── Deep Dive ─────────────────────────────────────────────────── */}
         <section style={{ padding: '56px 0 0' }}>
+          <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
+            Deep Dive · Featured
+          </div>
+          <div style={{ background: 'linear-gradient(135deg,rgba(79,142,247,0.10),rgba(20,184,166,0.06))', border: '1px solid rgba(79,142,247,0.30)', borderRadius: 24, overflow: 'hidden', marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 0 }}>
+              <div style={{ width: 5, background: 'linear-gradient(to bottom,#4F8EF7,#14B8A6)', borderRadius: '4px 0 0 4px' }} />
+              <div style={{ padding: '36px 36px 32px' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 20 }}>
+                  <Tag label="Deep Dive 01" color="#4F8EF7" bg="rgba(79,142,247,0.12)" />
+                  <Tag label="Canada" color="#93C5FD" bg="rgba(79,142,247,0.08)" />
+                  <Tag label="Macro · Capital Flows · Housing" color="#FCD34D" bg="rgba(245,158,11,0.08)" />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginLeft: 4 }}>September 2026</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(18px,3vw,26px)', fontWeight: 900, lineHeight: 1.25, margin: '0 0 14px', letterSpacing: '-0.01em' }}>
+                  The $61 Billion Paradox<br />
+                  <span style={{ color: '#14B8A6' }}>Canada Can Borrow. But Can Canadians Afford to Live Here?</span>
+                </h2>
+                <p style={{ color: 'rgba(255,255,255,0.50)', fontSize: 14, lineHeight: 1.75, maxWidth: 600, margin: '0 0 28px' }}>
+                  In Q2 2026, non-residents made a net C$61.3 billion acquisition of Canadian federal bonds — the largest quarterly
+                  acquisition on record. Lakive traces why record foreign capital hasn&apos;t translated into household purchasing
+                  power, housing access, or durable wage gains.
+                </p>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 20, background: 'rgba(79,142,247,0.10)', border: '1px solid rgba(79,142,247,0.25)', color: '#93C5FD', fontSize: 12, fontWeight: 700 }}>
+                    ✓ Published September 14, 2026
+                  </span>
+                  <Link href="/reports/the-61-billion-paradox" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', borderRadius: 12, background: 'linear-gradient(135deg,#4F8EF7,#14B8A6)', color: 'white', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                    Read in English →
+                  </Link>
+                  <Link href="/reports/the-61-billion-paradox-cn" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.65)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                    阅读中文版
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Latest Report ─────────────────────────────────────────────── */}
+        <section style={{ padding: '40px 0 0' }}>
           <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
             Latest Report
           </div>
