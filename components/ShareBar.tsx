@@ -11,10 +11,12 @@ const TEAL = '#14B8A6'
 
 export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
   const [copied, setCopied] = useState(false)
+  const [nativeShared, setNativeShared] = useState<string | null>(null)
 
   const encoded = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
 
+  // Platforms with standard web share URLs
   const links = [
     {
       label: 'X',
@@ -54,6 +56,28 @@ export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
     },
   ]
 
+  // Platforms that use native Web Share API (no URL-based sharing)
+  const nativeButtons = [
+    {
+      label: 'Instagram',
+      key: 'instagram',
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+        </svg>
+      ),
+    },
+    {
+      label: '小红书',
+      key: 'rednote',
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21.5 0h-19A2.5 2.5 0 000 2.5v19A2.5 2.5 0 002.5 24h19a2.5 2.5 0 002.5-2.5v-19A2.5 2.5 0 0021.5 0zM9.1 16.7H7.3V9.4h1.8v7.3zm5.6 0h-1.8v-3h-1.5v3h-1.8V9.4h1.8v2.8h1.5V9.4h1.8v7.3z"/>
+        </svg>
+      ),
+    },
+  ]
+
   function handleCopy() {
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
@@ -61,23 +85,40 @@ export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
     })
   }
 
-  const label = lang === 'zh' ? '分享' : 'Share'
+  async function handleNativeShare(platform: string) {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url })
+        setNativeShared(platform)
+        setTimeout(() => setNativeShared(null), 2000)
+      } catch {
+        // user cancelled or not supported — fallback to copy
+        handleCopy()
+      }
+    } else {
+      // Desktop: no Web Share API — copy link
+      handleCopy()
+    }
+  }
+
+  const shareLabel = lang === 'zh' ? '分享' : 'Share'
   const copyLabel = lang === 'zh' ? (copied ? '已复制！' : '复制链接') : (copied ? 'Copied!' : 'Copy link')
 
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
-      padding: '16px 20px',
+      display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap',
+      padding: '14px 18px',
       background: '#fff',
       border: '1px solid #E5E7EB',
       borderRadius: 14,
       margin: '32px 0',
     }}>
       <span style={{ fontSize: 12, fontWeight: 700, color: '#6B7280', letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>
-        {label}
+        {shareLabel}
       </span>
       <div style={{ width: 1, height: 16, background: '#E5E7EB', flexShrink: 0 }} />
 
+      {/* URL-based share links */}
       {links.map(l => (
         <a
           key={l.label}
@@ -86,8 +127,8 @@ export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
           rel="noopener noreferrer"
           aria-label={`Share on ${l.label}`}
           style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '6px 12px',
+            display: 'flex', alignItems: 'center', gap: 5,
+            padding: '6px 10px',
             borderRadius: 8,
             background: '#F3F4F6',
             color: '#374151',
@@ -110,11 +151,46 @@ export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
         </a>
       ))}
 
+      {/* Native share buttons (Instagram + 小红书) */}
+      {nativeButtons.map(b => (
+        <button
+          key={b.key}
+          onClick={() => handleNativeShare(b.key)}
+          aria-label={`Share on ${b.label}`}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            padding: '6px 10px',
+            borderRadius: 8,
+            background: nativeShared === b.key ? `${TEAL}18` : '#F3F4F6',
+            color: nativeShared === b.key ? TEAL : '#374151',
+            fontSize: 12,
+            fontWeight: 600,
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'background 0.15s, color 0.15s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = `${TEAL}18`
+            e.currentTarget.style.color = TEAL
+          }}
+          onMouseLeave={e => {
+            if (nativeShared !== b.key) {
+              e.currentTarget.style.background = '#F3F4F6'
+              e.currentTarget.style.color = '#374151'
+            }
+          }}
+        >
+          {b.icon}
+          {b.label}
+        </button>
+      ))}
+
+      {/* Copy link */}
       <button
         onClick={handleCopy}
         style={{
-          display: 'flex', alignItems: 'center', gap: 6,
-          padding: '6px 12px',
+          display: 'flex', alignItems: 'center', gap: 5,
+          padding: '6px 10px',
           borderRadius: 8,
           background: copied ? `${TEAL}18` : '#F3F4F6',
           color: copied ? TEAL : '#374151',
@@ -127,7 +203,7 @@ export default function ShareBar({ url, title, lang = 'en' }: ShareBarProps) {
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           {copied
-            ? <><polyline points="20 6 9 17 4 12" /></>
+            ? <polyline points="20 6 9 17 4 12" />
             : <><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></>
           }
         </svg>
