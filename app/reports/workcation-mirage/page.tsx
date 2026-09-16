@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import ShareBar from '@/components/ShareBar'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -298,7 +299,14 @@ export default function WorkcationMiragePage() {
           </p>
         </div>
 
-        {/* ── CTA ───────────────────────────────────────────────────────────── */}
+        {/* Share bar */}
+        <ShareBar
+          url="https://lakive.com/reports/workcation-mirage"
+          title="The Workcation Mirage — Why the World's Best Cities May Not Be Best for You"
+          lang="en"
+        />
+
+                {/* ── CTA ───────────────────────────────────────────────────────────── */}
         <div style={{ margin: '48px 0 0', background: 'linear-gradient(135deg,rgba(24,95,165,0.06),rgba(24,95,165,0.02))', border: '1px solid rgba(24,95,165,0.16)', borderRadius: 20, padding: '32px 28px', textAlign: 'center' }}>
           <p style={{ fontWeight: 800, color: DARK, fontSize: 17, margin: '0 0 8px' }}>Get future reports in your inbox</p>
           <p style={{ color: MUTED, fontSize: 14, margin: '0 0 20px' }}>Monthly city data · New report releases · Canada vs. U.S. insights</p>

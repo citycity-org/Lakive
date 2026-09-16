@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import ShareBar from '@/components/ShareBar'
 
 const NAVY  = '#0d1f44'
 const TEAL  = '#14B8A6'
@@ -490,6 +491,12 @@ export default function MonthlyReportAugust2026() {
             © 2026 Lakive. All rights reserved. This report is for informational purposes only and does not constitute financial or investment advice. · <Link href="/reports" style={{ color: BLUE }}>All Reports</Link>
           </p>
         </div>
+
+      <ShareBar
+        url="https://lakive.com/reports/monthly-report-august-2026"
+        title="Lakive Monthly Report — August 2026"
+        lang="en"
+      />
 
       </div>
     </main>

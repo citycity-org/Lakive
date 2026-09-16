@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import ShareBar from '@/components/ShareBar'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -520,6 +521,12 @@ export default function VancouverReportPage() {
               Subscribe to future reports →
             </Link>
           </div>
+        <ShareBar
+          url="https://lakive.com/reports/vancouver-livability-worker-affordability-2026"
+          title="Vancouver Is a Top-10 Livable City — But Can Local Workers Afford to Stay?"
+          lang="en"
+        />
+
         </section>
 
       </article>

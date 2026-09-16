@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import ShareBar from '@/components/ShareBar'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -473,7 +474,14 @@ export default function DeepDiveCnPage() {
           </div>
         </div>
 
-        {/* Language link */}
+        {/* Share bar */}
+        <ShareBar
+          url="https://lakive.com/reports/the-61-billion-paradox-cn"
+          title="610亿加元悖论 · 外国资本大举入市，本地居民为何仍感住房压力？"
+          lang="zh"
+        />
+
+                {/* Language link */}
         <div style={{ textAlign: 'center', marginTop: 32 }}>
           <Link href="/reports/the-61-billion-paradox" style={{ fontSize: 13, color: TEAL, textDecoration: 'none', fontWeight: 600 }}>
             Read English version →

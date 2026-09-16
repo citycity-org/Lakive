@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import ShareBar from '@/components/ShareBar'
 import Link from 'next/link'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -641,6 +642,12 @@ export default function CanadaCitiesReport2026() {
             Data reflects H1 2026 conditions · All figures in Canadian dollars · © 2026 Lakive · hello@lakive.com
           </p>
         </div>
+
+      <ShareBar
+        url="https://lakive.com/reports/canada-cities-on-the-rise-2026"
+        title="Canada Cities on the Rise 2026 — Where Career and Housing Align"
+        lang="en"
+      />
 
       </div>
     </main>
