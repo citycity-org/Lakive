@@ -26,11 +26,14 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
   { url: '/contact',    priority: 0.55, changeFrequency: 'yearly'  },
 ]
 
-// All cities with detail pages (CA + US)
-const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston']
+// Canadian cities with /city/[slug] detail pages
+const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria']
 
-// All cities including US (for guide pages)
-const CITY_SLUGS = [...CA_CITY_SLUGS, 'seattle', 'san-francisco', 'new-york', 'boston']
+// US cities with /city/[slug] detail pages
+const US_CITY_SLUGS = ['seattle', 'san-francisco', 'new-york', 'boston']
+
+// All cities for guide pages
+const CITY_SLUGS = [...CA_CITY_SLUGS, ...US_CITY_SLUGS]
 
 // Key occupation slugs (subset for guide pages)
 const OCC_SLUGS = [
@@ -49,8 +52,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }))
 
-  // City detail pages (CA only — US cities don't have /city/[slug] pages)
-  const cityPages = CA_CITY_SLUGS.map(slug => ({
+  // City detail pages (CA + US)
+  const cityPages = [...CA_CITY_SLUGS, ...US_CITY_SLUGS].map(slug => ({
     url: `${BASE}/city/${slug}`,
     lastModified: now,
     changeFrequency: 'weekly' as const,

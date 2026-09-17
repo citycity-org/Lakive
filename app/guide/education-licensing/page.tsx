@@ -4,6 +4,7 @@ import { LakiveLogo } from '../../components/LakiveLogo'
 export const metadata = {
   title: 'Education & Licensing in Canada | Lakive',
   description: 'Official regulatory bodies for regulated professions across BC, ON, AB, and QC. An index of licensing authorities — not procedural guidance.',
+  alternates: { canonical: 'https://lakive.com/guide/education-licensing' },
 }
 
 // ── Data ─────────────────────────────────────────────────────────────────────

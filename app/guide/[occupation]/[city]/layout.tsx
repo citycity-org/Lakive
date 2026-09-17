@@ -1,8 +1,14 @@
 import type { Metadata } from 'next'
 
 const CITY_NAMES: Record<string, string> = {
+  // Canada
   vancouver: 'Vancouver', toronto: 'Toronto', calgary: 'Calgary',
-  montreal: 'Montréal', ottawa: 'Ottawa',
+  montreal: 'Montréal', ottawa: 'Ottawa', edmonton: 'Edmonton',
+  winnipeg: 'Winnipeg', halifax: 'Halifax', 'quebec-city': 'Québec City',
+  hamilton: 'Hamilton', 'kitchener-waterloo': 'Kitchener-Waterloo', victoria: 'Victoria',
+  // United States
+  seattle: 'Seattle', 'san-francisco': 'San Francisco',
+  'new-york': 'New York City', boston: 'Boston',
 }
 
 function formatOccupation(slug: string): string {
