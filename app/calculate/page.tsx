@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import ShareModal from '@/components/ShareModal'
+import type { CityScoresResponse } from '@/app/api/city-scores/route'
 
 // ── Property types ─────────────────────────────────────────────────────────────
 const PROP_TYPES = [
@@ -153,11 +154,46 @@ export default function CalculatePage() {
   const [cityFromURL, setCityFromURL] = useState(false)
   const resultsRef = useRef<HTMLDivElement>(null)
 
+  // Dynamic city data from Supabase (falls back to hardcoded CITIES constant)
+  const [cities, setCities] = useState(CITIES)
+  useEffect(() => {
+    fetch('/api/city-scores')
+      .then(r => r.ok ? r.json() : null)
+      .then((d: CityScoresResponse | null) => {
+        if (!d?.cityIndices) return
+        setCities(prev => {
+          const merged = { ...prev }
+          for (const [id, ci] of Object.entries(d.cityIndices)) {
+            if (!merged[id]) continue
+            merged[id] = {
+              ...merged[id],
+              name:         ci.name         ?? merged[id].name,
+              province:     ci.province     ?? merged[id].province,
+              short:        ci.short        ?? merged[id].short,
+              eoi:          ci.eoi          ?? merged[id].eoi,
+              tai:          ci.tai          ?? merged[id].tai,
+              hai:          ci.hai          ?? merged[id].hai,
+              eqi:          ci.eqi          ?? merged[id].eqi,
+              tci:          ci.tci          ?? merged[id].tci,
+              psi:          ci.psi          ?? merged[id].psi,
+              edi:          ci.edi          ?? merged[id].edi,
+              taiNote:      ci.taiNote      ?? merged[id].taiNote,
+              basePrice:    ci.basePrice    ?? merged[id].basePrice,
+              medianRent:   ci.medianRent   ?? merged[id].medianRent,
+              effectiveTax: ci.effectiveTax ?? merged[id].effectiveTax,
+            }
+          }
+          return merged
+        })
+      })
+      .catch(() => { /* silently use hardcoded fallback */ })
+  }, [])
+
   // Read URL params — pre-fill city/occupation; skip step 3 if city already known
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     const c = p.get('city'), o = p.get('occupation'), h = p.get('housing')
-    if (c && CITIES[c]) { setCityId(c); setCityFromURL(true) }
+    if (c && CITIES[c]) { setCityId(c); setCityFromURL(true) } // CITIES used for initial check only
     if (o && ALL_OCCS.find(x => x.id === o)) {
       setOccId(o)
       const def = ALL_OCCS.find(x => x.id === o)?.income
@@ -198,7 +234,7 @@ export default function CalculatePage() {
     setStep(s => Math.max(1, s - 1))
   }
 
-  const city = CITIES[cityId]
+  const city = cities[cityId]
   const occ  = ALL_OCCS.find(o => o.id === occId)
   const pt   = PROP_TYPES.find(p => p.id === propType) ?? PROP_TYPES[1]
 
@@ -225,9 +261,9 @@ export default function CalculatePage() {
 
     // ── Cross-city comparison (same currency only) ────────────────────────────
     const selectedCurrency = city.currency ?? 'CAD'
-    const compareCityIDs = ALL_CITY_IDS.filter(id => (CITIES[id].currency ?? 'CAD') === selectedCurrency)
+    const compareCityIDs = ALL_CITY_IDS.filter(id => (cities[id].currency ?? 'CAD') === selectedCurrency)
     const allCities = compareCityIDs.map(id => {
-      const c      = CITIES[id]
+      const c      = cities[id]
       const aPrice = c.basePrice  * pt.priceMult
       const aRent  = c.medianRent * pt.rentMult
       const hpi    = parseFloat((aPrice / income).toFixed(1))
@@ -473,7 +509,7 @@ export default function CalculatePage() {
               </div>
               <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:28 }}>
                 {(country === 'CA' ? CITY_IDS : CITY_IDS_US).map(id => {
-                  const c = CITIES[id]
+                  const c = cities[id]
                   const sel = id === cityId
                   return (
                     <button key={id} className="city-card" onClick={() => setCityId(id)}
@@ -718,7 +754,7 @@ export default function CalculatePage() {
                 : { val:`$${c.monthlyMortgage.toLocaleString()}`, color:c.monthlyBuyDisp>0?'#F59E0B':'#EF4444', badge:'Lowest' }
               return (
                 <a key={c.id}
-                  href={CITIES[c.id]?.currency === 'USD' ? `/guide/software-engineer/${c.id}` : `/city/${c.id}?occupation=${occId}&housing=${propType}`}
+                  href={cities[c.id]?.currency === 'USD' ? `/guide/software-engineer/${c.id}` : `/city/${c.id}?occupation=${occId}&housing=${propType}`}
                   style={{ display:'grid', gridTemplateColumns:'1fr 52px 80px 90px', gap:6, padding:'12px 12px', borderRadius:12, marginBottom:6, textDecoration:'none', background:isCurrent?'rgba(79,142,247,0.08)':i===0&&!isCurrent?'rgba(20,184,166,0.05)':'rgba(255,255,255,0.025)', border:isCurrent?'1px solid rgba(79,142,247,0.30)':i===0&&!isCurrent?'1px solid rgba(20,184,166,0.18)':'1px solid rgba(255,255,255,0.06)', alignItems:'center' }}>
                   {/* City name */}
                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>

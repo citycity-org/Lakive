@@ -27,6 +27,8 @@ export type CityIndex = {
   taiNote: string
   medianRent: number | null
   basePrice: number | null
+  effectiveTax: number | null
+  currency: 'CAD' | 'USD'
 }
 
 export type CityScoresResponse = {
@@ -63,6 +65,8 @@ export async function GET() {
         taiNote:     row.tai_note,
         medianRent:  row.median_rent,
         basePrice:   row.base_price,
+        effectiveTax: row.effective_tax ? parseFloat(row.effective_tax) : null,
+        currency:    (row.currency ?? 'CAD') as 'CAD' | 'USD',
       }
     }
 
