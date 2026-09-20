@@ -158,6 +158,45 @@ export default function ReportsPage() {
           </div>
         </section>
 
+        {/* ── Quarterly Intelligence ────────────────────────────────────── */}
+        <section style={{ padding: '40px 0 0' }}>
+          <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
+            Quarterly Intelligence
+          </div>
+          <div style={{ background: 'linear-gradient(135deg,rgba(139,92,246,0.12),rgba(79,142,247,0.06))', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 24, overflow: 'hidden', marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 0 }}>
+              <div style={{ width: 5, background: 'linear-gradient(to bottom,#8B5CF6,#4F8EF7)', borderRadius: '4px 0 0 4px' }} />
+              <div style={{ padding: '36px 36px 32px' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 20 }}>
+                  <Tag label="Quarterly Report" color="#8B5CF6" bg="rgba(139,92,246,0.12)" />
+                  <Tag label="Canada" color="#93C5FD" bg="rgba(79,142,247,0.08)" />
+                  <Tag label="Macro · Labour · Housing · Policy" color="#FCD34D" bg="rgba(245,158,11,0.08)" />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginLeft: 4 }}>September 2026</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(18px,3vw,26px)', fontWeight: 900, lineHeight: 1.25, margin: '0 0 14px', letterSpacing: '-0.01em' }}>
+                  Canada Q3 2026 Economic Intelligence Report<br />
+                  <span style={{ color: '#8B5CF6' }}>Recession, Housing Crisis, and the Middle-Class Squeeze</span>
+                </h2>
+                <p style={{ color: 'rgba(255,255,255,0.50)', fontSize: 14, lineHeight: 1.75, maxWidth: 600, margin: '0 0 28px' }}>
+                  A structural analysis of Canada&apos;s post-pandemic economic reckoning: GDP growth stalling at 1.1%,
+                  youth unemployment climbing to 12.9%, mortgage burden consuming 51% of median household income,
+                  and the policy roots behind a housing market that still shuts out most Canadians. Includes city
+                  intelligence matrix across 9 metros and forward-looking recommendations for employers, investors,
+                  and policymakers.
+                </p>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 20, background: 'rgba(139,92,246,0.10)', border: '1px solid rgba(139,92,246,0.25)', color: '#A78BFA', fontSize: 12, fontWeight: 700 }}>
+                    ✓ Published September 19, 2026
+                  </span>
+                  <Link href="/reports/canada-q3-2026-economic-intelligence" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', borderRadius: 12, background: 'linear-gradient(135deg,#8B5CF6,#4F8EF7)', color: 'white', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                    Read report →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Latest Report ─────────────────────────────────────────────── */}
         <section style={{ padding: '40px 0 0' }}>
           <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
