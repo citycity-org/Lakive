@@ -232,7 +232,7 @@ export default function Q3Report() {
         {/* ── 2. Scorecard ─────────────────────────────────────────────────── */}
         <SectionHeading num={2} title="Q3 2026 Economic Scorecard" />
         <KpiDashboard />
-        <Source>Sources: Statistics Canada GDP release (Aug 28, 2026); Statistics Canada LFS (Aug 2026); Bank of Canada MPR (Jul 2026) and rate decision (Sep 2, 2026); CREA MLS HPI; Rentals.ca / Urbanation National Rent Report; NBC Housing Affordability Monitor Q2 2026; IRCC 2026–2028 Immigration Levels Plan.</Source>
+        <Source text="Sources: Statistics Canada GDP release (Aug 28, 2026); Statistics Canada LFS (Aug 2026); Bank of Canada MPR (Jul 2026) and rate decision (Sep 2, 2026); CREA MLS HPI; Rentals.ca / Urbanation National Rent Report; NBC Housing Affordability Monitor Q2 2026; IRCC 2026–2028 Immigration Levels Plan." />
 
         {/* ── 3. Macro ─────────────────────────────────────────────────────── */}
         <SectionHeading num={3} title="Macroeconomic Conditions: Weakness, Rebound, and Uncertainty" />
