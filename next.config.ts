@@ -53,6 +53,21 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // ── www → non-www canonical redirect ─────────────────────────────────────────
+  // Canonicals all point to lakive.com (no www). If www.lakive.com is reachable,
+  // Google treats them as cross-domain duplicates and may ignore the canonical.
+  // This 301 redirect ensures www always resolves to the canonical domain.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.lakive.com' }],
+        destination: 'https://lakive.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
+
   async headers() {
     const rules = [
       {
