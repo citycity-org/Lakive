@@ -8,9 +8,10 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/api/',
-          '/s/',        // share short-links — dynamic, low value
-          '/subscribe', // subscription flow
+          '/s/',           // share short-links — dynamic, low value
+          '/subscribe',    // subscription flow
           '/share',
+          '/prices/submit', // form submission page — no SEO value
         ],
       },
     ],

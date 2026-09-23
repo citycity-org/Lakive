@@ -54,13 +54,25 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   async headers() {
-    return [
+    const rules = [
       {
-        // Apply to all routes
+        // Apply security headers to all routes
         source: '/(.*)',
         headers: securityHeaders,
       },
     ]
+
+    // Block Vercel preview deployments from Google indexing.
+    // VERCEL_ENV is 'production' on lakive.com, 'preview' on *.vercel.app branches.
+    // Without this, each preview URL appears as a duplicate in Google Search Console.
+    if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
+      rules.push({
+        source: '/(.*)',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      })
+    }
+
+    return rules
   },
 }
 
