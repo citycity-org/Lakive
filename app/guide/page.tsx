@@ -51,9 +51,10 @@ const TOPICS = [
   {
     icon: '💰', label: 'Rent vs Own',
     desc: 'When does renting make more sense than buying? A city-by-city breakdown.',
+    href: '/guide/rent-vs-own',
     links: [
       { label: 'Software Engineer in Vancouver', href: '/guide/rent-vs-own?occ=software-engineer&city=vancouver' },
-      { label: 'Nurse in Calgary',               href: '/guide/rent-vs-own?occ=nurse&city=calgary' },
+      { label: 'Registered Nurse in Calgary',    href: '/guide/rent-vs-own?occ=registered-nurse&city=calgary' },
       { label: 'Electrician in Toronto',         href: '/guide/rent-vs-own?occ=electrician&city=toronto' },
     ],
     available: true,
@@ -61,10 +62,11 @@ const TOPICS = [
   {
     icon: '🎓', label: 'Education & Licensing',
     desc: 'Official regulatory bodies by occupation and province. Where to go to get licensed in Canada.',
+    href: '/guide/education-licensing',
     links: [
-      { label: 'Healthcare licensing bodies', href: '/guide/education-licensing' },
-      { label: 'Trades & Red Seal program',   href: '/guide/education-licensing' },
-      { label: 'Foreign credential (ECA)',     href: '/guide/education-licensing' },
+      { label: 'Healthcare licensing bodies', href: '/guide/education-licensing#healthcare' },
+      { label: 'Trades & Red Seal program',   href: '/guide/education-licensing#trades' },
+      { label: 'Foreign credential (ECA)',     href: '/guide/education-licensing#engineering' },
     ],
     available: true,
   },
@@ -329,11 +331,18 @@ function GuidePageInner() {
                   style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${t.available ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.05)'}`, opacity: t.available ? 1 : 0.5 }}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xl">{t.icon}</span>
-                    <span className="font-semibold text-sm" style={{ color: 'white' }}>{t.label}</span>
+                    {'href' in t && t.href ? (
+                      <Link href={t.href} className="font-semibold text-sm hover:underline" style={{ color: 'white', textDecoration: 'none' }}>{t.label}</Link>
+                    ) : (
+                      <span className="font-semibold text-sm" style={{ color: 'white' }}>{t.label}</span>
+                    )}
                     {!t.available && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full ml-auto" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.35)' }}>
                         Coming Soon
                       </span>
+                    )}
+                    {'href' in t && t.href && (
+                      <Link href={t.href} className="ml-auto text-xs font-semibold" style={{ color: '#14B8A6', textDecoration: 'none' }}>Open →</Link>
                     )}
                   </div>
                   <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>{t.desc}</p>
