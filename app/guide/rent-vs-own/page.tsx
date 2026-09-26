@@ -18,6 +18,7 @@ const TRANSACTION_COST  = 0.025   // 2.5% of home price (land transfer tax + leg
 // Municipal property tax rates (annual % of assessed home value)
 // Sources: each city's 2025 residential mill rate / assessment authority
 const PROP_TAX: Record<string, number> = {
+  // Canada
   vancouver:           0.0028,   // BC — low rate due to very high assessed values
   victoria:            0.0049,   // BC — similarly suppressed by high assessments
   toronto:             0.0063,   // ON
@@ -30,6 +31,11 @@ const PROP_TAX: Record<string, number> = {
   'quebec-city':       0.0106,   // QC
   winnipeg:            0.0124,   // MB — highest of major CA cities
   halifax:             0.0114,   // NS
+  // United States
+  seattle:             0.0093,   // WA (King County)
+  'san-francisco':     0.0074,   // CA (Prop 13 suppressed)
+  'new-york':          0.0088,   // NY (NYC effective rate)
+  boston:              0.0106,   // MA
 }
 
 const CA_CITIES = [
@@ -37,10 +43,15 @@ const CA_CITIES = [
   'halifax', 'ottawa', 'hamilton', 'montreal', 'toronto', 'victoria', 'vancouver',
 ]
 
+const US_CITIES = ['seattle', 'boston', 'new-york', 'san-francisco']
+
 const CITY_FLAGS: Record<string, string> = {
+  // Canada
   vancouver: '🌊', victoria: '🌺', toronto: '🏙️', ottawa: '🏛️',
   hamilton: '⚙️', 'kitchener-waterloo': '🎓', calgary: '🏔️', edmonton: '⛽',
   montreal: '🎭', 'quebec-city': '🏰', winnipeg: '🌾', halifax: '⚓',
+  // United States
+  seattle: '☁️', 'san-francisco': '🌉', 'new-york': '🗽', boston: '🦞',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -77,11 +88,15 @@ interface RentOwnResult {
 function computeRentOwn(occSlug: string, citySlug: string): RentOwnResult | null {
   const city = CITIES[citySlug]
   const occ  = OCCUPATIONS[occSlug]
-  if (!city || city.country === 'US') return null
+  if (!city) return null
 
-  // Use occupation's actual salary so changing occupation affects the numbers.
-  // Fall back to city benchmarkSalary (or $75K) if occupation not found.
-  const salary      = occ?.salary ?? city.benchmarkSalary ?? 75000
+  const isUS = city.country === 'US'
+
+  // Use occupation's actual salary (CAD or USD) so changing occupation affects the numbers.
+  // Fall back to city benchmarkSalary (or $75K / $80K) if occupation not found.
+  const salary = isUS
+    ? (occ?.salaryUS ?? city.benchmarkSalary ?? 80000)
+    : (occ?.salary   ?? city.benchmarkSalary ?? 75000)
   const homePrice   = Math.round(city.benchmarkHpi * salary / 5000) * 5000
   const downPayment = homePrice * DOWN_PCT
   const mortgage    = homePrice * (1 - DOWN_PCT)
@@ -173,9 +188,12 @@ function RentVsOwnContent() {
   )
 
   const allCityResults = useMemo(
-    () => CA_CITIES.map(c => ({ city: c, data: computeRentOwn(selectedOcc, c) })),
+    () => [...CA_CITIES, ...US_CITIES].map(c => ({ city: c, data: computeRentOwn(selectedOcc, c) })),
     [selectedOcc]
   )
+
+  const isUS = CITIES[selectedCity]?.country === 'US'
+  const currencyLabel = isUS ? 'USD' : 'CAD'
 
   // Simple bar chart: max ownerNW or renterNW across 30 years
   const chartMax = result
@@ -226,17 +244,36 @@ function RentVsOwnContent() {
           </div>
 
           {/* City */}
-          <div style={{ flex: '0 1 200px' }}>
+          <div style={{ flex: '1 1 300px' }}>
             <label style={{ display: 'block', fontSize: 11, color: 'rgba(255,255,255,0.38)', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>
               City
             </label>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <div style={{ marginBottom: 6 }}>
+              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>🇨🇦 Canada (CAD)</span>
+            </div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
               {CA_CITIES.map(c => (
                 <button key={c} onClick={() => setSelectedCity(c)}
                   style={{
-                    padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
+                    padding: '7px 11px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
                     background: c === selectedCity ? 'rgba(20,184,166,0.20)' : 'rgba(255,255,255,0.05)',
                     color: c === selectedCity ? '#14B8A6' : 'rgba(255,255,255,0.45)',
+                    transition: 'all 0.15s',
+                  }}>
+                  {CITY_FLAGS[c]} {CITIES[c]?.displayName ?? c}
+                </button>
+              ))}
+            </div>
+            <div style={{ marginBottom: 6 }}>
+              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>🇺🇸 United States (USD)</span>
+            </div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {US_CITIES.map(c => (
+                <button key={c} onClick={() => setSelectedCity(c)}
+                  style={{
+                    padding: '7px 11px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
+                    background: c === selectedCity ? 'rgba(79,142,247,0.20)' : 'rgba(255,255,255,0.05)',
+                    color: c === selectedCity ? '#4F8EF7' : 'rgba(255,255,255,0.45)',
                     transition: 'all 0.15s',
                   }}>
                   {CITY_FLAGS[c]} {CITIES[c]?.displayName ?? c}
@@ -254,7 +291,7 @@ function RentVsOwnContent() {
               {/* Home price header */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Median 2-Bedroom Home · {CITIES[selectedCity]?.displayName}
+                  Median 2-Bedroom Home · {CITIES[selectedCity]?.displayName} · {currencyLabel}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 32, fontWeight: 800, fontFamily: 'monospace' }}>{fmt$(result.homePrice)}</span>
