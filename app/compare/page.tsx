@@ -614,8 +614,8 @@ function ComparePageInner() {
       .then(r => r.ok ? r.json() : null)
       .then(d => {
         if (!d) return
-        if (d.fitMatrix)   setFitMatrix(d.fitMatrix)
-        if (d.cityIndices) setCityBase(d.cityIndices as typeof CITY_BASE)
+        if (d.fitMatrix)   setFitMatrix(prev => ({ ...prev, ...d.fitMatrix }))
+        if (d.cityIndices) setCityBase(prev => ({ ...prev, ...(d.cityIndices as typeof CITY_BASE) }))
       })
       .catch(() => { /* silently use hardcoded fallback */ })
   }, [])

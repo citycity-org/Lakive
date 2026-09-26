@@ -45,7 +45,8 @@ const OCCUPATIONS = [
 
 // ── Region list ───────────────────────────────────────────────────────────────
 const REGIONS = [
-  { id:'canada', label:'Canada',    subLabel:'All cities',         cities:['vancouver','toronto','calgary','montreal','ottawa','edmonton','winnipeg','halifax','quebec-city','hamilton','kitchener-waterloo','victoria'] },
+  { id:'all',    label:'All',       subLabel:'CA + US',            cities:['vancouver','toronto','calgary','montreal','ottawa','edmonton','winnipeg','halifax','quebec-city','hamilton','kitchener-waterloo','victoria','seattle','san-francisco','new-york','boston'] },
+  { id:'canada', label:'Canada',    subLabel:'All CA cities',      cities:['vancouver','toronto','calgary','montreal','ottawa','edmonton','winnipeg','halifax','quebec-city','hamilton','kitchener-waterloo','victoria'] },
   { id:'bc',     label:'BC',        subLabel:'British Columbia',   cities:['vancouver','victoria'] },
   { id:'ab',     label:'AB',        subLabel:'Alberta',            cities:['calgary','edmonton'] },
   { id:'on',     label:'ON',        subLabel:'Ontario',            cities:['toronto','ottawa','hamilton','kitchener-waterloo'] },
@@ -599,7 +600,7 @@ const UNEMPLOYED_INSIGHTS: Record<string, string> = {
 // ── US city IDs (no /city/ page — use guide instead) ─────────────────────────
 const US_CITY_IDS = new Set(['seattle', 'san-francisco', 'new-york', 'boston'])
 const cityDetailLink = (id: string, occ: string) =>
-  US_CITY_IDS.has(id) ? `/guide/software-engineer/${id}` : `/city/${id}?occupation=${occ}`
+  US_CITY_IDS.has(id) ? `/guide/${occ || 'software-engineer'}/${id}` : `/city/${id}?occupation=${occ}`
 
 // ── Auto-generate ranking title ───────────────────────────────────────────────
 function getRankingTitle(regionLabel:string, occName:string, sortId:string):string {
@@ -708,7 +709,7 @@ function FilterDropdown({ label, value, options, onChange }: {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function RankingPage() {
-  const [region,      setRegion     ] = useState('canada')
+  const [region,      setRegion     ] = useState('all')
   const [occ,         setOcc        ] = useState('')
   const [sortDim,     setSortDim    ] = useState('score')
   const [propType,    setPropType   ] = useState('')
@@ -726,8 +727,8 @@ export default function RankingPage() {
       .then(r => r.ok ? r.json() : null)
       .then(d => {
         if (!d) return
-        if (d.fitMatrix)   setFitMatrix(d.fitMatrix)
-        if (d.cityIndices) setCityBase(d.cityIndices)
+        if (d.fitMatrix)   setFitMatrix(prev => ({ ...prev, ...d.fitMatrix }))
+        if (d.cityIndices) setCityBase(prev => ({ ...prev, ...d.cityIndices }))
       })
       .catch(() => { /* silently use hardcoded fallback */ })
   }, [])

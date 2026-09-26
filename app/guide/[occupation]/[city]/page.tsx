@@ -281,7 +281,7 @@ export default async function GuidePage(
               <tbody>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(20,184,166,0.08)' }}>
                   <td className="px-4 py-3 font-semibold" style={{ color: 'white' }}>
-                    {cty.displayName}
+                    {isUS ? '🇺🇸 ' : '🇨🇦 '}{cty.displayName}
                     <span className="ml-2 text-[10px] font-normal px-1.5 py-0.5 rounded-full" style={{ color: '#14B8A6', background: 'rgba(20,184,166,0.15)' }}>current</span>
                   </td>
                   <td className="px-4 py-3 text-right font-mono font-semibold" style={{ color: hpiLbl.color }}>{formatYears(hpi)}</td>
@@ -293,11 +293,12 @@ export default async function GuidePage(
                   const aHl  = hpiLabel(a.years)
                   const aRl  = rpiLabel(a.rpi)
                   const aCur = ac?.currency ?? 'CAD'
+                  const aIsUS = ac?.country === 'US'
                   return (
                     <tr key={a.slug} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                       <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.65)' }}>
                         <Link href={`/guide/${occupation}/${a.slug}`} style={{ color: 'rgba(255,255,255,0.65)' }} className="hover:text-teal-400 transition-colors">
-                          {ac.displayName}
+                          {aIsUS ? '🇺🇸 ' : '🇨🇦 '}{ac.displayName}
                         </Link>
                       </td>
                       <td className="px-4 py-3 text-right font-mono" style={{ color: aHl.color }}>{formatYears(a.years)}</td>
