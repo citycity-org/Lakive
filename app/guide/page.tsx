@@ -95,11 +95,12 @@ export default function GuidePage() {
   const [mode, setMode]         = useState<'career' | 'city' | 'topic' | null>(null)
   const [selCat, setSelCat]     = useState<string | null>(null)
   const [selOcc, setSelOcc]     = useState<string | null>(null)
+  const [selCountry, setSelCountry] = useState<'CA' | 'US' | null>(null)
 
   const cities   = Object.keys(CITIES)
   const occsByCat = (cat: string) => Object.entries(OCCUPATIONS).filter(([, v]) => v.category === cat)
 
-  function reset() { setMode(null); setSelCat(null); setSelOcc(null) }
+  function reset() { setMode(null); setSelCat(null); setSelOcc(null); setSelCountry(null) }
 
   return (
     <div style={{ background: '#080c14', minHeight: '100vh' }}>
@@ -240,47 +241,71 @@ export default function GuidePage() {
         {mode === 'city' && (
           <div>
             <h2 className="text-xl font-bold mb-6" style={{ color: 'white' }}>Choose a city</h2>
-            <div className="space-y-3">
-              {Object.entries(CITY_STATS)
-                .sort((a, b) => a[1].hpi - b[1].hpi)
-                .map(([slug, cs]) => (
-                  <div key={slug} className="rounded-xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <div className="font-bold" style={{ color: 'white' }}>{cs.label}</div>
-                          {cs.currency === 'USD' && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{ background: 'rgba(79,142,247,0.15)', color: '#4F8EF7' }}>USD</span>
-                          )}
-                        </div>
-                        <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{cs.note}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-mono font-bold" style={{ color: cs.hpi < 10 ? '#14B8A6' : cs.hpi < 14 ? '#F59E0B' : '#F87171' }}>
-                          {cs.hpi} yr
-                        </div>
-                        <div className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>median HPI</div>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {!cs.currency && (
-                        <Link href={`/city/${slug}`}
-                          className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors"
-                          style={{ background: 'rgba(20,184,166,0.15)', color: '#14B8A6', border: '1px solid rgba(20,184,166,0.25)', textDecoration: 'none' }}>
-                          City Overview
-                        </Link>
-                      )}
-                      {['registered-nurse', 'software-engineer', 'electrician'].map(occ => (
-                        <Link key={occ} href={`/guide/${occ}/${slug}`}
-                          className="text-xs px-3 py-1.5 rounded-lg transition-colors"
-                          style={{ border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
-                          {OCCUPATIONS[occ]?.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+
+            {/* Step 1: pick country */}
+            {!selCountry && (
+              <div className="grid sm:grid-cols-2 gap-4">
+                {([
+                  { id: 'CA', flag: '🇨🇦', label: 'Canada', sub: '12 cities', color: '#F87171' },
+                  { id: 'US', flag: '🇺🇸', label: 'United States', sub: '4 cities', color: '#4F8EF7' },
+                ] as const).map(c => (
+                  <button key={c.id} onClick={() => setSelCountry(c.id)}
+                    className="rounded-2xl p-6 text-left transition-all"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}>
+                    <div className="text-4xl mb-4">{c.flag}</div>
+                    <div className="font-bold text-base mb-1" style={{ color: 'white' }}>{c.label}</div>
+                    <div className="text-xs" style={{ color: 'rgba(255,255,255,0.40)' }}>{c.sub}</div>
+                    <div className="mt-4 text-xs font-semibold" style={{ color: c.color }}>Explore →</div>
+                  </button>
                 ))}
-            </div>
+              </div>
+            )}
+
+            {/* Step 2: pick city */}
+            {selCountry && (
+              <div>
+                <button onClick={() => setSelCountry(null)} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  ← {selCountry === 'CA' ? 'Canada' : 'United States'}
+                </button>
+                <div className="space-y-3">
+                  {Object.entries(CITY_STATS)
+                    .filter(([, cs]) => selCountry === 'US' ? cs.currency === 'USD' : cs.currency !== 'USD')
+                    .sort((a, b) => a[1].hpi - b[1].hpi)
+                    .map(([slug, cs]) => (
+                      <div key={slug} className="rounded-xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <div className="font-bold" style={{ color: 'white' }}>{cs.label}</div>
+                            <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{cs.note}</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-mono font-bold" style={{ color: cs.hpi < 10 ? '#14B8A6' : cs.hpi < 14 ? '#F59E0B' : '#F87171' }}>
+                              {cs.hpi} yr
+                            </div>
+                            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>median HEY</div>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {selCountry === 'CA' && (
+                            <Link href={`/city/${slug}`}
+                              className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors"
+                              style={{ background: 'rgba(20,184,166,0.15)', color: '#14B8A6', border: '1px solid rgba(20,184,166,0.25)', textDecoration: 'none' }}>
+                              City Overview
+                            </Link>
+                          )}
+                          {['registered-nurse', 'software-engineer', 'electrician'].map(occ => (
+                            <Link key={occ} href={`/guide/${occ}/${slug}`}
+                              className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                              style={{ border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
+                              {OCCUPATIONS[occ]?.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
