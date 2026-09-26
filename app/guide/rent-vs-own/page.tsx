@@ -16,18 +16,31 @@ const RENTER_INS        = 20      // $/month renters insurance
 const TRANSACTION_COST  = 0.025   // 2.5% of home price (land transfer tax + legal + inspection)
 
 // Municipal property tax rates (annual % of assessed home value)
+// Sources: each city's 2025 residential mill rate / assessment authority
 const PROP_TAX: Record<string, number> = {
-  vancouver: 0.0028,   // BC — low rate due to very high assessed values
-  toronto:   0.0063,   // ON
-  calgary:   0.0062,   // AB
-  montreal:  0.0094,   // QC
-  ottawa:    0.0100,   // ON
+  vancouver:           0.0028,   // BC — low rate due to very high assessed values
+  victoria:            0.0049,   // BC — similarly suppressed by high assessments
+  toronto:             0.0063,   // ON
+  ottawa:              0.0100,   // ON
+  hamilton:            0.0112,   // ON
+  'kitchener-waterloo':0.0104,   // ON (Kitchener rate)
+  calgary:             0.0062,   // AB
+  edmonton:            0.0087,   // AB
+  montreal:            0.0094,   // QC
+  'quebec-city':       0.0106,   // QC
+  winnipeg:            0.0124,   // MB — highest of major CA cities
+  halifax:             0.0114,   // NS
 }
 
-const CA_CITIES = ['calgary', 'ottawa', 'montreal', 'toronto', 'vancouver']
+const CA_CITIES = [
+  'winnipeg', 'quebec-city', 'edmonton', 'calgary', 'kitchener-waterloo',
+  'halifax', 'ottawa', 'hamilton', 'montreal', 'toronto', 'victoria', 'vancouver',
+]
 
 const CITY_FLAGS: Record<string, string> = {
-  vancouver: '🌊', toronto: '🏙️', calgary: '🏔️', montreal: '🎭', ottawa: '🏛️',
+  vancouver: '🌊', victoria: '🌺', toronto: '🏙️', ottawa: '🏛️',
+  hamilton: '⚙️', 'kitchener-waterloo': '🎓', calgary: '🏔️', edmonton: '⛽',
+  montreal: '🎭', 'quebec-city': '🏰', winnipeg: '🌾', halifax: '⚓',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
