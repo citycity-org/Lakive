@@ -71,15 +71,23 @@ const TOPICS = [
 
 const CITY_STATS: Record<string, { label: string; hpi: number; rpi: number; note: string; currency?: string }> = {
   // Canada
-  calgary:         { label: 'Calgary, AB',       hpi: 8.5,  rpi: 24.1, note: 'No provincial tax · Fastest growth' },
-  seattle:         { label: 'Seattle, WA',        hpi: 8.8,  rpi: 21.3, note: 'No state income tax · Amazon/Microsoft', currency: 'USD' },
-  ottawa:          { label: 'Ottawa, ON',         hpi: 9.8,  rpi: 28.4, note: 'Federal jobs · Stable market' },
-  montreal:        { label: 'Montréal, QC',       hpi: 10.0, rpi: 30.2, note: 'Most affordable major city' },
-  boston:          { label: 'Boston, MA',          hpi: 11.8, rpi: 24.4, note: 'Biotech & universities hub', currency: 'USD' },
-  toronto:         { label: 'Toronto, ON',         hpi: 15.1, rpi: 41.2, note: 'Largest job market in Canada' },
-  'new-york':      { label: 'New York City, NY',   hpi: 14.8, rpi: 29.2, note: 'Finance capital · Highest diversity', currency: 'USD' },
-  'san-francisco': { label: 'San Francisco, CA',   hpi: 15.6, rpi: 27.6, note: 'Top tech salaries · Extreme housing', currency: 'USD' },
-  vancouver:       { label: 'Vancouver, BC',       hpi: 16.2, rpi: 43.6, note: 'Tech hub · Highest housing cost' },
+  winnipeg:            { label: 'Winnipeg, MB',          hpi: 5.8,  rpi: 23.2, note: 'Most affordable in Canada' },
+  'quebec-city':       { label: 'Québec City, QC',       hpi: 6.5,  rpi: 22.4, note: 'Low cost · French market' },
+  edmonton:            { label: 'Edmonton, AB',           hpi: 6.8,  rpi: 26.4, note: 'No provincial tax · Oil sector' },
+  calgary:             { label: 'Calgary, AB',            hpi: 8.5,  rpi: 24.1, note: 'No provincial tax · Fastest growth' },
+  'kitchener-waterloo':{ label: 'Kitchener-Waterloo, ON', hpi: 8.5,  rpi: 28.8, note: 'Tech corridor · University towns' },
+  halifax:             { label: 'Halifax, NS',            hpi: 8.2,  rpi: 31.2, note: 'Atlantic hub · Growing market' },
+  ottawa:              { label: 'Ottawa, ON',             hpi: 9.8,  rpi: 28.4, note: 'Federal jobs · Stable market' },
+  hamilton:            { label: 'Hamilton, ON',           hpi: 9.2,  rpi: 30.4, note: 'GTA alternative · Industrial base' },
+  montreal:            { label: 'Montréal, QC',           hpi: 10.0, rpi: 30.2, note: 'Most affordable major city' },
+  toronto:             { label: 'Toronto, ON',            hpi: 15.1, rpi: 41.2, note: 'Largest job market in Canada' },
+  victoria:            { label: 'Victoria, BC',           hpi: 13.2, rpi: 38.4, note: 'Island living · Gov\'t & tech' },
+  vancouver:           { label: 'Vancouver, BC',          hpi: 16.2, rpi: 43.6, note: 'Tech hub · Highest housing cost' },
+  // United States
+  seattle:             { label: 'Seattle, WA',            hpi: 8.8,  rpi: 21.3, note: 'No state income tax · Amazon/Microsoft', currency: 'USD' },
+  boston:              { label: 'Boston, MA',             hpi: 11.8, rpi: 24.4, note: 'Biotech & universities hub', currency: 'USD' },
+  'new-york':          { label: 'New York City, NY',      hpi: 14.8, rpi: 29.2, note: 'Finance capital · Highest diversity', currency: 'USD' },
+  'san-francisco':     { label: 'San Francisco, CA',      hpi: 15.6, rpi: 27.6, note: 'Top tech salaries · Extreme housing', currency: 'USD' },
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
