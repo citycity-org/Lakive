@@ -1130,7 +1130,7 @@ export default function RankingPage() {
         {/* ── More cities CTA ── */}
         <div style={{ textAlign:'center', marginBottom:28, padding:'20px 24px', background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16 }}>
           <p style={{ color:'rgba(255,255,255,0.35)', fontSize:13, margin:'0 0 12px' }}>
-            Showing {allCities.length} Canadian cities · Compare any two cities side-by-side
+            Showing {allCities.length} {regionObj.label} {allCities.length === 1 ? 'city' : 'cities'} · Compare any two cities side-by-side
           </p>
           <a href="/compare"
             style={{ display:'inline-block', padding:'10px 20px', borderRadius:10, background:'rgba(79,142,247,0.12)', border:'1px solid rgba(79,142,247,0.25)', color:'#93C5FD', fontSize:13, fontWeight:700, textDecoration:'none' }}>
