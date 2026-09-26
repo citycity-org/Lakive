@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { LakiveLogo } from '../components/LakiveLogo'
 import { OCCUPATIONS, CITIES, calcHpiYears, formatYears } from './_data'
@@ -90,17 +91,26 @@ const CITY_STATS: Record<string, { label: string; hpi: number; rpi: number; note
   'san-francisco':     { label: 'San Francisco, CA',      hpi: 15.6, rpi: 27.6, note: 'Top tech salaries · Extreme housing', currency: 'USD' },
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
-export default function GuidePage() {
-  const [mode, setMode]         = useState<'career' | 'city' | 'topic' | null>(null)
-  const [selCat, setSelCat]     = useState<string | null>(null)
-  const [selOcc, setSelOcc]     = useState<string | null>(null)
-  const [selCountry, setSelCountry] = useState<'CA' | 'US' | null>(null)
+// ── Inner component (needs useSearchParams inside Suspense) ───────────────────
+function GuidePageInner() {
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+
+  // All navigation state lives in the URL so the browser back button works
+  // at every step: /guide → /guide?mode=city → /guide?mode=city&country=US
+  const mode      = searchParams.get('mode') as 'career' | 'city' | 'topic' | null
+  const selCat    = searchParams.get('cat')
+  const selOcc    = searchParams.get('occ')
+  const selCountry = searchParams.get('country') as 'CA' | 'US' | null
+
+  function nav(params: Record<string, string>) {
+    const p = new URLSearchParams(params)
+    router.push(`/guide?${p.toString()}`)
+  }
+  function reset() { router.push('/guide') }
 
   const cities   = Object.keys(CITIES)
   const occsByCat = (cat: string) => Object.entries(OCCUPATIONS).filter(([, v]) => v.category === cat)
-
-  function reset() { setMode(null); setSelCat(null); setSelOcc(null); setSelCountry(null) }
 
   return (
     <div style={{ background: '#080c14', minHeight: '100vh' }}>
@@ -130,7 +140,7 @@ export default function GuidePage() {
               { id: 'city',   icon: '🏙️', title: 'By City',    sub: 'I know where I want to go' },
               { id: 'topic',  icon: '📚', title: 'By Topic',   sub: 'I have a question' },
             ].map(e => (
-              <button key={e.id} onClick={() => setMode(e.id as 'career' | 'city' | 'topic')}
+              <button key={e.id} onClick={() => nav({ mode: e.id })}
                 className="rounded-2xl p-6 text-left transition-all group"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}>
                 <div className="text-3xl mb-4">{e.icon}</div>
@@ -163,7 +173,7 @@ export default function GuidePage() {
                   const occs = occsByCat(cat.key)
                   if (!occs.length) return null
                   return (
-                    <button key={cat.key} onClick={() => setSelCat(cat.key)}
+                    <button key={cat.key} onClick={() => nav({ mode: 'career', cat: cat.key })}
                       className="rounded-xl p-4 text-left transition-all"
                       style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       <div className="flex items-center gap-3">
@@ -182,12 +192,12 @@ export default function GuidePage() {
             {/* Step 2: pick occupation */}
             {selCat && !selOcc && (
               <div>
-                <button onClick={() => setSelCat(null)} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <button onClick={() => nav({ mode: 'career' })} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   ← All categories
                 </button>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {occsByCat(selCat).map(([slug, occ]) => (
-                    <button key={slug} onClick={() => setSelOcc(slug)}
+                    <button key={slug} onClick={() => nav({ mode: 'career', cat: selCat, occ: slug })}
                       className="rounded-xl p-4 text-left transition-all"
                       style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       <div className="font-semibold text-sm mb-1" style={{ color: 'white' }}>{occ.name}</div>
@@ -203,7 +213,7 @@ export default function GuidePage() {
             {/* Step 3: pick city */}
             {selOcc && (
               <div>
-                <button onClick={() => setSelOcc(null)} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <button onClick={() => nav({ mode: 'career', cat: selCat ?? '' })} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   ← {OCCUPATIONS[selOcc]?.name}
                 </button>
                 <h3 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>
@@ -249,7 +259,7 @@ export default function GuidePage() {
                   { id: 'CA', flag: '🇨🇦', label: 'Canada', sub: '12 cities', color: '#F87171' },
                   { id: 'US', flag: '🇺🇸', label: 'United States', sub: '4 cities', color: '#4F8EF7' },
                 ] as const).map(c => (
-                  <button key={c.id} onClick={() => setSelCountry(c.id)}
+                  <button key={c.id} onClick={() => nav({ mode: 'city', country: c.id })}
                     className="rounded-2xl p-6 text-left transition-all"
                     style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}>
                     <div className="text-4xl mb-4">{c.flag}</div>
@@ -264,7 +274,7 @@ export default function GuidePage() {
             {/* Step 2: pick city */}
             {selCountry && (
               <div>
-                <button onClick={() => setSelCountry(null)} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <button onClick={() => nav({ mode: 'city' })} className="text-xs mb-5 block" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   ← {selCountry === 'CA' ? 'Canada' : 'United States'}
                 </button>
                 <div className="space-y-3">
@@ -364,5 +374,13 @@ export default function GuidePage() {
 
       </main>
     </div>
+  )
+}
+
+export default function GuidePage() {
+  return (
+    <Suspense fallback={<div style={{ background: '#080c14', minHeight: '100vh' }} />}>
+      <GuidePageInner />
+    </Suspense>
   )
 }
