@@ -356,7 +356,7 @@ export default function EducationLicensingPage() {
         </div>
 
         {/* ── ECA Section ─────────────────────────────────────────────────── */}
-        <div style={{ marginBottom: 48 }}>
+        <div id="eca" style={{ marginBottom: 48 }}>
           <SectionHeader
             title="Foreign Credentials — Start Here"
             desc="Most regulated professions require an Educational Credential Assessment (ECA) before applying to a provincial body."
@@ -381,6 +381,7 @@ export default function EducationLicensingPage() {
         </div>
 
         {/* ── Healthcare ──────────────────────────────────────────────────── */}
+        <div id="healthcare" />
         <SectionHeader title="Healthcare" desc="All healthcare professions in Canada are provincially regulated. Interprovincial mobility varies by profession." />
         <OccTable rows={HEALTHCARE} />
 
@@ -393,7 +394,7 @@ export default function EducationLicensingPage() {
         <OccTable rows={EDUCATION_PUBLIC} />
 
         {/* ── Skilled Trades ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: 16 }}>
+        <div id="trades" style={{ marginBottom: 16 }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, color: 'white', marginBottom: 4 }}>Skilled Trades</h2>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', margin: 0 }}>
             Most trades are compulsory in Quebec (CCQ) and voluntary in other provinces — though Red Seal certification enables interprovincial mobility everywhere.

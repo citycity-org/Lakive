@@ -63,10 +63,13 @@ interface RentOwnResult {
 
 function computeRentOwn(occSlug: string, citySlug: string): RentOwnResult | null {
   const city = CITIES[citySlug]
+  const occ  = OCCUPATIONS[occSlug]
   if (!city || city.country === 'US') return null
 
-  const benchmarkSalary = city.benchmarkSalary ?? 75000
-  const homePrice   = Math.round(city.benchmarkHpi * benchmarkSalary / 5000) * 5000
+  // Use occupation's actual salary so changing occupation affects the numbers.
+  // Fall back to city benchmarkSalary (or $75K) if occupation not found.
+  const salary      = occ?.salary ?? city.benchmarkSalary ?? 75000
+  const homePrice   = Math.round(city.benchmarkHpi * salary / 5000) * 5000
   const downPayment = homePrice * DOWN_PCT
   const mortgage    = homePrice * (1 - DOWN_PCT)
 

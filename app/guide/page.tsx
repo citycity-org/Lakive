@@ -66,7 +66,7 @@ const TOPICS = [
     links: [
       { label: 'Healthcare licensing bodies', href: '/guide/education-licensing#healthcare' },
       { label: 'Trades & Red Seal program',   href: '/guide/education-licensing#trades' },
-      { label: 'Foreign credential (ECA)',     href: '/guide/education-licensing#engineering' },
+      { label: 'Foreign credential (ECA)',     href: '/guide/education-licensing#eca' },
     ],
     available: true,
   },
