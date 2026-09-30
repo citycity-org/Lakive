@@ -36,6 +36,17 @@ const PROP_TAX: Record<string, number> = {
   'san-francisco':     0.0074,   // CA (Prop 13 suppressed)
   'new-york':          0.0088,   // NY (NYC effective rate)
   boston:              0.0106,   // MA
+  austin:              0.0183,   // TX (Travis County)
+  chicago:             0.0155,   // IL (Cook County)
+  'los-angeles':       0.0074,   // CA (Prop 13 suppressed)
+  denver:              0.0062,   // CO (Denver County)
+  miami:               0.0171,   // FL (Miami-Dade County)
+  dallas:              0.0208,   // TX (Dallas County)
+  atlanta:             0.0115,   // GA (Fulton County)
+  phoenix:             0.0087,   // AZ (Maricopa County)
+  'washington-dc':     0.0085,   // DC
+  houston:             0.0231,   // TX (Harris County)
+  nashville:           0.0071,   // TN (Davidson County)
 }
 
 const CA_CITIES = [
@@ -43,7 +54,7 @@ const CA_CITIES = [
   'halifax', 'ottawa', 'hamilton', 'montreal', 'toronto', 'victoria', 'vancouver',
 ]
 
-const US_CITIES = ['seattle', 'boston', 'new-york', 'san-francisco']
+const US_CITIES = ['seattle', 'boston', 'new-york', 'san-francisco', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville']
 
 const CITY_FLAGS: Record<string, string> = {
   // Canada
@@ -52,6 +63,9 @@ const CITY_FLAGS: Record<string, string> = {
   montreal: '🎭', 'quebec-city': '🏰', winnipeg: '🌾', halifax: '⚓',
   // United States
   seattle: '☁️', 'san-francisco': '🌉', 'new-york': '🗽', boston: '🦞',
+  austin: '🎸', chicago: '💨', 'los-angeles': '🎬', denver: '⛷️',
+  miami: '🌴', dallas: '⭐', atlanta: '🍑', phoenix: '🌵',
+  'washington-dc': '🦅', houston: '🚀', nashville: '🎵',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

@@ -81,6 +81,61 @@ const CITY_META: Record<string, { name: string; province: string; desc: string }
     province: 'MA',
     desc: 'Boston city intelligence: housing affordability, biotech & education sector salaries, rent pressure, employment outlook, and quality of life scores for professionals.',
   },
+  austin: {
+    name: 'Austin',
+    province: 'TX',
+    desc: 'Austin city intelligence: housing affordability, tech sector salaries, no state income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  chicago: {
+    name: 'Chicago',
+    province: 'IL',
+    desc: 'Chicago city intelligence: housing affordability, finance & tech salaries, rent pressure, employment outlook, and quality of life scores for professionals.',
+  },
+  'los-angeles': {
+    name: 'Los Angeles',
+    province: 'CA',
+    desc: 'Los Angeles city intelligence: housing affordability, entertainment & tech salaries, rent pressure, employment outlook, and quality of life scores for professionals.',
+  },
+  denver: {
+    name: 'Denver',
+    province: 'CO',
+    desc: 'Denver city intelligence: housing affordability, aerospace & tech salaries, flat income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  miami: {
+    name: 'Miami',
+    province: 'FL',
+    desc: 'Miami city intelligence: housing affordability, finance & international business salaries, no state income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  dallas: {
+    name: 'Dallas',
+    province: 'TX',
+    desc: 'Dallas city intelligence: housing affordability, corporate & tech salaries, no state income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  atlanta: {
+    name: 'Atlanta',
+    province: 'GA',
+    desc: 'Atlanta city intelligence: housing affordability, corporate HQ & tech salaries, rent pressure, employment outlook, and quality of life scores for professionals.',
+  },
+  phoenix: {
+    name: 'Phoenix',
+    province: 'AZ',
+    desc: 'Phoenix city intelligence: housing affordability, semiconductor & healthcare salaries, low income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  'washington-dc': {
+    name: 'Washington DC',
+    province: 'DC',
+    desc: 'Washington DC city intelligence: housing affordability, government contracting & tech salaries, rent pressure, employment outlook, and quality of life scores for professionals.',
+  },
+  houston: {
+    name: 'Houston',
+    province: 'TX',
+    desc: 'Houston city intelligence: housing affordability, energy & medical center salaries, no state income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
+  nashville: {
+    name: 'Nashville',
+    province: 'TN',
+    desc: 'Nashville city intelligence: housing affordability, healthcare IT & entertainment salaries, no state income tax advantage, rent pressure, employment outlook, and quality of life scores.',
+  },
 }
 
 export async function generateMetadata(
