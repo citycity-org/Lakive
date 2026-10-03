@@ -4,26 +4,21 @@ import { useRouter } from 'next/navigation'
 import { MarketPulse } from '@/components/MarketPulse'
 import SituationAdvisor from '@/components/SituationAdvisor'
 
-declare global {
-  interface Window { d3: any; topojson: any }
-}
-
 interface City {
   id: string
   name: string
   nameEn: string
-  lat: number
-  lng: number
+  lat?: number
+  lng?: number
   active: boolean
   country?: 'CA' | 'US'
   score?: number; tai?: number; eoi?: number; eqi?: number
   hpiYears?: number
   rpi?: number
-  // Label positioning — avoids overlap in dense clusters
-  labelDx?: number          // horizontal offset from dot centre (px)
-  labelDy?: number          // vertical offset from dot centre (px), default -18
-  labelAlign?: CanvasTextAlign  // 'center' | 'left' | 'right'
-  labelText?: string        // override display name (e.g. abbreviate)
+  labelDx?: number
+  labelDy?: number
+  labelAlign?: string
+  labelText?: string
 }
 
 const CITIES: City[] = [
@@ -236,343 +231,40 @@ const OCCUPATIONS = [
 const ACTIVE_CITIES    = CITIES.filter(c => c.active)
 const ACTIVE_CITIES_CA = CITIES.filter(c => c.active && c.country !== 'US')
 
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return }
-    const s = document.createElement('script')
-    s.src = src
-    s.onload = () => resolve()
-    s.onerror = reject
-    document.head.appendChild(s)
-  })
-}
+// ── Video sources — place files in /public/videos/ ───────────────────────────
+// Swap these paths for your own city footage (MP4, H.264 recommended)
+const VIDEO_SRCS = [
+  '/videos/hero-1.mp4',
+  '/videos/hero-2.mp4',
+  '/videos/hero-3.mp4',
+]
 
 export default function Home() {
   const router = useRouter()
 
-  // ── Globe refs ──────────────────────────────────────────────────────────────
-  const canvasRef    = useRef<HTMLCanvasElement>(null)
-  const rotRef       = useRef<[number, number]>([-100, -30])
-  const scaleRef     = useRef(0)
-  const minScaleRef  = useRef(0)
-  const maxScaleRef  = useRef(0)
-  const projRef      = useRef<any>(null)
-  const dragging     = useRef(false)
-  const pointerStart = useRef<[number, number]>([0, 0])
-  const lastPos      = useRef<[number, number]>([0, 0])
-  const autoRotate   = useRef(true)
-  const animFrame    = useRef(0)
-  const worldData    = useRef<any>(null)
-  const pulseT       = useRef(0)
-  const pinchDist    = useRef(0)
-
-  const [ready,        setReady]        = useState(false)
-  const [selectedCity, setSelectedCity] = useState<City | null>(null)
-  const [panelOpen,    setPanelOpen]    = useState(false)
-  const [zoomLevel,    setZoomLevel]    = useState(0)
+  // ── Video cycling state ─────────────────────────────────────────────────────
+  const videoRef              = useRef<HTMLVideoElement>(null)
+  const [vidIdx,   setVidIdx]   = useState(0)
+  const [isFading, setIsFading] = useState(false)
 
   // ── Hero selector state ─────────────────────────────────────────────────────
   const [heroOccupation, setHeroOccupation] = useState('')
   const [heroCity,       setHeroCity]       = useState('')
 
-  const openCity = useCallback((city: City) => {
-    setSelectedCity(city)
-    setPanelOpen(true)
-    autoRotate.current = false
-    // Bridge: clicking a live city on the globe pre-fills the hero city dropdown
-    if (city.active) setHeroCity(city.id)
-  }, [])
-
-  const closePanel = useCallback(() => {
-    setPanelOpen(false)
-    autoRotate.current = true
-  }, [])
-
   const handleHeroGo = useCallback(() => {
     router.push(`/calculate?city=${heroCity}&occupation=${heroOccupation}`)
   }, [heroCity, heroOccupation, router])
 
-  // ── Load D3 + TopoJSON ──────────────────────────────────────────────────────
+  // ── Cycle to next video every 10 s with a cross-fade ───────────────────────
   useEffect(() => {
-    Promise.all([
-      loadScript('https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js'),
-      loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js'),
-    ])
-      .then(() => fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r => r.json()))
-      .then(data => { worldData.current = data; setReady(true) })
-      .catch(console.error)
-  }, [])
-
-  // ── Globe renderer ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!ready || !canvasRef.current) return
-    const canvas = canvasRef.current
-    const d3       = window.d3
-    const topojson = window.topojson
-    const dpr = window.devicePixelRatio || 1
-
-    const NAV_H = 56
-    let W = window.innerWidth
-    let H = window.innerHeight - NAV_H
-    canvas.width  = W * dpr
-    canvas.height = H * dpr
-    canvas.style.width  = W + 'px'
-    canvas.style.height = H + 'px'
-    const ctx = canvas.getContext('2d')!
-    ctx.scale(dpr, dpr)
-
-    const baseR = Math.min(W, H) * 0.40
-    let cx    = W / 2
-    let cy    = H / 2
-    minScaleRef.current = baseR * 0.75
-    maxScaleRef.current = baseR * 5
-    if (scaleRef.current === 0) scaleRef.current = baseR
-
-    const projection = d3.geoOrthographic()
-      .scale(scaleRef.current)
-      .translate([cx, cy])
-      .clipAngle(90)
-      .rotate(rotRef.current)
-    projRef.current = projection
-
-    const path      = d3.geoPath(projection, ctx)
-    const land      = topojson.feature(worldData.current, worldData.current.objects.land)
-    const graticule = d3.geoGraticule()()
-
-    function draw() {
-      ctx.clearRect(0, 0, W, H)
-      pulseT.current += 0.04
-      const r = projection.scale()
-
-      // Ocean
-      projection.clipAngle(180)
-      ctx.beginPath(); path({ type: 'Sphere' })
-      const oceanGrad = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.22, 0, cx, cy, r)
-      oceanGrad.addColorStop(0, '#1c3a70')
-      oceanGrad.addColorStop(0.55, '#0d1f44')
-      oceanGrad.addColorStop(1, '#04091a')
-      ctx.fillStyle = oceanGrad; ctx.fill()
-      projection.clipAngle(90)
-
-      // Graticules
-      ctx.beginPath(); path(graticule)
-      ctx.strokeStyle = 'rgba(79,142,247,0.07)'; ctx.lineWidth = 0.6; ctx.stroke()
-
-      // Land
-      ctx.beginPath(); path(land)
-      const landGrad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r)
-      landGrad.addColorStop(0, '#1d3b6a')
-      landGrad.addColorStop(1, '#132b50')
-      ctx.fillStyle = landGrad; ctx.fill()
-      ctx.strokeStyle = 'rgba(79,142,247,0.22)'; ctx.lineWidth = 0.5; ctx.stroke()
-
-      // Atmosphere
-      projection.clipAngle(180)
-      ctx.beginPath(); path({ type: 'Sphere' })
-      const atm = ctx.createRadialGradient(cx, cy, r * 0.93, cx, cy, r * 1.08)
-      atm.addColorStop(0,   'rgba(79,142,247,0.00)')
-      atm.addColorStop(0.4, 'rgba(79,142,247,0.18)')
-      atm.addColorStop(1,   'rgba(79,142,247,0.00)')
-      ctx.strokeStyle = atm; ctx.lineWidth = r * 0.15; ctx.stroke()
-      projection.clipAngle(90)
-
-      // Cities
-      CITIES.forEach(city => {
-        const dist = d3.geoDistance(
-          [city.lng, city.lat],
-          [-projection.rotate()[0], -projection.rotate()[1]]
-        )
-        if (dist >= Math.PI / 2) return
-        const pos = projection([city.lng, city.lat])
-        if (!pos) return
-        const [x, y] = pos
-
-        if (city.active) {
-          const phase = pulseT.current + (city.lat + city.lng) * 0.05
-          const pulse = 0.5 + 0.5 * Math.sin(phase)
-
-          const pR = 10 + pulse * 8
-          const ringGrad = ctx.createRadialGradient(x, y, 0, x, y, pR)
-          ringGrad.addColorStop(0, `rgba(253,212,36,${0.35 * pulse})`)
-          ringGrad.addColorStop(1, 'rgba(253,212,36,0)')
-          ctx.beginPath(); ctx.arc(x, y, pR, 0, Math.PI * 2)
-          ctx.fillStyle = ringGrad; ctx.fill()
-
-          const gGrad = ctx.createRadialGradient(x, y, 0, x, y, 10)
-          gGrad.addColorStop(0, 'rgba(255,230,80,0.7)')
-          gGrad.addColorStop(1, 'rgba(251,191,36,0)')
-          ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2)
-          ctx.fillStyle = gGrad; ctx.fill()
-
-          ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2)
-          ctx.fillStyle = '#FDE047'; ctx.fill()
-          ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1; ctx.stroke()
-
-          // Name label — per-city offsets prevent cluster overlap
-          if (r > baseR * 0.85) {
-            ctx.save()
-            const fs   = Math.max(8, Math.min(11, r / baseR * 9))
-            const lx   = x + (city.labelDx ?? 0)
-            const ly   = y + (city.labelDy ?? -18)
-            const text = city.labelText ?? city.nameEn
-            ctx.font      = `bold ${fs}px -apple-system,system-ui,sans-serif`
-            ctx.textAlign = city.labelAlign ?? 'center'
-            // Dark pill behind text for readability on any background
-            const tw = ctx.measureText(text).width
-            const pad = 3
-            const bgX = ctx.textAlign === 'center' ? lx - tw / 2 - pad
-                      : ctx.textAlign === 'right'  ? lx - tw - pad
-                      : lx - pad
-            ctx.fillStyle = 'rgba(4,9,26,0.60)'
-            ctx.beginPath()
-            ctx.roundRect(bgX, ly - fs + 1, tw + pad * 2, fs + 3, 3)
-            ctx.fill()
-            ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 4
-            ctx.fillStyle = 'rgba(255,255,255,0.95)'
-            ctx.fillText(text, lx, ly)
-            ctx.restore()
-          }
-
-        } else {
-          const opacity = Math.max(0.25, 0.6 - dist * 0.5)
-          ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(147,197,253,${opacity})`; ctx.fill()
-        }
-      })
-    }
-
-    function animate() {
-      if (autoRotate.current) {
-        const rot = projection.rotate()
-        const newLng = rot[0] + 0.12
-        projection.rotate([newLng, rot[1]])
-        rotRef.current = [newLng, rot[1]]
-      }
-      draw()
-      animFrame.current = requestAnimationFrame(animate)
-    }
-    animFrame.current = requestAnimationFrame(animate)
-
-    // ── Events ────────────────────────────────────────────────────────────────
-    function getXY(e: PointerEvent): [number, number] {
-      const rect = canvas.getBoundingClientRect()
-      return [e.clientX - rect.left, e.clientY - rect.top]
-    }
-
-    function onPointerDown(e: PointerEvent) {
-      dragging.current = true; autoRotate.current = false
-      const [x, y] = getXY(e)
-      pointerStart.current = [x, y]; lastPos.current = [x, y]
-      canvas.setPointerCapture(e.pointerId)
-    }
-
-    function onPointerMove(e: PointerEvent) {
-      if (!dragging.current) return
-      const [x, y] = getXY(e)
-      const dx = x - lastPos.current[0], dy = y - lastPos.current[1]
-      lastPos.current = [x, y]
-      const sensitivity = 250 / projection.scale()
-      const rot = projection.rotate()
-      const newRot: [number, number] = [rot[0] + dx * sensitivity, Math.max(-80, Math.min(80, rot[1] - dy * sensitivity))]
-      projection.rotate(newRot); rotRef.current = newRot
-    }
-
-    function onPointerUp(e: PointerEvent) {
-      if (!dragging.current) return
-      dragging.current = false
-      const [x, y] = getXY(e)
-      const moved = Math.hypot(x - pointerStart.current[0], y - pointerStart.current[1])
-      if (moved < 8) {
-        const rect = canvas.getBoundingClientRect()
-        handleClick(e.clientX - rect.left, e.clientY - rect.top)
-      }
-    }
-
-    function handleClick(mx: number, my: number) {
-      let closest: City | null = null
-      let closestDist = Infinity
-      const hitR = Math.max(18, 32 / (projection.scale() / baseR))
-      CITIES.forEach(city => {
-        const dist = d3.geoDistance([city.lng, city.lat], [-projection.rotate()[0], -projection.rotate()[1]])
-        if (dist >= Math.PI / 2) return
-        const pos = projection([city.lng, city.lat])
-        if (!pos) return
-        const [x, y] = pos
-        const d = Math.hypot(mx - x, my - y)
-        const threshold = city.active ? hitR : hitR * 0.5
-        if (d < threshold && d < closestDist) { closestDist = d; closest = city }
-      })
-      if (closest) openCity(closest)
-      else closePanel()
-    }
-
-    const activeTouches = new Map<number, [number, number]>()
-    function onTouchStart(e: TouchEvent) {
-      for (const t of Array.from(e.changedTouches)) {
-        const rect = canvas.getBoundingClientRect()
-        activeTouches.set(t.identifier, [t.clientX - rect.left, t.clientY - rect.top])
-      }
-      if (activeTouches.size === 2) {
-        const pts = Array.from(activeTouches.values())
-        pinchDist.current = Math.hypot(pts[1][0] - pts[0][0], pts[1][1] - pts[0][1])
-      }
-    }
-    function onTouchMove(e: TouchEvent) {
-      e.preventDefault()
-      const rect = canvas.getBoundingClientRect()
-      for (const t of Array.from(e.changedTouches)) activeTouches.set(t.identifier, [t.clientX - rect.left, t.clientY - rect.top])
-      if (activeTouches.size === 2 && pinchDist.current > 0) {
-        const pts = Array.from(activeTouches.values())
-        const newDist = Math.hypot(pts[1][0] - pts[0][0], pts[1][1] - pts[0][1])
-        const factor = newDist / pinchDist.current; pinchDist.current = newDist
-        const newScale = Math.max(minScaleRef.current, Math.min(maxScaleRef.current, projection.scale() * factor))
-        projection.scale(newScale); scaleRef.current = newScale
-        setZoomLevel(Math.round((newScale - minScaleRef.current) / (maxScaleRef.current - minScaleRef.current) * 100))
-      }
-    }
-    function onTouchEnd(e: TouchEvent) {
-      for (const t of Array.from(e.changedTouches)) activeTouches.delete(t.identifier)
-      if (activeTouches.size < 2) pinchDist.current = 0
-    }
-
-    canvas.addEventListener('pointerdown', onPointerDown)
-    canvas.addEventListener('pointermove', onPointerMove)
-    canvas.addEventListener('pointerup',   onPointerUp)
-    canvas.addEventListener('touchstart', onTouchStart, { passive: false })
-    canvas.addEventListener('touchmove',  onTouchMove,  { passive: false })
-    canvas.addEventListener('touchend',   onTouchEnd)
-
-    function handleResize() {
-      W = window.innerWidth
-      H = window.innerHeight - NAV_H
-      cx = W / 2
-      cy = H / 2
-      canvas.width  = W * dpr
-      canvas.height = H * dpr
-      canvas.style.width  = W + 'px'
-      canvas.style.height = H + 'px'
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      projection.translate([cx, cy])
-    }
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      cancelAnimationFrame(animFrame.current)
-      canvas.removeEventListener('pointerdown', onPointerDown)
-      canvas.removeEventListener('pointermove', onPointerMove)
-      canvas.removeEventListener('pointerup',   onPointerUp)
-      canvas.removeEventListener('touchstart', onTouchStart)
-      canvas.removeEventListener('touchmove',  onTouchMove)
-      canvas.removeEventListener('touchend',   onTouchEnd)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [ready, openCity, closePanel])
-
-  const applyZoom = useCallback((factor: number) => {
-    const proj = projRef.current; if (!proj) return
-    const newScale = Math.max(minScaleRef.current, Math.min(maxScaleRef.current, proj.scale() * factor))
-    proj.scale(newScale); scaleRef.current = newScale
-    setZoomLevel(Math.round((newScale - minScaleRef.current) / (maxScaleRef.current - minScaleRef.current) * 100))
+    const interval = setInterval(() => {
+      setIsFading(true)
+      setTimeout(() => {
+        setVidIdx(i => (i + 1) % VIDEO_SRCS.length)
+        setIsFading(false)
+      }, 800)
+    }, 10000)
+    return () => clearInterval(interval)
   }, [])
 
   // ── Select styles (shared) ─────────────────────────────────────────────────
@@ -597,267 +289,160 @@ export default function Home() {
   return (
     <div style={{ background: '#04091a' }}>
 
-      {/* ── SECTION 1: Globe + Hero ────────────────────────────────────────── */}
+      {/* ── SECTION 1: Video Hero ──────────────────────────────────────────── */}
       <section
-        className="relative overflow-hidden select-none"
-        style={{ height: 'calc(100vh - 56px)', background: '#04091a' }}
+        className="relative overflow-hidden"
+        style={{ height: 'calc(100vh - 56px)' }}
       >
-        {/* Loading */}
-        {!ready && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-            <div className="w-12 h-12 rounded-full border-2 border-[#4F8EF7]/20 border-t-[#4F8EF7] animate-spin mb-4" />
-            <div className="text-white/40 text-sm">Loading...</div>
-          </div>
-        )}
+        {/* Fallback gradient background (visible when no video file is present) */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at 25% 35%, rgba(79,142,247,0.18) 0%, transparent 55%), radial-gradient(ellipse at 75% 65%, rgba(20,184,166,0.12) 0%, transparent 50%), linear-gradient(160deg, #060c20 0%, #080f26 55%, #04091a 100%)',
+        }} />
 
-        {/* Globe canvas */}
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ cursor: 'grab' }} />
-
-        {/* ── Hero Panel (left overlay) ──────────────────────────────────── */}
-        {ready && (
-          <div
-            className="absolute left-0 top-0 bottom-0 flex items-center pointer-events-none"
-            style={{ width: 'min(420px, 90vw)', zIndex: 10 }}
-          >
-            {/* Gradient fade */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(to right, rgba(4,9,26,0.97) 65%, rgba(4,9,26,0))',
-                backdropFilter: 'blur(1px)',
-              }}
-            />
-
-            <div className="relative z-10 px-8 py-8 w-full pointer-events-auto">
-
-              {/* Badge */}
-              <div className="inline-flex items-center gap-1.5 mb-5 px-3 py-1 rounded-full text-xs font-medium"
-                style={{ background: 'rgba(79,142,247,0.15)', border: '1px solid rgba(79,142,247,0.3)', color: '#93C5FD' }}>
-                <div className="w-1.5 h-1.5 rounded-full bg-[#4F8EF7] animate-pulse" />
-                9 Cities · Canada & USA
-              </div>
-
-              {/* H1 */}
-              <h1 className="text-3xl font-bold leading-snug mb-3" style={{ color: '#fff' }}>
-                From data<br />
-                to <span style={{ color: '#14B8A6' }}>belonging.</span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.60)' }}>
-                City intelligence for your next chapter — built on career, tax, housing, and opportunity.
-              </p>
-
-              {/* What you get — outcome chips */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
-                {[
-                  { icon: '🏠', label: 'Years to own' },
-                  { icon: '💰', label: 'Tax advantage' },
-                  { icon: '📊', label: 'Employment score' },
-                ].map(({ icon, label }) => (
-                  <span key={label} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
-                    fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.11)',
-                    borderRadius: 20, padding: '4px 10px',
-                  }}>
-                    {icon} {label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Selectors */}
-              <div className="space-y-3 mb-4">
-                <div>
-                  <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>Your Occupation</label>
-                  <select
-                    value={heroOccupation}
-                    onChange={e => setHeroOccupation(e.target.value)}
-                    style={selectStyle}
-                  >
-                    <option value="" style={{ background: '#0d1f44', color: 'rgba(255,255,255,0.4)' }}>Select occupation...</option>
-                    {OCCUPATIONS.map(o => (
-                      <option key={o.id} value={o.id} style={{ background: '#0d1f44', color: 'white' }}>{o.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>City you&apos;re considering</label>
-                  <select
-                    value={heroCity}
-                    onChange={e => setHeroCity(e.target.value)}
-                    style={selectStyle}
-                  >
-                    <option value="" style={{ background: '#0d1f44', color: 'rgba(255,255,255,0.4)' }}>Select city...</option>
-                    <optgroup label="🇨🇦 Canada" style={{ background: '#0d1f44' }}>
-                      {ACTIVE_CITIES_CA.map(c => (
-                        <option key={c.id} value={c.id} style={{ background: '#0d1f44', color: 'white' }}>{c.nameEn}</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="🇺🇸 United States" style={{ background: '#0d1f44' }}>
-                      {ACTIVE_CITIES.filter(c => c.country === 'US').map(c => (
-                        <option key={c.id} value={c.id} style={{ background: '#0d1f44', color: 'white' }}>{c.nameEn}</option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-
-              {/* CTA — always shows gradient; text guides user when incomplete */}
-              <button
-                onClick={handleHeroGo}
-                disabled={!heroOccupation || !heroCity}
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity active:opacity-75"
-                style={{
-                  background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)',
-                  opacity: heroOccupation && heroCity ? 1 : 0.45,
-                  cursor: heroOccupation && heroCity ? 'pointer' : 'default',
-                }}
-              >
-                {heroOccupation && heroCity ? 'View My City Fit Score →' : 'Select occupation & city above'}
-              </button>
-
-              {/* Quick links — pill buttons, easier to tap */}
-              <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
-                {[
-                  { href: '/ranking',   label: 'Rankings',  icon: '📊' },
-                  { href: '/compare',   label: 'Compare',   icon: '⚖️' },
-                  { href: '/calculate', label: 'Calculate', icon: '🧮' },
-                ].map(link => (
-                  <a key={link.href} href={link.href} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.60)',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    borderRadius: 8, padding: '6px 12px',
-                    textDecoration: 'none', transition: 'color 0.15s',
-                  }}>
-                    {link.icon} {link.label}
-                  </a>
-                ))}
-              </div>
-
-              {/* Globe bridge hint */}
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.22)', marginTop: 12, textAlign: 'center' }}>
-                or tap a city on the globe to explore →
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Zoom controls */}
-        {ready && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2" style={{ zIndex: 10 }}>
-            <button onClick={() => applyZoom(1.3)}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-colors"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </button>
-            <div className="relative w-9 h-20 rounded-xl overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="absolute bottom-0 left-0 right-0 transition-all duration-150 rounded-xl"
-                style={{ height: `${Math.max(4, zoomLevel)}%`, background: 'linear-gradient(to top, #4F8EF7, #5B5CF0)', opacity: 0.7 }} />
-            </div>
-            <button onClick={() => applyZoom(0.77)}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-colors"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                <path d="M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </button>
-          </div>
-        )}
-
-        {/* Legend */}
-        {ready && (
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10 }}>
-            <div className="flex items-center gap-5 px-5 py-2.5 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ background: '#FDE047', boxShadow: '0 0 8px #FDE047' }} />
-                <span className="text-white/70 text-xs">Live cities (tap to explore)</span>
-              </div>
-              <div className="w-px h-3.5 bg-white/10" />
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#93C5FD]/50" />
-                <span className="text-white/50 text-xs">Coming soon</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* City info panel */}
-        <div
-          className="absolute bottom-0 left-0 right-0 transition-transform duration-400 ease-out"
-          style={{ transform: panelOpen ? 'translateY(0)' : 'translateY(110%)', zIndex: 40, transitionDuration: '350ms' }}
+        {/* Background video — fades between clips every 10 s */}
+        <video
+          ref={videoRef}
+          key={vidIdx}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover',
+            opacity: isFading ? 0 : 1,
+            transition: 'opacity 0.8s ease',
+          }}
         >
-          {selectedCity && (
-            <div className="mx-3 mb-3 rounded-2xl overflow-hidden shadow-2xl"
-              style={{ background: 'rgba(10,16,36,0.97)', border: '1px solid rgba(79,142,247,0.3)', backdropFilter: 'blur(24px)' }}>
-              <button onClick={closePanel} className="w-full flex justify-center pt-3 pb-1" aria-label="Close">
-                <div className="w-9 h-1 rounded-full bg-white/20" />
-              </button>
-              <div className="px-5 pb-5">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-bold text-white leading-tight">{selectedCity.nameEn}</h2>
-                    <div className="text-white/40 text-sm">{selectedCity.country === 'US' ? 'United States' : 'Canada'}</div>
-                  </div>
-                  {selectedCity.active && selectedCity.score !== undefined ? (
-                    <div className="text-right">
-                      <div className="text-2xl font-bold font-mono leading-none" style={{ color: '#4F8EF7' }}>{selectedCity.score}</div>
-                      <div className="text-white/55 text-xs mt-0.5">City Fit Score / 100</div>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-semibold px-3 py-1.5 rounded-full text-white"
-                      style={{ background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)' }}>Coming Soon</span>
-                  )}
-                </div>
-                {selectedCity.active ? (
-                  <>
-                    <div className="grid grid-cols-3 gap-2 mb-4">
-                      {[
-                        { label: 'Environment', value: selectedCity.eqi, color: '#10B981' },
-                        { label: 'Tax Friendly', value: selectedCity.tai, color: '#4F8EF7' },
-                        { label: 'Employment',   value: selectedCity.eoi, color: '#F59E0B' },
-                      ].map(({ label, value, color }) => (
-                        <div key={label} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}>
-                          <div className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</div>
-                          <div className="text-xl font-bold font-mono leading-none" style={{ color }}>
-                            {value}<span className="text-xs font-normal ml-0.5" style={{ color: 'rgba(255,255,255,0.25)' }}>/100</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <a href={selectedCity.country === 'US' ? `/guide/software-engineer/${selectedCity.id}` : `/city/${selectedCity.id}`}
-                        className="flex-1 py-3 rounded-xl text-white text-sm font-semibold text-center"
-                        style={{ background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)' }}>
-                        {selectedCity.country === 'US' ? 'Explore City Guides →' : 'View City Details →'}
-                      </a>
-                      <a href="/ranking"
-                        className="px-4 py-3 rounded-xl text-sm font-semibold text-white/60 hover:text-white text-center transition-colors"
-                        style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
-                        Rankings
-                      </a>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center py-2">
-                    <p className="text-white/30 text-sm mb-3">We&apos;re collecting data for {selectedCity.nameEn}</p>
-                    <a href="/subscribe"
-                      className="inline-block px-6 py-2.5 rounded-xl text-white text-sm font-semibold"
-                      style={{ background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)' }}>
-                      Notify Me When Live →
-                    </a>
-                  </div>
-                )}
+          <source src={VIDEO_SRCS[vidIdx]} type="video/mp4" />
+        </video>
+
+        {/* Dark overlay — keeps text legible over any footage */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(4,9,26,0.72) 0%, rgba(4,9,26,0.52) 45%, rgba(4,9,26,0.78) 100%)',
+        }} />
+
+        {/* Hero content — centred */}
+        <div style={{
+          position: 'relative', zIndex: 10,
+          height: '100%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '0 24px',
+        }}>
+          <div style={{ width: '100%', maxWidth: '440px' }}>
+
+            {/* Badge */}
+            <div className="inline-flex items-center gap-1.5 mb-5 px-3 py-1 rounded-full text-xs font-medium"
+              style={{ background: 'rgba(79,142,247,0.15)', border: '1px solid rgba(79,142,247,0.3)', color: '#93C5FD' }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#4F8EF7] animate-pulse" />
+              27 Cities · Canada &amp; USA
+            </div>
+
+            {/* H1 */}
+            <h1 className="text-4xl font-bold leading-snug mb-3" style={{ color: '#fff' }}>
+              From data<br />
+              to <span style={{ color: '#14B8A6' }}>belonging.</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-sm leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              City intelligence for your next chapter — built on career, tax, housing, and opportunity.
+            </p>
+
+            {/* Feature chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+              {[
+                { icon: '🏠', label: 'Years to own' },
+                { icon: '💰', label: 'Tax advantage' },
+                { icon: '📊', label: 'Employment score' },
+              ].map(({ icon, label }) => (
+                <span key={label} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.13)',
+                  borderRadius: 20, padding: '4px 10px',
+                }}>
+                  {icon} {label}
+                </span>
+              ))}
+            </div>
+
+            {/* Selectors */}
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>Your Occupation</label>
+                <select
+                  value={heroOccupation}
+                  onChange={e => setHeroOccupation(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" style={{ background: '#0d1f44', color: 'rgba(255,255,255,0.4)' }}>Select occupation...</option>
+                  {OCCUPATIONS.map(o => (
+                    <option key={o.id} value={o.id} style={{ background: '#0d1f44', color: 'white' }}>{o.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.55)' }}>City you&apos;re considering</label>
+                <select
+                  value={heroCity}
+                  onChange={e => setHeroCity(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" style={{ background: '#0d1f44', color: 'rgba(255,255,255,0.4)' }}>Select city...</option>
+                  <optgroup label="🇨🇦 Canada" style={{ background: '#0d1f44' }}>
+                    {ACTIVE_CITIES_CA.map(c => (
+                      <option key={c.id} value={c.id} style={{ background: '#0d1f44', color: 'white' }}>{c.nameEn}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="🇺🇸 United States" style={{ background: '#0d1f44' }}>
+                    {ACTIVE_CITIES.filter(c => c.country === 'US').map(c => (
+                      <option key={c.id} value={c.id} style={{ background: '#0d1f44', color: 'white' }}>{c.nameEn}</option>
+                    ))}
+                  </optgroup>
+                </select>
               </div>
             </div>
-          )}
+
+            {/* CTA button */}
+            <button
+              onClick={handleHeroGo}
+              disabled={!heroOccupation || !heroCity}
+              className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity active:opacity-75"
+              style={{
+                background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)',
+                opacity: heroOccupation && heroCity ? 1 : 0.45,
+                cursor: heroOccupation && heroCity ? 'pointer' : 'default',
+              }}
+            >
+              {heroOccupation && heroCity ? 'View My City Fit Score →' : 'Select occupation & city above'}
+            </button>
+
+            {/* Quick links */}
+            <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[
+                { href: '/ranking',   label: 'Rankings',  icon: '📊' },
+                { href: '/compare',   label: 'Compare',   icon: '⚖️' },
+                { href: '/calculate', label: 'Calculate', icon: '🧮' },
+              ].map(link => (
+                <a key={link.href} href={link.href} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.60)',
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.13)',
+                  borderRadius: 8, padding: '6px 12px',
+                  textDecoration: 'none',
+                }}>
+                  {link.icon} {link.label}
+                </a>
+              ))}
+            </div>
+
+          </div>
         </div>
       </section>
 
