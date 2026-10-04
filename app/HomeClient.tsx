@@ -192,40 +192,59 @@ const OCCUPATIONS = [
   // Healthcare
   { id: 'nurse',            name: 'Registered Nurse' },
   { id: 'doctor',           name: 'Family Physician' },
-  { id: 'pharmacist',       name: 'Pharmacist' },
-  { id: 'dentist',          name: 'Dentist' },
-  { id: 'social_worker',    name: 'Social Worker' },
+  { id: 'pharmacist',         name: 'Pharmacist' },
+  { id: 'dentist',            name: 'Dentist' },
+  { id: 'dental_hygienist',   name: 'Dental Hygienist' },
+  { id: 'nurse_practitioner', name: 'Nurse Practitioner' },
+  { id: 'physical_therapist', name: 'Physical Therapist' },
+  { id: 'social_worker',      name: 'Social Worker' },
+  { id: 'veterinarian',       name: 'Veterinarian' },
+  { id: 'pharmacy_tech',      name: 'Pharmacy Technician' },
   // Tech
-  { id: 'software_eng',     name: 'Software Engineer' },
-  { id: 'data_analyst',     name: 'Data Analyst' },
-  { id: 'it_support',       name: 'IT Support' },
+  { id: 'software_eng',       name: 'Software Engineer' },
+  { id: 'data_analyst',       name: 'Data Analyst' },
+  { id: 'it_support',         name: 'IT Support' },
+  { id: 'cybersecurity',      name: 'Cybersecurity Analyst' },
+  { id: 'ux_designer',        name: 'UX/UI Designer' },
+  { id: 'network_engineer',   name: 'Network Engineer' },
   // Trades
-  { id: 'electrician',      name: 'Electrician' },
-  { id: 'plumber',          name: 'Plumber' },
-  { id: 'carpenter',        name: 'Carpenter' },
-  { id: 'welder',           name: 'Welder' },
-  { id: 'mechanic',         name: 'Auto Mechanic' },
-  { id: 'construction_worker', name: 'Construction Worker' },
+  { id: 'electrician',        name: 'Electrician' },
+  { id: 'plumber',            name: 'Plumber' },
+  { id: 'carpenter',          name: 'Carpenter' },
+  { id: 'welder',             name: 'Welder' },
+  { id: 'mechanic',           name: 'Auto Mechanic' },
+  { id: 'hvac',               name: 'HVAC Technician' },
+  { id: 'construction_worker',name: 'Construction Worker' },
   // Professional
-  { id: 'engineer',         name: 'Civil Engineer' },
-  { id: 'lawyer',           name: 'Lawyer' },
-  { id: 'accountant',       name: 'Accountant' },
-  { id: 'financial_advisor',name: 'Financial Advisor' },
-  { id: 'real_estate',      name: 'Real Estate Agent' },
-  { id: 'marketing',        name: 'Marketing Specialist' },
-  { id: 'hr',               name: 'HR Specialist' },
+  { id: 'engineer',           name: 'Civil Engineer' },
+  { id: 'lawyer',             name: 'Lawyer' },
+  { id: 'paralegal',          name: 'Paralegal' },
+  { id: 'accountant',         name: 'Accountant' },
+  { id: 'financial_advisor',  name: 'Financial Advisor' },
+  { id: 'real_estate',        name: 'Real Estate Agent' },
+  { id: 'project_manager',    name: 'Project Manager' },
+  { id: 'business_analyst',   name: 'Business Analyst' },
+  { id: 'marketing',          name: 'Marketing Specialist' },
+  { id: 'hr',                 name: 'HR Specialist' },
+  { id: 'operations_manager', name: 'Operations Manager' },
   // Public Service
-  { id: 'teacher',          name: 'Secondary Teacher' },
-  { id: 'firefighter',      name: 'Firefighter' },
-  { id: 'police',           name: 'Police Officer' },
+  { id: 'teacher',            name: 'Secondary Teacher' },
+  { id: 'firefighter',        name: 'Firefighter' },
+  { id: 'police',             name: 'Police Officer' },
   // Transport & Logistics
-  { id: 'truck_driver',     name: 'Truck Driver' },
-  { id: 'pilot',            name: 'Commercial Pilot' },
+  { id: 'truck_driver',       name: 'Truck Driver' },
+  { id: 'delivery_driver',    name: 'Delivery Driver' },
+  { id: 'pilot',              name: 'Commercial Pilot' },
+  { id: 'flight_attendant',   name: 'Flight Attendant' },
   // Service
-  { id: 'chef',             name: 'Chef' },
-  { id: 'retail',           name: 'Retail Associate' },
-  { id: 'security',         name: 'Security Guard' },
-  { id: 'cleaner',          name: 'Cleaner' },
+  { id: 'chef',               name: 'Chef' },
+  { id: 'retail',             name: 'Retail Associate' },
+  { id: 'security',           name: 'Security Guard' },
+  { id: 'cleaner',            name: 'Cleaner' },
+  { id: 'personal_trainer',   name: 'Personal Trainer' },
+  { id: 'childcare',          name: 'Childcare Worker' },
+  // Other
+  { id: 'other',              name: 'Other Occupation' },
 ]
 
 const ACTIVE_CITIES    = CITIES.filter(c => c.active)
@@ -237,6 +256,8 @@ const VIDEO_SRCS = [
   '/videos/hero-1.mp4',
   '/videos/hero-2.mp4',
   '/videos/hero-3.mp4',
+  '/videos/hero-4.mp4',
+  '/videos/hero-5.mp4',
 ]
 
 export default function Home() {
@@ -254,7 +275,11 @@ export default function Home() {
   const [heroCity,       setHeroCity]       = useState('')
 
   const handleHeroGo = useCallback(() => {
-    router.push(`/calculate?city=${heroCity}&occupation=${heroOccupation}`)
+    if (heroOccupation === 'other') {
+      router.push(heroCity ? `/ranking?region=all` : '/ranking')
+    } else {
+      router.push(`/calculate?city=${heroCity}&occupation=${heroOccupation}`)
+    }
   }, [heroCity, heroOccupation, router])
 
   // ── Crossfade cycle: every 10 s bring the hidden slot to front ─────────────
@@ -376,8 +401,8 @@ export default function Home() {
 
             {/* H1 */}
             <h1 className="text-4xl font-bold leading-snug mb-3" style={{ color: '#fff' }}>
-              From data<br />
-              to <span style={{ color: '#14B8A6' }}>belonging.</span>
+              From <span style={{ color: '#14B8A6' }}>data</span><br />
+              to <span style={{ color: '#E86C2F' }}>belonging.</span>
             </h1>
 
             {/* Subtitle */}
