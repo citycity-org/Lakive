@@ -242,10 +242,12 @@ const VIDEO_SRCS = [
 export default function Home() {
   const router = useRouter()
 
-  // ── Video cycling state ─────────────────────────────────────────────────────
-  const videoRef              = useRef<HTMLVideoElement>(null)
-  const [vidIdx,   setVidIdx]   = useState(0)
-  const [isFading, setIsFading] = useState(false)
+  // ── Two-slot crossfade video state ─────────────────────────────────────────
+  // Two overlapping <video> elements swap opacity — no unmount, no black flash
+  const videoARef    = useRef<HTMLVideoElement>(null)
+  const videoBRef    = useRef<HTMLVideoElement>(null)
+  const [topSlot, setTopSlot] = useState<'a' | 'b'>('a')
+  const switchCount  = useRef(0)
 
   // ── Hero selector state ─────────────────────────────────────────────────────
   const [heroOccupation, setHeroOccupation] = useState('')
@@ -255,22 +257,37 @@ export default function Home() {
     router.push(`/calculate?city=${heroCity}&occupation=${heroOccupation}`)
   }, [heroCity, heroOccupation, router])
 
-  // ── Cycle to next video every 10 s with a cross-fade ───────────────────────
+  // ── Crossfade cycle: every 10 s bring the hidden slot to front ─────────────
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsFading(true)
+      switchCount.current += 1
+      const count    = switchCount.current
+      const incoming = count % 2 === 1 ? 'b' : 'a'
+      const outgoing = count % 2 === 1 ? 'a' : 'b'
+      const inRef    = incoming === 'b' ? videoBRef : videoARef
+      const outRef   = incoming === 'b' ? videoARef : videoBRef
+
+      // Start the incoming video playing before it fades in
+      inRef.current?.play().catch(() => {})
+      setTopSlot(incoming)
+
+      // After the 1 s crossfade completes, reload the now-hidden slot with the next clip
       setTimeout(() => {
-        setVidIdx(i => (i + 1) % VIDEO_SRCS.length)
-        setIsFading(false)
-      }, 800)
+        const nextIdx = (count + 1) % VIDEO_SRCS.length
+        if (outRef.current) {
+          outRef.current.pause()
+          outRef.current.src = VIDEO_SRCS[nextIdx]
+          outRef.current.load()
+        }
+      }, 1200)
     }, 10000)
     return () => clearInterval(interval)
   }, [])
 
   // ── Select styles (shared) ─────────────────────────────────────────────────
   const selectStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.07)',
-    border: '1px solid rgba(255,255,255,0.15)',
+    background: 'rgba(255,255,255,0.12)',
+    border: '1px solid rgba(255,255,255,0.22)',
     borderRadius: '10px',
     color: 'white',
     padding: '10px 14px',
@@ -300,29 +317,37 @@ export default function Home() {
           background: 'radial-gradient(ellipse at 25% 35%, rgba(79,142,247,0.18) 0%, transparent 55%), radial-gradient(ellipse at 75% 65%, rgba(20,184,166,0.12) 0%, transparent 50%), linear-gradient(160deg, #060c20 0%, #080f26 55%, #04091a 100%)',
         }} />
 
-        {/* Background video — fades between clips every 10 s */}
+        {/* Two stacked videos — B is always on top (DOM order), crossfade via opacity only */}
         <video
-          ref={videoRef}
-          key={vidIdx}
-          autoPlay
-          muted
-          loop
-          playsInline
+          ref={videoARef}
+          src={VIDEO_SRCS[0]}
+          autoPlay muted loop playsInline preload="auto"
           style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'cover',
-            opacity: isFading ? 0 : 1,
-            transition: 'opacity 0.8s ease',
+            opacity: topSlot === 'a' ? 1 : 0,
+            transition: 'opacity 1.2s ease',
+            zIndex: 1,
           }}
-        >
-          <source src={VIDEO_SRCS[vidIdx]} type="video/mp4" />
-        </video>
+        />
+        <video
+          ref={videoBRef}
+          src={VIDEO_SRCS[1 % VIDEO_SRCS.length]}
+          muted loop playsInline preload="auto"
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover',
+            opacity: topSlot === 'b' ? 1 : 0,
+            transition: 'opacity 1.2s ease',
+            zIndex: 2,
+          }}
+        />
 
         {/* Dark overlay — keeps text legible over any footage */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(4,9,26,0.72) 0%, rgba(4,9,26,0.52) 45%, rgba(4,9,26,0.78) 100%)',
+          background: 'linear-gradient(to bottom, rgba(4,9,26,0.55) 0%, rgba(4,9,26,0.38) 45%, rgba(4,9,26,0.60) 100%)',
+          zIndex: 3,
         }} />
 
         {/* Hero content — centred */}
@@ -332,7 +357,15 @@ export default function Home() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '0 24px',
         }}>
-          <div style={{ width: '100%', maxWidth: '440px' }}>
+          <div style={{
+            width: '100%', maxWidth: '440px',
+            background: 'rgba(4,9,26,0.45)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            border: '1px solid rgba(255,255,255,0.10)',
+            padding: '32px 28px',
+          }}>
 
             {/* Badge */}
             <div className="inline-flex items-center gap-1.5 mb-5 px-3 py-1 rounded-full text-xs font-medium"
@@ -661,9 +694,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Canada Cities */}
-            <a href="/reports/canada-cities-on-the-rise-2026"
-              className="group block rounded-2xl p-5 transition-all hover:-translate-y-0.5"
-              style={{ textDecoration: 'none', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div className="group relative rounded-2xl p-5 transition-all hover:-translate-y-0.5 cursor-pointer"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+              onClick={() => router.push('/reports/canada-cities-on-the-rise-2026')}>
               <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full text-xs font-semibold"
                 style={{ background: 'rgba(239,68,68,0.12)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.25)' }}>
                 National Report
@@ -679,12 +712,12 @@ export default function Home() {
                 <a href="/reports/pdf/Lakive_Canada_Cities_on_the_Rise_2026.pdf" download onClick={e => e.stopPropagation()}
                   className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.30)', textDecoration: 'none' }}>↓ PDF</a>
               </div>
-            </a>
+            </div>
 
             {/* Vancouver */}
-            <a href="/reports/vancouver-livability-worker-affordability-2026"
-              className="group block rounded-2xl p-5 transition-all hover:-translate-y-0.5"
-              style={{ textDecoration: 'none', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div className="group relative rounded-2xl p-5 transition-all hover:-translate-y-0.5 cursor-pointer"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+              onClick={() => router.push('/reports/vancouver-livability-worker-affordability-2026')}>
               <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full text-xs font-semibold"
                 style={{ background: 'rgba(20,184,166,0.12)', color: '#14B8A6', border: '1px solid rgba(20,184,166,0.25)' }}>
                 Issue Brief
@@ -700,18 +733,18 @@ export default function Home() {
                 <a href="/reports/pdf/Lakive_Vancouver_Worker_Affordability_Issue_Brief_H1_2026.pdf" download onClick={e => e.stopPropagation()}
                   className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.30)', textDecoration: 'none' }}>↓ PDF</a>
               </div>
-            </a>
+            </div>
 
             {/* Newsletter CTA card */}
-            <a href="/newsletter"
-              className="group block rounded-2xl p-5 transition-all hover:-translate-y-0.5"
-              style={{ textDecoration: 'none', background: 'rgba(79,142,247,0.06)', border: '1px solid rgba(79,142,247,0.18)' }}>
+            <div className="group relative rounded-2xl p-5 transition-all hover:-translate-y-0.5 cursor-pointer"
+              style={{ background: 'rgba(79,142,247,0.06)', border: '1px solid rgba(79,142,247,0.18)' }}
+              onClick={() => router.push('/newsletter')}>
               <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full text-xs font-semibold"
                 style={{ background: 'rgba(79,142,247,0.12)', color: '#93C5FD', border: '1px solid rgba(79,142,247,0.25)' }}>
                 Coming Next
               </div>
               <div className="text-sm font-semibold mb-2 text-white leading-snug">
-                More reports in Q3 & Q4 2026
+                More reports in Q3 &amp; Q4 2026
               </div>
               <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.50)' }}>
                 Newcomer&apos;s Guide, Remote Worker Arbitrage, Calgary&apos;s Tax Advantage — subscribe to get notified.
@@ -720,7 +753,7 @@ export default function Home() {
                 style={{ color: '#93C5FD' }}>
                 Subscribe free →
               </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
