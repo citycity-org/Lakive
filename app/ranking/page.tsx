@@ -1080,7 +1080,7 @@ function FilterDropdown({ label, value, options, onChange }: {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function RankingPage() {
-  const [region,      setRegion     ] = useState('all')
+  const [region,      setRegion     ] = useState('canada')
   const [occ,         setOcc        ] = useState('')
   const [sortDim,     setSortDim    ] = useState('score')
   const [propType,    setPropType   ] = useState('')

@@ -3,6 +3,30 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import ShareModal from '@/components/ShareModal'
 import type { CityScoresResponse } from '@/app/api/city-scores/route'
 
+// ── Occupation ID mapping: calculate page → rent-vs-own page ───────────────────
+const CALC_OCC_TO_RVO: Record<string, string> = {
+  nurse:        'registered-nurse',
+  doctor:       'family-physician',
+  pharmacist:   'pharmacist',
+  software_eng: 'software-engineer',
+  data_analyst: 'data-analyst',
+  it_support:   'it-support',
+  electrician:  'electrician',
+  engineer:     'civil-engineer',
+  plumber:      'plumber',
+  carpenter:    'carpenter',
+  teacher:      'secondary-teacher',
+  accountant:   'accountant',
+  lawyer:       'lawyer',
+  police:       'police-officer',
+  firefighter:  'firefighter',
+  social_worker:'social-worker',
+  truck_driver: 'truck-driver',
+  mechanic:     'auto-mechanic',
+  chef:         'chef',
+  retail:       'retail-associate',
+}
+
 // ── Property types ─────────────────────────────────────────────────────────────
 const PROP_TYPES = [
   { id:'1br',       label:'1 Bedroom',     priceMult:0.70, rentMult:0.78, desc:'Solo / Couple'       },
@@ -202,6 +226,19 @@ export default function CalculatePage() {
     if (h && PROP_TYPES.find(x => x.id === h)) setPropType(h)
     if (c && o && h) { setSubmitted(true); setStep(4) }
   }, [])
+
+  // Intercept browser back button when at step 4 — go to previous wizard step
+  useEffect(() => {
+    if (step === 4) {
+      window.history.pushState({ calcStep: 4 }, '')
+      const handlePop = () => {
+        setSubmitted(false)
+        setStep(cityFromURL ? 2 : 3)
+      }
+      window.addEventListener('popstate', handlePop)
+      return () => window.removeEventListener('popstate', handlePop)
+    }
+  }, [step, cityFromURL])
 
   const handleOccChange = (id: string) => {
     setOccId(id)
@@ -698,7 +735,7 @@ export default function CalculatePage() {
 
           {/* ── Explore more ─────────────────────────────────────────────────── */}
           <div style={{ display:'flex', gap:8, marginBottom:20, flexWrap:'wrap' }}>
-            <a href="/guide/rent-vs-own"
+            <a href={`/guide/rent-vs-own?occ=${CALC_OCC_TO_RVO[occId] ?? 'software-engineer'}&city=${cityId}`}
               style={{ display:'flex', alignItems:'center', gap:6, padding:'10px 14px', borderRadius:10, background:'rgba(20,184,166,0.07)', border:'1px solid rgba(20,184,166,0.20)', textDecoration:'none', flex:'1 1 auto' }}>
               <span style={{ fontSize:15 }}>🏠</span>
               <div>
