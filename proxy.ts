@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server'
 // from internal share links.
 const UI_STATE_PATHS = ['/', '/ranking', '/calculate', '/compare', '/city', '/pulse', '/prices', '/guide']
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
   const host = request.headers.get('host') ?? ''
 
