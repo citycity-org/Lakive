@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server'
 // or /?occupation=pharmacist&city=montreal — those are just pre-filled filters,
 // not unique pages. '/' is included because the homepage accepts occupation/city params
 // from internal share links.
-const UI_STATE_PATHS = ['/', '/ranking', '/calculate', '/compare', '/city', '/pulse', '/prices']
+const UI_STATE_PATHS = ['/', '/ranking', '/calculate', '/compare', '/city', '/pulse', '/prices', '/guide']
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl

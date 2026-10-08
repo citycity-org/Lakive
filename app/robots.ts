@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
           '/s/',           // share short-links — dynamic, low value
           '/subscribe',    // subscription flow
           '/share',
+          '/results',      // client-side redirect to /calculate — no content
           '/prices/submit', // form submission page — no SEO value
         ],
       },
