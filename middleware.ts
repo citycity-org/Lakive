@@ -10,7 +10,25 @@ const UI_STATE_PATHS = ['/', '/ranking', '/calculate', '/compare', '/city', '/pu
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
+  const host = request.headers.get('host') ?? ''
 
+  // ── www → non-www canonical redirect ────────────────────────────────────────
+  // next.config.ts redirects with has:[{type:'host'}] are unreliable on Vercel
+  // when www is configured as a separate domain alias. Middleware runs earlier
+  // and is guaranteed to fire regardless of how Vercel routes the request.
+  if (host.startsWith('www.')) {
+    const canonicalHost = host.slice(4) // strip 'www.'
+    const url = request.nextUrl.clone()
+    url.host = canonicalHost
+    // Keep protocol from request (Vercel always HTTPS in prod)
+    url.protocol = 'https:'
+    return NextResponse.redirect(url, { status: 301 })
+  }
+
+  // ── noindex for UI-state query-param variants ────────────────────────────────
+  // These pages render identical structure regardless of params — the params
+  // just pre-fill filters. We don't want /calculate?occupation=nurse indexed
+  // as a separate page from /calculate.
   const isUiStatePage = UI_STATE_PATHS.some(p =>
     pathname === p || pathname.startsWith(p + '/')
   )
