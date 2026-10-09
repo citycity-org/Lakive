@@ -44,19 +44,19 @@ const CITIES: Record<string, {
   taiNote:string; effectiveTax:number
 }> = {
   // ── Canada (CAD) ──────────────────────────────────────────────────────────────
-  vancouver:       { name:'Vancouver',     short:'YVR', province:'BC',               basePrice:1099100, medianRent:3300, tai:72, eoi:80, hai:88, eqi:90, tci:82, psi:72, edi:80, taiNote:'GST + PST ~12%',       effectiveTax:0.28 },
-  toronto:         { name:'Toronto',       short:'YYZ', province:'ON',               basePrice:940800,  medianRent:2600, tai:68, eoi:92, hai:90, eqi:75, tci:78, psi:68, edi:82, taiNote:'HST 13%',              effectiveTax:0.30 },
-  calgary:         { name:'Calgary',       short:'YYC', province:'AB',               basePrice:572500,  medianRent:1750, tai:90, eoi:65, hai:78, eqi:82, tci:48, psi:78, edi:72, taiNote:'GST 5% only',          effectiveTax:0.22 },
-  montreal:        { name:'Montréal',      short:'YUL', province:'QC',               basePrice:580000,  medianRent:1900, tai:42, eoi:72, hai:75, eqi:78, tci:72, psi:70, edi:80, taiNote:'GST + QST ~15%',       effectiveTax:0.33 },
-  ottawa:          { name:'Ottawa',        short:'YOW', province:'ON',               basePrice:632200,  medianRent:2400, tai:68, eoi:75, hai:82, eqi:80, tci:55, psi:82, edi:85, taiNote:'HST 13%',              effectiveTax:0.29 },
+  vancouver:       { name:'Vancouver',     short:'YVR', province:'BC',               basePrice:1099100, medianRent:3260, tai:72, eoi:80, hai:88, eqi:90, tci:82, psi:72, edi:80, taiNote:'GST + PST ~12%',       effectiveTax:0.28 },
+  toronto:         { name:'Toronto',       short:'YYZ', province:'ON',               basePrice:940800,  medianRent:2560, tai:68, eoi:92, hai:90, eqi:75, tci:78, psi:68, edi:82, taiNote:'HST 13%',              effectiveTax:0.30 },
+  calgary:         { name:'Calgary',       short:'YYC', province:'AB',               basePrice:572500,  medianRent:1680, tai:90, eoi:65, hai:78, eqi:82, tci:48, psi:78, edi:72, taiNote:'GST 5% only',          effectiveTax:0.22 },
+  montreal:        { name:'Montréal',      short:'YUL', province:'QC',               basePrice:580000,  medianRent:1880, tai:42, eoi:72, hai:75, eqi:78, tci:72, psi:70, edi:80, taiNote:'GST + QST ~15%',       effectiveTax:0.33 },
+  ottawa:          { name:'Ottawa',        short:'YOW', province:'ON',               basePrice:632200,  medianRent:2370, tai:68, eoi:75, hai:82, eqi:80, tci:55, psi:82, edi:85, taiNote:'HST 13%',              effectiveTax:0.29 },
   // ── Canada (new cities) ───────────────────────────────────────────────────────
-  edmonton:              { name:'Edmonton',           short:'YEG', province:'AB', basePrice:440000,  medianRent:1650, tai:90, eoi:62, hai:80, eqi:78, tci:42, psi:76, edi:68, taiNote:'GST 5% only',      effectiveTax:0.22 },
-  winnipeg:              { name:'Winnipeg',           short:'YWG', province:'MB', basePrice:370000,  medianRent:1450, tai:65, eoi:58, hai:82, eqi:74, tci:38, psi:72, edi:65, taiNote:'GST + PST 7%',     effectiveTax:0.29 },
-  halifax:               { name:'Halifax',            short:'YHZ', province:'NS', basePrice:520000,  medianRent:1950, tai:55, eoi:55, hai:76, eqi:82, tci:40, psi:70, edi:60, taiNote:'HST 15%',          effectiveTax:0.31 },
-  'quebec-city':         { name:'Québec City',        short:'YQB', province:'QC', basePrice:380000,  medianRent:1400, tai:42, eoi:55, hai:80, eqi:80, tci:45, psi:72, edi:58, taiNote:'GST + QST ≈ 15%', effectiveTax:0.33 },
-  hamilton:              { name:'Hamilton',           short:'YHM', province:'ON', basePrice:680000,  medianRent:1900, tai:68, eoi:65, hai:78, eqi:72, tci:50, psi:70, edi:70, taiNote:'HST 13%',          effectiveTax:0.30 },
-  'kitchener-waterloo':  { name:'Kitchener-Waterloo', short:'YKF', province:'ON', basePrice:650000,  medianRent:1800, tai:68, eoi:68, hai:78, eqi:76, tci:48, psi:72, edi:75, taiNote:'HST 13%',          effectiveTax:0.29 },
-  victoria:              { name:'Victoria',           short:'YYJ', province:'BC', basePrice:820000,  medianRent:2400, tai:72, eoi:55, hai:70, eqi:90, tci:55, psi:78, edi:58, taiNote:'GST + PST ~12%',   effectiveTax:0.28 },
+  edmonton:              { name:'Edmonton',           short:'YEG', province:'AB', basePrice:440000,  medianRent:1600, tai:90, eoi:62, hai:80, eqi:78, tci:42, psi:76, edi:68, taiNote:'GST 5% only',      effectiveTax:0.22 },
+  winnipeg:              { name:'Winnipeg',           short:'YWG', province:'MB', basePrice:370000,  medianRent:1400, tai:65, eoi:58, hai:82, eqi:74, tci:38, psi:72, edi:65, taiNote:'GST + PST 7%',     effectiveTax:0.29 },
+  halifax:               { name:'Halifax',            short:'YHZ', province:'NS', basePrice:520000,  medianRent:1970, tai:55, eoi:55, hai:76, eqi:82, tci:40, psi:70, edi:60, taiNote:'HST 15%',          effectiveTax:0.31 },
+  'quebec-city':         { name:'Québec City',        short:'YQB', province:'QC', basePrice:380000,  medianRent:1380, tai:42, eoi:55, hai:80, eqi:80, tci:45, psi:72, edi:58, taiNote:'GST + QST ≈ 15%', effectiveTax:0.33 },
+  hamilton:              { name:'Hamilton',           short:'YHM', province:'ON', basePrice:680000,  medianRent:1830, tai:68, eoi:65, hai:78, eqi:72, tci:50, psi:70, edi:70, taiNote:'HST 13%',          effectiveTax:0.30 },
+  'kitchener-waterloo':  { name:'Kitchener-Waterloo', short:'YKF', province:'ON', basePrice:650000,  medianRent:1730, tai:68, eoi:68, hai:78, eqi:76, tci:48, psi:72, edi:75, taiNote:'HST 13%',          effectiveTax:0.29 },
+  victoria:              { name:'Victoria',           short:'YYJ', province:'BC', basePrice:820000,  medianRent:2370, tai:72, eoi:55, hai:70, eqi:90, tci:55, psi:78, edi:58, taiNote:'GST + PST ~12%',   effectiveTax:0.28 },
   // ── United States (USD) ───────────────────────────────────────────────────────
   seattle:         { name:'Seattle',       short:'SEA', province:'Washington',  currency:'USD', basePrice:800000,  medianRent:2700, tai:95, eoi:88, hai:72, eqi:78, tci:65, psi:72, edi:82, taiNote:'No state income tax', effectiveTax:0.22 },
   'san-francisco': { name:'San Francisco', short:'SFO', province:'California',  currency:'USD', basePrice:1250000, medianRent:3500, tai:35, eoi:95, hai:38, eqi:70, tci:75, psi:55, edi:90, taiNote:'CA top rate 13.3%',  effectiveTax:0.35 },

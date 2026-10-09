@@ -52,15 +52,15 @@ export const CA_CONFIG: CountryConfig = {
     source: 'Statistics Canada',
   },
   unemployment: {
-    value: 6.4,              // Jul 2026 LFS released Aug 7 — +75K jobs (+0.4%), rate fell 0.1 pts to 6.4%, lowest since Jul 2024
-    prev: 6.5,
-    date: 'Jul 2026',
+    value: 6.4,              // Aug 2026 LFS released Sep 5 — −42K jobs, rate held at 6.4%, participation rate fell, employment rate 60.8%
+    prev: 6.4,               // Jul 2026 was also 6.4% (prev=6.5 from Jun)
+    date: 'Aug 2026',
     source: 'Statistics Canada LFS',
   },
-  housingNote: 'CPI rose to 3.0% in July — rent and food costs remain the primary pressure. BoC next decision Sep 4.',
-  lastReviewed: '2026-08-29',
-  updatedAt: '2026-08-29 PDT',
-  sources: ['Bank of Canada', 'Statistics Canada', 'CMHC'],
+  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca, Sep 2026). Oct 9 LFS and Oct 28 BoC decision are next key signals.',
+  lastReviewed: '2026-10-08',
+  updatedAt: '2026-10-08 PDT',
+  sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'Rentals.ca × Urbanation'],
 }
 
 // ── United States ────────────────────────────────────────────────────────────
