@@ -1,9 +1,9 @@
 'use client'
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
+import { type OccFit, buildCityMatrix, computeScore } from '@/lib/fit-engine'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-type OccFit = { score: number; hpiYears: number; rpi: number; eoi: 'High'|'Mid'|'Low' }
 interface PriceAggregate { item_id: string; item_label: string; category: string; avg_price: number; sample_count: number; last_seen: string }
 
 // ── Score verdict ─────────────────────────────────────────────────────────────
@@ -66,16 +66,10 @@ function getOccReality(cityName: string, occName: string, fit: OccFit) {
   return { bestFor, hardFor, hiddenRisk }
 }
 
-// ── v4.0 composite score ──────────────────────────────────────────────────────
-function computeScore(hpiYears: number, rpi: number, tai: number, eoi: number, hai: number, eqi: number, tci: number, psi: number): number {
-  const hpiScore = hpiYears<6?92:hpiYears<8?82:hpiYears<10?70:hpiYears<12?58:hpiYears<16?45:30
-  const rpiScore = rpi<25?90:rpi<30?82:rpi<35?72:rpi<40?60:rpi<45?48:35
-  const housingScore = hpiScore * 0.55 + rpiScore * 0.45
-  const cityScore    = eoi*0.22 + tai*0.20 + hai*0.20 + eqi*0.14 + tci*0.12 + psi*0.12
-  return Math.max(10, Math.min(99, Math.round(housingScore * 0.52 + cityScore * 0.48)))
-}
-
 // ── Scenario-adjusted score ───────────────────────────────────────────────────
+// Uses computeScore from fit-engine (single source of truth for the formula).
+// eoi here is the city-level numeric index (city.eoi from CITY_BASE), not the
+// per-occupation string — scenario cards reflect city-wide pressure, not occ-specific.
 function getAdjScore(base: OccFit, priceMult: number, rentMult: number, tai: number, eoi: number, hai: number, eqi: number, tci: number, psi: number): number {
   const adjH = parseFloat((base.hpiYears * priceMult).toFixed(1))
   const adjR = Math.round(base.rpi * rentMult)
@@ -454,282 +448,11 @@ const CITY_BASE: Record<string, {
 }
 
 // ── Fit matrix ────────────────────────────────────────────────────────────────
-// hpiYears = benchmarkHpi × (benchmarkSalary / occupationSalary) — same formula as guide calcHpiYears()
-// rpi = avgRent2BR × 12 / occupationSalary × 100 — same formula as guide calcRpi()
-// score = computeScore(hpiYears, rpi, city.tai, eoiNum, city.hai, city.eqi, city.tci, city.psi)
-// Last recomputed: 2026-10-09 from Sep 2026 rent data
-const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
-  vancouver: {
-    electrician:  { score: 63, hpiYears: 14.8, rpi: 45, eoi: 'High' },
-    software_eng: { score: 73, hpiYears: 11.0, rpi: 33, eoi: 'High' },
-    nurse:        { score: 61, hpiYears: 14.5, rpi: 44, eoi: 'Mid'  },
-    teacher:      { score: 58, hpiYears: 15.6, rpi: 47, eoi: 'Mid'  },
-    truck_driver: { score: 54, hpiYears: 16.9, rpi: 51, eoi: 'Mid'  },
-    accountant:   { score: 54, hpiYears: 16.9, rpi: 51, eoi: 'Mid'  },
-    police:       { score: 66, hpiYears: 13.2, rpi: 40, eoi: 'High' },
-    retail:       { score: 54, hpiYears: 28.9, rpi: 87, eoi: 'Mid'  },
-  },
-  toronto: {
-    electrician:  { score: 62, hpiYears: 13.8, rpi: 41, eoi: 'High' },
-    software_eng: { score: 71, hpiYears: 10.3, rpi: 31, eoi: 'High' },
-    nurse:        { score: 62, hpiYears: 13.5, rpi: 40, eoi: 'High' },
-    teacher:      { score: 62, hpiYears: 14.5, rpi: 43, eoi: 'High' },
-    truck_driver: { score: 57, hpiYears: 15.7, rpi: 47, eoi: 'Mid'  },
-    accountant:   { score: 59, hpiYears: 15.7, rpi: 47, eoi: 'High' },
-    police:       { score: 65, hpiYears: 12.3, rpi: 37, eoi: 'High' },
-    retail:       { score: 52, hpiYears: 27.0, rpi: 80, eoi: 'Mid'  },
-  },
-  calgary: {
-    electrician:  { score: 81, hpiYears: 7.8,  rpi: 27, eoi: 'High' },
-    software_eng: { score: 83, hpiYears: 5.8,  rpi: 20, eoi: 'Mid'  },
-    nurse:        { score: 81, hpiYears: 7.6,  rpi: 26, eoi: 'High' },
-    teacher:      { score: 75, hpiYears: 8.2,  rpi: 28, eoi: 'Mid'  },
-    truck_driver: { score: 75, hpiYears: 8.9,  rpi: 31, eoi: 'High' },
-    accountant:   { score: 73, hpiYears: 8.9,  rpi: 31, eoi: 'Mid'  },
-    police:       { score: 82, hpiYears: 6.9,  rpi: 24, eoi: 'High' },
-    retail:       { score: 57, hpiYears: 15.2, rpi: 52, eoi: 'Mid'  },
-  },
-  montreal: {
-    electrician:  { score: 71, hpiYears: 9.1,  rpi: 28, eoi: 'Mid' },
-    software_eng: { score: 76, hpiYears: 6.8,  rpi: 21, eoi: 'Mid' },
-    nurse:        { score: 71, hpiYears: 8.9,  rpi: 28, eoi: 'Mid' },
-    teacher:      { score: 71, hpiYears: 9.6,  rpi: 30, eoi: 'Mid' },
-    truck_driver: { score: 65, hpiYears: 10.4, rpi: 32, eoi: 'Mid' },
-    accountant:   { score: 65, hpiYears: 10.4, rpi: 32, eoi: 'Mid' },
-    police:       { score: 71, hpiYears: 8.2,  rpi: 25, eoi: 'Mid' },
-    retail:       { score: 46, hpiYears: 17.9, rpi: 55, eoi: 'Low' },
-  },
-  ottawa: {
-    electrician:  { score: 71, hpiYears: 9.0,  rpi: 30, eoi: 'Mid'  },
-    software_eng: { score: 81, hpiYears: 6.7,  rpi: 23, eoi: 'High' },
-    nurse:        { score: 76, hpiYears: 8.8,  rpi: 30, eoi: 'High' },
-    teacher:      { score: 74, hpiYears: 9.4,  rpi: 32, eoi: 'High' },
-    truck_driver: { score: 68, hpiYears: 10.2, rpi: 35, eoi: 'Mid'  },
-    accountant:   { score: 68, hpiYears: 10.2, rpi: 35, eoi: 'Mid'  },
-    police:       { score: 76, hpiYears: 8.0,  rpi: 27, eoi: 'High' },
-    retail:       { score: 49, hpiYears: 17.5, rpi: 59, eoi: 'Low'  },
-  },
-  edmonton: {
-    electrician:  { score: 80, hpiYears: 6.2,  rpi: 23, eoi: 'High' },
-    software_eng: { score: 81, hpiYears: 4.6,  rpi: 18, eoi: 'Mid'  },
-    nurse:        { score: 80, hpiYears: 6.1,  rpi: 23, eoi: 'High' },
-    teacher:      { score: 78, hpiYears: 6.5,  rpi: 25, eoi: 'Mid'  },
-    truck_driver: { score: 78, hpiYears: 7.1,  rpi: 27, eoi: 'High' },
-    accountant:   { score: 76, hpiYears: 7.1,  rpi: 27, eoi: 'Mid'  },
-    police:       { score: 83, hpiYears: 5.5,  rpi: 21, eoi: 'High' },
-    retail:       { score: 55, hpiYears: 12.1, rpi: 46, eoi: 'Mid'  },
-  },
-  winnipeg: {
-    electrician:  { score: 77, hpiYears: 5.3,  rpi: 21, eoi: 'Mid'  },
-    software_eng: { score: 74, hpiYears: 4.0,  rpi: 15, eoi: 'Mid'  },
-    nurse:        { score: 79, hpiYears: 5.2,  rpi: 20, eoi: 'High' },
-    teacher:      { score: 77, hpiYears: 5.6,  rpi: 22, eoi: 'Mid'  },
-    truck_driver: { score: 76, hpiYears: 6.0,  rpi: 23, eoi: 'High' },
-    accountant:   { score: 74, hpiYears: 6.0,  rpi: 23, eoi: 'Mid'  },
-    police:       { score: 77, hpiYears: 4.7,  rpi: 18, eoi: 'Mid'  },
-    retail:       { score: 57, hpiYears: 10.4, rpi: 40, eoi: 'Low'  },
-  },
-  halifax: {
-    electrician:  { score: 73, hpiYears: 7.5,  rpi: 29, eoi: 'Mid'  },
-    software_eng: { score: 75, hpiYears: 5.6,  rpi: 22, eoi: 'Mid'  },
-    nurse:        { score: 73, hpiYears: 7.3,  rpi: 28, eoi: 'High' },
-    teacher:      { score: 70, hpiYears: 7.9,  rpi: 30, eoi: 'Mid'  },
-    truck_driver: { score: 67, hpiYears: 8.5,  rpi: 33, eoi: 'Mid'  },
-    accountant:   { score: 64, hpiYears: 8.5,  rpi: 33, eoi: 'Mid'  },
-    police:       { score: 73, hpiYears: 6.7,  rpi: 26, eoi: 'Mid'  },
-    retail:       { score: 48, hpiYears: 14.6, rpi: 56, eoi: 'Low'  },
-  },
-  'quebec-city': {
-    electrician:  { score: 76, hpiYears: 5.9,  rpi: 20, eoi: 'Mid'  },
-    software_eng: { score: 73, hpiYears: 4.4,  rpi: 15, eoi: 'Mid'  },
-    nurse:        { score: 76, hpiYears: 5.8,  rpi: 20, eoi: 'Mid'  },
-    teacher:      { score: 73, hpiYears: 6.3,  rpi: 21, eoi: 'Mid'  },
-    truck_driver: { score: 73, hpiYears: 6.8,  rpi: 23, eoi: 'Mid'  },
-    accountant:   { score: 70, hpiYears: 6.8,  rpi: 23, eoi: 'Mid'  },
-    police:       { score: 76, hpiYears: 5.3,  rpi: 18, eoi: 'Mid'  },
-    retail:       { score: 57, hpiYears: 11.6, rpi: 39, eoi: 'Low'  },
-  },
-  hamilton: {
-    electrician:  { score: 71, hpiYears: 8.4,  rpi: 27, eoi: 'High' },
-    software_eng: { score: 76, hpiYears: 6.3,  rpi: 20, eoi: 'Mid'  },
-    nurse:        { score: 73, hpiYears: 8.2,  rpi: 26, eoi: 'High' },
-    teacher:      { score: 73, hpiYears: 8.8,  rpi: 28, eoi: 'Mid'  },
-    truck_driver: { score: 69, hpiYears: 9.6,  rpi: 31, eoi: 'High' },
-    accountant:   { score: 69, hpiYears: 9.6,  rpi: 31, eoi: 'Mid'  },
-    police:       { score: 76, hpiYears: 7.5,  rpi: 24, eoi: 'High' },
-    retail:       { score: 46, hpiYears: 16.4, rpi: 52, eoi: 'Low'  },
-  },
-  'kitchener-waterloo': {
-    electrician:  { score: 75, hpiYears: 7.8,  rpi: 25, eoi: 'High' },
-    software_eng: { score: 82, hpiYears: 5.8,  rpi: 19, eoi: 'High' },
-    nurse:        { score: 77, hpiYears: 7.6,  rpi: 25, eoi: 'High' },
-    teacher:      { score: 71, hpiYears: 8.2,  rpi: 27, eoi: 'Mid'  },
-    truck_driver: { score: 71, hpiYears: 8.9,  rpi: 29, eoi: 'Mid'  },
-    accountant:   { score: 71, hpiYears: 8.9,  rpi: 29, eoi: 'High' },
-    police:       { score: 77, hpiYears: 6.9,  rpi: 23, eoi: 'Mid'  },
-    retail:       { score: 51, hpiYears: 15.2, rpi: 49, eoi: 'Low'  },
-  },
-  victoria: {
-    electrician:  { score: 66, hpiYears: 12.1, rpi: 35, eoi: 'Mid'  },
-    software_eng: { score: 73, hpiYears: 9.0,  rpi: 26, eoi: 'Mid'  },
-    nurse:        { score: 69, hpiYears: 11.8, rpi: 34, eoi: 'Mid'  },
-    teacher:      { score: 63, hpiYears: 12.7, rpi: 37, eoi: 'Mid'  },
-    truck_driver: { score: 60, hpiYears: 13.8, rpi: 40, eoi: 'Low'  },
-    accountant:   { score: 60, hpiYears: 13.8, rpi: 40, eoi: 'Mid'  },
-    police:       { score: 69, hpiYears: 10.8, rpi: 31, eoi: 'Mid'  },
-    retail:       { score: 50, hpiYears: 23.6, rpi: 68, eoi: 'Low'  },
-  },
-  seattle: {
-    electrician:  { score: 70, hpiYears: 9.0,  rpi: 41, eoi: 'High' },
-    software_eng: { score: 86, hpiYears: 4.7,  rpi: 21, eoi: 'High' },
-    nurse:        { score: 77, hpiYears: 7.8,  rpi: 35, eoi: 'High' },
-    teacher:      { score: 62, hpiYears: 11.6, rpi: 52, eoi: 'Mid'  },
-    truck_driver: { score: 64, hpiYears: 10.6, rpi: 48, eoi: 'High' },
-    accountant:   { score: 70, hpiYears: 9.3,  rpi: 42, eoi: 'High' },
-    police:       { score: 73, hpiYears: 8.8,  rpi: 40, eoi: 'High' },
-    retail:       { score: 54, hpiYears: 21.2, rpi: 95, eoi: 'Mid'  },
-  },
-  'san-francisco': {
-    electrician:  { score: 49, hpiYears: 17.2, rpi: 53, eoi: 'High' },
-    software_eng: { score: 71, hpiYears: 9.0,  rpi: 28, eoi: 'High' },
-    nurse:        { score: 53, hpiYears: 14.9, rpi: 46, eoi: 'High' },
-    teacher:      { score: 47, hpiYears: 22.1, rpi: 68, eoi: 'Mid'  },
-    truck_driver: { score: 47, hpiYears: 20.2, rpi: 62, eoi: 'Mid'  },
-    accountant:   { score: 49, hpiYears: 17.6, rpi: 54, eoi: 'High' },
-    police:       { score: 47, hpiYears: 16.7, rpi: 51, eoi: 'Mid'  },
-    retail:       { score: 47, hpiYears: 40.4, rpi: 124, eoi: 'Low' },
-  },
-  'new-york': {
-    electrician:  { score: 53, hpiYears: 14.8, rpi: 56, eoi: 'High' },
-    software_eng: { score: 75, hpiYears: 7.8,  rpi: 29, eoi: 'High' },
-    nurse:        { score: 53, hpiYears: 12.9, rpi: 48, eoi: 'High' },
-    teacher:      { score: 49, hpiYears: 19.1, rpi: 72, eoi: 'High' },
-    truck_driver: { score: 47, hpiYears: 17.4, rpi: 65, eoi: 'Mid'  },
-    accountant:   { score: 53, hpiYears: 15.2, rpi: 57, eoi: 'High' },
-    police:       { score: 53, hpiYears: 14.4, rpi: 54, eoi: 'High' },
-    retail:       { score: 47, hpiYears: 34.8, rpi: 131, eoi: 'Mid' },
-  },
-  boston: {
-    electrician:  { score: 61, hpiYears: 11.5, rpi: 47, eoi: 'High' },
-    software_eng: { score: 80, hpiYears: 6.1,  rpi: 25, eoi: 'High' },
-    nurse:        { score: 64, hpiYears: 10.0, rpi: 40, eoi: 'High' },
-    teacher:      { score: 57, hpiYears: 14.8, rpi: 60, eoi: 'High' },
-    truck_driver: { score: 55, hpiYears: 13.5, rpi: 55, eoi: 'Mid'  },
-    accountant:   { score: 61, hpiYears: 11.8, rpi: 48, eoi: 'High' },
-    police:       { score: 61, hpiYears: 11.2, rpi: 45, eoi: 'High' },
-    retail:       { score: 50, hpiYears: 27.1, rpi: 109, eoi: 'Mid' },
-  },
-  austin: {
-    electrician:  { score: 81, hpiYears: 5.6,  rpi: 29, eoi: 'High' },
-    software_eng: { score: 83, hpiYears: 3.0,  rpi: 15, eoi: 'High' },
-    nurse:        { score: 83, hpiYears: 4.9,  rpi: 25, eoi: 'High' },
-    teacher:      { score: 71, hpiYears: 7.3,  rpi: 37, eoi: 'Mid'  },
-    truck_driver: { score: 76, hpiYears: 6.6,  rpi: 34, eoi: 'Mid'  },
-    accountant:   { score: 79, hpiYears: 5.8,  rpi: 29, eoi: 'Mid'  },
-    police:       { score: 79, hpiYears: 5.5,  rpi: 28, eoi: 'High' },
-    retail:       { score: 54, hpiYears: 13.2, rpi: 67, eoi: 'Mid'  },
-  },
-  chicago: {
-    electrician:  { score: 78, hpiYears: 4.0,  rpi: 33, eoi: 'High' },
-    software_eng: { score: 83, hpiYears: 2.1,  rpi: 17, eoi: 'High' },
-    nurse:        { score: 81, hpiYears: 3.5,  rpi: 29, eoi: 'High' },
-    teacher:      { score: 73, hpiYears: 5.1,  rpi: 43, eoi: 'High' },
-    truck_driver: { score: 76, hpiYears: 4.7,  rpi: 39, eoi: 'Mid'  },
-    accountant:   { score: 78, hpiYears: 4.1,  rpi: 34, eoi: 'High' },
-    police:       { score: 76, hpiYears: 3.9,  rpi: 32, eoi: 'Mid'  },
-    retail:       { score: 61, hpiYears: 9.4,  rpi: 78, eoi: 'Low'  },
-  },
-  'los-angeles': {
-    electrician:  { score: 62, hpiYears: 9.4,  rpi: 42, eoi: 'High' },
-    software_eng: { score: 78, hpiYears: 4.9,  rpi: 22, eoi: 'High' },
-    nurse:        { score: 64, hpiYears: 8.2,  rpi: 37, eoi: 'High' },
-    teacher:      { score: 51, hpiYears: 12.1, rpi: 54, eoi: 'Mid'  },
-    truck_driver: { score: 55, hpiYears: 11.0, rpi: 49, eoi: 'Mid'  },
-    accountant:   { score: 62, hpiYears: 9.6,  rpi: 43, eoi: 'High' },
-    police:       { score: 59, hpiYears: 9.1,  rpi: 41, eoi: 'Mid'  },
-    retail:       { score: 45, hpiYears: 22.1, rpi: 99, eoi: 'Low'  },
-  },
-  denver: {
-    electrician:  { score: 80, hpiYears: 6.1,  rpi: 29, eoi: 'High' },
-    software_eng: { score: 85, hpiYears: 3.2,  rpi: 15, eoi: 'High' },
-    nurse:        { score: 85, hpiYears: 5.3,  rpi: 25, eoi: 'High' },
-    teacher:      { score: 73, hpiYears: 7.9,  rpi: 37, eoi: 'Mid'  },
-    truck_driver: { score: 75, hpiYears: 7.2,  rpi: 34, eoi: 'Mid'  },
-    accountant:   { score: 78, hpiYears: 6.3,  rpi: 29, eoi: 'Mid'  },
-    police:       { score: 78, hpiYears: 6.0,  rpi: 28, eoi: 'Mid'  },
-    retail:       { score: 56, hpiYears: 14.4, rpi: 67, eoi: 'Low'  },
-  },
-  miami: {
-    electrician:  { score: 70, hpiYears: 6.9,  rpi: 44, eoi: 'High' },
-    software_eng: { score: 80, hpiYears: 3.6,  rpi: 23, eoi: 'High' },
-    nurse:        { score: 73, hpiYears: 6.0,  rpi: 38, eoi: 'High' },
-    teacher:      { score: 61, hpiYears: 8.9,  rpi: 56, eoi: 'Mid'  },
-    truck_driver: { score: 61, hpiYears: 8.1,  rpi: 51, eoi: 'Mid'  },
-    accountant:   { score: 68, hpiYears: 7.1,  rpi: 45, eoi: 'Mid'  },
-    police:       { score: 68, hpiYears: 6.7,  rpi: 42, eoi: 'Mid'  },
-    retail:       { score: 50, hpiYears: 16.2, rpi: 102, eoi: 'Low' },
-  },
-  dallas: {
-    electrician:  { score: 85, hpiYears: 4.3,  rpi: 24, eoi: 'High' },
-    software_eng: { score: 85, hpiYears: 2.2,  rpi: 13, eoi: 'High' },
-    nurse:        { score: 85, hpiYears: 3.7,  rpi: 21, eoi: 'High' },
-    teacher:      { score: 78, hpiYears: 5.5,  rpi: 31, eoi: 'Mid'  },
-    truck_driver: { score: 83, hpiYears: 5.0,  rpi: 28, eoi: 'High' },
-    accountant:   { score: 85, hpiYears: 4.4,  rpi: 25, eoi: 'High' },
-    police:       { score: 83, hpiYears: 4.1,  rpi: 23, eoi: 'High' },
-    retail:       { score: 60, hpiYears: 10.0, rpi: 57, eoi: 'Mid'  },
-  },
-  atlanta: {
-    electrician:  { score: 81, hpiYears: 4.0,  rpi: 26, eoi: 'High' },
-    software_eng: { score: 83, hpiYears: 2.1,  rpi: 13, eoi: 'High' },
-    nurse:        { score: 83, hpiYears: 3.5,  rpi: 22, eoi: 'High' },
-    teacher:      { score: 76, hpiYears: 5.1,  rpi: 33, eoi: 'Mid'  },
-    truck_driver: { score: 78, hpiYears: 4.7,  rpi: 30, eoi: 'Mid'  },
-    accountant:   { score: 79, hpiYears: 4.1,  rpi: 26, eoi: 'High' },
-    police:       { score: 81, hpiYears: 3.9,  rpi: 25, eoi: 'Mid'  },
-    retail:       { score: 61, hpiYears: 9.4,  rpi: 60, eoi: 'Low'  },
-  },
-  phoenix: {
-    electrician:  { score: 80, hpiYears: 4.5,  rpi: 26, eoi: 'High' },
-    software_eng: { score: 80, hpiYears: 2.4,  rpi: 13, eoi: 'High' },
-    nurse:        { score: 82, hpiYears: 3.9,  rpi: 22, eoi: 'High' },
-    teacher:      { score: 76, hpiYears: 5.8,  rpi: 33, eoi: 'Mid'  },
-    truck_driver: { score: 76, hpiYears: 5.3,  rpi: 30, eoi: 'Mid'  },
-    accountant:   { score: 78, hpiYears: 4.6,  rpi: 26, eoi: 'Mid'  },
-    police:       { score: 80, hpiYears: 4.4,  rpi: 25, eoi: 'Mid'  },
-    retail:       { score: 57, hpiYears: 10.6, rpi: 60, eoi: 'Low'  },
-  },
-  'washington-dc': {
-    electrician:  { score: 70, hpiYears: 6.9,  rpi: 42, eoi: 'High' },
-    software_eng: { score: 83, hpiYears: 3.6,  rpi: 22, eoi: 'High' },
-    nurse:        { score: 73, hpiYears: 6.0,  rpi: 37, eoi: 'High' },
-    teacher:      { score: 64, hpiYears: 8.9,  rpi: 54, eoi: 'High' },
-    truck_driver: { score: 62, hpiYears: 8.1,  rpi: 49, eoi: 'Mid'  },
-    accountant:   { score: 70, hpiYears: 7.0,  rpi: 43, eoi: 'High' },
-    police:       { score: 70, hpiYears: 6.7,  rpi: 41, eoi: 'High' },
-    retail:       { score: 50, hpiYears: 16.1, rpi: 99, eoi: 'Mid'  },
-  },
-  houston: {
-    electrician:  { score: 83, hpiYears: 3.5,  rpi: 21, eoi: 'High' },
-    software_eng: { score: 81, hpiYears: 1.8,  rpi: 11, eoi: 'High' },
-    nurse:        { score: 83, hpiYears: 3.0,  rpi: 18, eoi: 'High' },
-    teacher:      { score: 79, hpiYears: 4.5,  rpi: 27, eoi: 'Mid'  },
-    truck_driver: { score: 83, hpiYears: 4.1,  rpi: 25, eoi: 'High' },
-    accountant:   { score: 81, hpiYears: 3.6,  rpi: 22, eoi: 'Mid'  },
-    police:       { score: 81, hpiYears: 3.4,  rpi: 21, eoi: 'High' },
-    retail:       { score: 62, hpiYears: 8.2,  rpi: 49, eoi: 'Mid'  },
-  },
-  nashville: {
-    electrician:  { score: 81, hpiYears: 5.0,  rpi: 27, eoi: 'High' },
-    software_eng: { score: 81, hpiYears: 2.7,  rpi: 14, eoi: 'High' },
-    nurse:        { score: 83, hpiYears: 4.4,  rpi: 24, eoi: 'High' },
-    teacher:      { score: 74, hpiYears: 6.5,  rpi: 35, eoi: 'Mid'  },
-    truck_driver: { score: 77, hpiYears: 5.9,  rpi: 32, eoi: 'Mid'  },
-    accountant:   { score: 76, hpiYears: 5.2,  rpi: 28, eoi: 'Mid'  },
-    police:       { score: 79, hpiYears: 4.9,  rpi: 26, eoi: 'Mid'  },
-    retail:       { score: 58, hpiYears: 11.9, rpi: 64, eoi: 'Low'  },
-  },
-}
+// All hpiYears and rpi values are computed at runtime from lib/fit-engine.ts,
+// which reads the authoritative data in app/guide/_data.ts (CITIES, OCCUPATIONS).
+// The only manual input is EOI_MATRIX in fit-engine.ts (labour-demand assessment).
+// buildCityMatrix() is called inside the component, keyed to the current slug.
+// ─────────────────────────────────────────────────────────────────────────────
 
 const OCCUPATIONS = [
   { id: 'electrician',  name: 'Electrician'       },
@@ -769,7 +492,9 @@ function SecHeader({ title, sub }: { title: string; sub: string }) {
 export default function CityPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const city     = CITY_BASE[slug] ?? CITY_BASE.vancouver
-  const matrix   = FIT_MATRIX[slug] ?? FIT_MATRIX.vancouver
+  // buildCityMatrix computes all hpiYears/rpi/score values at runtime from _data.ts
+  // — no more hardcoded FIT_MATRIX; updating _data.ts propagates everywhere.
+  const matrix   = buildCityMatrix(slug, city)
 
   const [occ,        setOcc      ] = useState('electrician')
   const [propType,   setPropType ] = useState('2br')
@@ -835,10 +560,11 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
 
   const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville']
   const rankList     = ALL_CITY_IDS
-    .filter(id => FIT_MATRIX[id]?.[occ])
+    .filter(id => CITY_BASE[id])
     .map(id => {
-      const c = CITY_BASE[id]
-      return { id, score: getAdjScore(FIT_MATRIX[id][occ], pt.priceMult, pt.rentMult, c.tai, c.eoi, c.hai, c.eqi, c.tci, c.psi) }
+      const c   = CITY_BASE[id]
+      const m   = buildCityMatrix(id, c)
+      return { id, score: getAdjScore(m[occ] ?? m.electrician, pt.priceMult, pt.rentMult, c.tai, c.eoi, c.hai, c.eqi, c.tci, c.psi) }
     })
     .sort((a, b) => b.score - a.score)
   const occRank     = rankList.findIndex(c => c.id === slug) + 1

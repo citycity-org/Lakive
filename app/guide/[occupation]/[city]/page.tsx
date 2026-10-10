@@ -2,12 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Comments from '../../_comments'
 import { LakiveLogo } from '../../../components/LakiveLogo'
-import {
-  OCCUPATIONS, CITIES,
-  calcHpiYears, calcRpi, calcLevel,
-  LEVEL_META, hpiLabel, rpiLabel, rankedCities,
-  formatYears, formatSalary, formatSalaryUS,
-} from '../../_data'
+// Data: raw city and occupation records
+import { OCCUPATIONS, CITIES, rankedCities, formatYears, formatSalary, formatSalaryUS, hpiLabel, rpiLabel } from '../../_data'
+// Computation: all metric formulas route through fit-engine (single source of truth)
+import { calcHpiYears, calcRpi, calcLevel, LEVEL_META } from '@/lib/fit-engine'
 
 // ── Static generation: all N combos ──────────────────────────────────────────
 export function generateStaticParams() {
