@@ -160,7 +160,7 @@ function faqItems(occSlug: string, citySlug: string, hpi: number, rpi: number): 
   return [
     {
       q: `How long does it take ${art(occ.name)} ${occ.name} to buy a home in ${city.displayName}?`,
-      a: `Based on 2026 market data, ${art(occ.name)} ${occ.name} earning approximately ${salaryStr}/year needs around ${formatYears(hpi)} of gross income to afford a 2-bedroom home in ${city.displayName}. This uses a standard savings and down-payment model. ${hpi > 12 ? `That timeline is among the longest ${marketContext} for this occupation — ${bestCity?.displayName} offers a significantly shorter path at ${formatYears(best.years)}.` : `This is ${hpi < 8 ? `one of the more accessible markets ${marketContext} for this income level.` : `a manageable timeline relative to other major cities.`}`}`,
+      a: `Based on 2026 market data, a 2-bedroom home in ${city.displayName} costs roughly ${formatYears(hpi)} of ${art(occ.name)} ${occ.name}'s gross annual income — a standard price-to-income measure of housing accessibility. ${hpi > 12 ? `That ratio is among the highest ${marketContext} for this occupation — ${bestCity?.displayName} offers a significantly more accessible entry point at ${formatYears(best.years)}.` : `This is ${hpi < 8 ? `one of the more accessible markets ${marketContext} for this income level.` : `a manageable ratio relative to other major cities.`}`}`,
     },
     {
       q: `What percentage of income does ${art(occ.name)} ${occ.name} spend on rent in ${city.displayName}?`,
