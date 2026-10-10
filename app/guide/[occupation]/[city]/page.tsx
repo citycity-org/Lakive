@@ -34,7 +34,8 @@ export async function generateMetadata(
   const hl   = hpiLabel(hpi)
 
   const title       = `${occ.name} in ${cty.displayName}: Housing & Career Guide (2026)`
-  const description = `A ${occ.name} in ${cty.displayName} needs ${formatYears(hpi)} of income to own a 2BR home, spending ${rpi}% of salary on rent. ${hl.text} housing market. Full data, city comparison, and relocation analysis.`
+  const artMeta = /^[aeiou]/i.test(occ.name) ? 'An' : 'A'
+  const description = `${artMeta} ${occ.name} in ${cty.displayName} needs ${formatYears(hpi)} of income to own a 2BR home, spending ${rpi}% of salary on rent. ${hl.text} housing market. Full data, city comparison, and relocation analysis.`
 
   return {
     title,
@@ -52,6 +53,15 @@ export async function generateMetadata(
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+function art(word: string): string {
+  return /^[aeiou]/i.test(word) ? 'an' : 'a'
+}
+
+// Strip "L# " prefix from level labels for inline prose (e.g. "L2 Manageable" → "manageable")
+function levelDesc(label: string): string {
+  return label.replace(/^L\d+\s+/i, '').toLowerCase()
+}
+
 function overallVerdict(hpi: number, rpi: number): string {
   return LEVEL_META[calcLevel(hpi, rpi)].label
 }
@@ -127,7 +137,7 @@ function introText(occSlug: string, citySlug: string, hpi: number, rpi: number):
   return [
     cityLead[citySlug] ?? '',
     occLead[cat] ?? '',
-    `On the housing side, a ${occ.name} in ${city.displayName} faces a ${hl.text.toLowerCase()} market — requiring approximately ${formatYears(hpi)} of gross income to own a 2-bedroom home, with rent consuming roughly ${rpi}% of pre-tax salary.`,
+    `On the housing side, ${art(occ.name)} ${occ.name} in ${city.displayName} faces a ${levelDesc(hl.text)} market — requiring approximately ${formatYears(hpi)} of gross income to own a 2-bedroom home, with rent consuming roughly ${rpi}% of pre-tax salary.`,
   ].filter(Boolean).join(' ')
 }
 
@@ -149,12 +159,12 @@ function faqItems(occSlug: string, citySlug: string, hpi: number, rpi: number): 
 
   return [
     {
-      q: `How long does it take a ${occ.name} to buy a home in ${city.displayName}?`,
-      a: `Based on 2026 market data, a ${occ.name} earning approximately ${salaryStr}/year needs around ${formatYears(hpi)} of gross income to afford a 2-bedroom home in ${city.displayName}. This uses a standard savings and down-payment model. ${hpi > 12 ? `That timeline is among the longest ${marketContext} for this occupation — ${bestCity?.displayName} offers a significantly shorter path at ${formatYears(best.years)}.` : `This is ${hpi < 8 ? `one of the more accessible markets ${marketContext} for this income level.` : `a manageable timeline relative to other major cities.`}`}`,
+      q: `How long does it take ${art(occ.name)} ${occ.name} to buy a home in ${city.displayName}?`,
+      a: `Based on 2026 market data, ${art(occ.name)} ${occ.name} earning approximately ${salaryStr}/year needs around ${formatYears(hpi)} of gross income to afford a 2-bedroom home in ${city.displayName}. This uses a standard savings and down-payment model. ${hpi > 12 ? `That timeline is among the longest ${marketContext} for this occupation — ${bestCity?.displayName} offers a significantly shorter path at ${formatYears(best.years)}.` : `This is ${hpi < 8 ? `one of the more accessible markets ${marketContext} for this income level.` : `a manageable timeline relative to other major cities.`}`}`,
     },
     {
-      q: `What percentage of income does a ${occ.name} spend on rent in ${city.displayName}?`,
-      a: `At current market rents ($${city.avgRent2BR.toLocaleString()} ${currency}/mo for a 2BR), a ${occ.name} in ${city.displayName} spends approximately ${rpi}% of gross income on a 2-bedroom apartment. The widely-cited guideline is to keep housing costs below 30% of gross income. ${rpi > 38 ? `${city.displayName} significantly exceeds this threshold for ${occ.name}s — renting here places meaningful pressure on savings and financial flexibility.` : rpi > 30 ? `${city.displayName} is slightly above the guideline. Manageable, but leaves limited room for savings.` : `${city.displayName} is within or near the guideline — one of the healthier rent-to-income ratios for this occupation.`}`,
+      q: `What percentage of income does ${art(occ.name)} ${occ.name} spend on rent in ${city.displayName}?`,
+      a: `At current market rents ($${city.avgRent2BR.toLocaleString()} ${currency}/mo for a 2BR), ${art(occ.name)} ${occ.name} in ${city.displayName} spends approximately ${rpi}% of gross income on a 2-bedroom apartment. The widely-cited guideline is to keep housing costs below 30% of gross income. ${rpi > 38 ? `${city.displayName} significantly exceeds this threshold for ${occ.name}s — renting here places meaningful pressure on savings and financial flexibility.` : rpi > 30 ? `${city.displayName} is slightly above the guideline. Manageable, but leaves limited room for savings.` : `${city.displayName} is within or near the guideline — one of the healthier rent-to-income ratios for this occupation.`}`,
     },
     {
       q: isUS
