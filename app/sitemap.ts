@@ -32,16 +32,20 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
 const CA_CITY_SLUGS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria']
 
 // US cities with /city/[slug] detail pages
-const US_CITY_SLUGS = ['seattle', 'san-francisco', 'new-york', 'boston']
+const US_CITY_SLUGS = [
+  'seattle', 'san-francisco', 'new-york', 'boston',
+  'austin', 'chicago', 'los-angeles', 'denver', 'miami',
+  'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville',
+]
 
 // All cities for guide pages
 const CITY_SLUGS = [...CA_CITY_SLUGS, ...US_CITY_SLUGS]
 
-// Key occupation slugs (subset for guide pages)
+// Key occupation slugs — must match keys in OCCUPATIONS (app/guide/_data.ts)
 const OCC_SLUGS = [
-  'nurse', 'software-engineer', 'electrician', 'teacher',
+  'registered-nurse', 'software-engineer', 'electrician', 'secondary-teacher',
   'accountant', 'truck-driver', 'civil-engineer', 'pharmacist',
-  'data-analyst', 'registered-nurse',
+  'data-analyst', 'plumber', 'firefighter', 'police-officer',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -47,9 +47,9 @@ function Callout({ label, text, color = TEAL, bg = '#F0FDFA' }: { label: string;
 // ── KPI summary table ─────────────────────────────────────────────────────────
 function KpiTable() {
   const rows = [
-    { label: 'National Avg. Asking Rent (Sep 2026)', value: 'CAD $2,035', signal: '▼ 4.8% YoY · 23rd consecutive month of decline', color: GRN },
-    { label: 'Unemployment Rate (Aug 2026)', value: '6.4%', signal: '— Held · employment rate 60.8% · participation declined', color: AMBER },
-    { label: 'Net Jobs (Aug 2026)', value: '−42,000', signal: 'Reversal after 4 months of growth · services & construction fell', color: RED },
+    { label: 'National Avg. Asking Rent (Sep 2026)', value: 'CAD $2,034', signal: '▼ 4.2% YoY · 24th consecutive month of decline', color: GRN },
+    { label: 'Unemployment Rate (Sep 2026)', value: '6.5%', signal: '▲ 0.1pp · employment rate 60.6% · participation 64.8% (lowest since 1997)', color: RED },
+    { label: 'Net Jobs (Sep 2026)', value: '−68,000', signal: 'Second consecutive decline · Quebec hardest hit · below all forecasts', color: RED },
     { label: 'BoC Policy Rate', value: '2.25%', signal: '— Held · 6th consecutive hold · next decision Oct 28 · ~95% hold probability', color: GRN },
     { label: 'CREA Benchmark HPI (Aug 2026)', value: '▼ 3.0% YoY', signal: 'Smallest YoY decline since Oct 2025 · avg sale price $668,219 · sales ▼ 6.9% YoY', color: AMBER },
     { label: 'Counter-Tariffs (Sep 8, 2026)', value: 'CA$27.6B', signal: 'New Canadian counter-tariffs effective September 8 · trade uncertainty elevated', color: AMBER },
@@ -83,9 +83,9 @@ function ChangesTable() {
   const rows = [
     { dir: '⚠', label: 'Counter-Tariffs', prev: 'CA$26.3B (prior)', now: 'CA$27.6B effective Sep 8 · trade war escalation continues', good: false },
     { dir: '▼', label: 'CREA HPI (YoY)', prev: '▼ 1.1% YoY (Jul)', now: '▼ 3.0% YoY (Aug) · smallest decline since Oct 2025', good: true },
-    { dir: '▼', label: 'National avg. asking rent', prev: 'CAD $2,012 (Aug)', now: 'CAD $2,035 (Sep) · ▼ 4.8% YoY · 23rd consecutive month', good: true },
-    { dir: '—', label: 'BoC Policy Rate', prev: '2.25%', now: '2.25% · 6th consecutive hold · Oct 28 next · ~95% hold probability', good: false },
-    { dir: '—', label: 'Unemployment rate', prev: '6.4% (Aug)', now: '6.4% (Aug) · employment rate 60.8% · Oct 9 LFS is next update', good: false },
+    { dir: '▼', label: 'National avg. asking rent', prev: 'CAD $2,012 (Aug)', now: 'CAD $2,034 (Sep) · ▼ 4.2% YoY · 24th consecutive month', good: true },
+    { dir: '—', label: 'BoC Policy Rate', prev: '2.25%', now: '2.25% · 6th consecutive hold · Oct 28 next · rate cut odds rising post-jobs miss', good: false },
+    { dir: '▲', label: 'Unemployment rate', prev: '6.4% (Aug)', now: '6.5% (Sep) · −68K jobs · employment rate 60.6% · 2nd straight decline', good: false },
     { dir: '▼', label: 'Population growth (YoY)', prev: '~1.1% (2025)', now: '0.5% YoY · sharp slowdown · reduced rental demand pressure', good: false },
   ]
   return (

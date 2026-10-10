@@ -52,14 +52,14 @@ export const CA_CONFIG: CountryConfig = {
     source: 'Statistics Canada',
   },
   unemployment: {
-    value: 6.4,              // Aug 2026 LFS released Sep 5 — −42K jobs, rate held at 6.4%, participation rate fell, employment rate 60.8%
-    prev: 6.4,               // Jul 2026 was also 6.4% (prev=6.5 from Jun)
-    date: 'Aug 2026',
+    value: 6.5,              // Sep 2026 LFS released Oct 9 — −68K jobs, rate rose 0.1pp to 6.5%, employment rate 60.6%, participation 64.8%
+    prev: 6.4,               // Aug 2026 was 6.4% (held)
+    date: 'Sep 2026',
     source: 'Statistics Canada LFS',
   },
-  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca, Sep 2026). Oct 9 LFS and Oct 28 BoC decision are next key signals.',
-  lastReviewed: '2026-10-08',
-  updatedAt: '2026-10-08 PDT',
+  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca, Sep 2026). BoC decision Oct 28 — next key signal.',
+  lastReviewed: '2026-10-09',
+  updatedAt: '2026-10-09 PDT',
   sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'Rentals.ca × Urbanation'],
 }
 
