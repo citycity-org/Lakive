@@ -17,6 +17,7 @@ import { calcHpiYears, calcRpi, hpiLevel, rpiLevel, calcLevel, LEVEL_META } from
 // ── Occupation ID bridge ──────────────────────────────────────────────────────
 // Maps city-page short IDs  →  guide-page slug keys (OCCUPATIONS record)
 export const OCC_SLUG: Record<string, string> = {
+  // Core 8
   electrician:  'electrician',
   software_eng: 'software-engineer',
   nurse:        'registered-nurse',
@@ -25,6 +26,26 @@ export const OCC_SLUG: Record<string, string> = {
   accountant:   'accountant',
   police:       'police-officer',
   retail:       'retail-associate',
+  // Extended 12
+  doctor:       'family-physician',
+  pharmacist:   'pharmacist',
+  data_analyst: 'data-analyst',
+  it_support:   'it-support',
+  engineer:     'civil-engineer',
+  plumber:      'plumber',
+  carpenter:    'carpenter',
+  lawyer:       'lawyer',
+  firefighter:  'firefighter',
+  social_worker:'social-worker',
+  mechanic:     'auto-mechanic',
+  chef:         'chef',
+}
+
+// Default EOI for occupations with clear nationwide demand signals.
+// Used as fallback when EOI_MATRIX has no city-specific entry.
+const OCC_DEFAULT_EOI: Partial<Record<string, Eoi>> = {
+  doctor:   'High',  // nationwide physician shortage (CA & US)
+  plumber:  'High',  // nationwide trades shortage
 }
 
 // ── Employment Opportunity Index ──────────────────────────────────────────────
@@ -115,7 +136,7 @@ export function computeOccFit(
   const guideSlug = OCC_SLUG[occId] ?? occId
   const hpiYears  = calcHpiYears(guideSlug, citySlug)
   const rpi       = calcRpi(guideSlug, citySlug)
-  const eoi: Eoi  = EOI_MATRIX[citySlug]?.[occId] ?? 'Mid'
+  const eoi: Eoi  = EOI_MATRIX[citySlug]?.[occId] ?? OCC_DEFAULT_EOI[occId] ?? 'Mid'
   const score     = computeScore(hpiYears, rpi, cityBase.tai, eoiNum(eoi), cityBase.hai, cityBase.eqi, cityBase.tci, cityBase.psi)
   return { hpiYears, rpi, eoi, score }
 }
@@ -123,7 +144,13 @@ export function computeOccFit(
 // ── Full city matrix builder ──────────────────────────────────────────────────
 // Drop-in replacement for the old static FIT_MATRIX[slug].
 // Returns the same Record<occId, OccFit> shape — no hardcoded numbers.
-const OCC_IDS = ['electrician', 'software_eng', 'nurse', 'teacher', 'truck_driver', 'accountant', 'police', 'retail']
+// All real occupations with a salary benchmark in _data.ts (excludes special types
+// like self_employed, freelancer, unemployed, retired which have no guide salary data).
+const OCC_IDS = [
+  'electrician', 'software_eng', 'nurse', 'teacher', 'truck_driver', 'accountant', 'police', 'retail',
+  'doctor', 'pharmacist', 'data_analyst', 'it_support', 'engineer', 'plumber',
+  'carpenter', 'lawyer', 'firefighter', 'social_worker', 'mechanic', 'chef',
+]
 
 export function buildCityMatrix(
   citySlug: string,

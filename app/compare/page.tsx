@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { buildCityMatrix } from '@/lib/fit-engine'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type OccFit = { score: number; hpiYears: number; rpi: number; eoi: 'High'|'Mid'|'Low' }
@@ -278,6 +279,15 @@ const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
     unemployed:    { score:26, hpiYears:35.0, rpi:118,eoi:'Low'  },
     retired:       { score:44, hpiYears:20.5, rpi:76, eoi:'Low'  },
   },
+}
+
+// ── Override stale FIT_MATRIX values with fit-engine computed data ─────────────
+// For any city that _data.ts supports, buildCityMatrix() computes hpiYears, rpi,
+// and score from live data; this overrides only the real occupation entries —
+// special types (self_employed, freelancer, unemployed, retired) are preserved.
+for (const slug of Object.keys(CITY_BASE) as Array<keyof typeof CITY_BASE>) {
+  const cb = CITY_BASE[slug]
+  if (FIT_MATRIX[slug]) Object.assign(FIT_MATRIX[slug], buildCityMatrix(slug as string, cb))
 }
 
 const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'seattle', 'san-francisco', 'new-york', 'boston']

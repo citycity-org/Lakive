@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { buildCityMatrix } from '@/lib/fit-engine'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type EoiVal = 'High'|'Mid'|'Low'
@@ -786,6 +787,7 @@ const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
 }
 
 // ── City base ─────────────────────────────────────────────────────────────────
+// NOTE: FIT_MATRIX override (via fit-engine) is applied after CITY_BASE is defined.
 const CITY_BASE: Record<string, {
   name:string; province:string; short:string
   eoi:number; tai:number; hai:number; eqi:number; tci:number; psi:number; edi:number
@@ -820,13 +822,25 @@ const CITY_BASE: Record<string, {
   nashville:             { name:'Nashville',          province:'Tennessee',     short:'BNA', eoi:68, tai:90, hai:75, eqi:72, tci:35, psi:68, edi:72, taiNote:'No state income tax' },
 }
 
+// ── Override stale FIT_MATRIX values with fit-engine computed data ─────────────
+// Only cities whose benchmarkHpi/avgRent2BR live in _data.ts get computed overrides;
+// the 11 extended US cities without _data.ts entries keep their FIT_MATRIX values.
+// Special occupations (self_employed, freelancer, unemployed, retired) are preserved.
+;(() => {
+  const COMPUTABLE = ['vancouver','toronto','calgary','montreal','ottawa','edmonton','winnipeg','halifax','quebec-city','hamilton','kitchener-waterloo','victoria','seattle','san-francisco','new-york','boston']
+  for (const slug of COMPUTABLE) {
+    const cb = CITY_BASE[slug]
+    if (cb && FIT_MATRIX[slug]) Object.assign(FIT_MATRIX[slug], buildCityMatrix(slug, cb))
+  }
+})()
+
 // ── City Insights ─────────────────────────────────────────────────────────────
 const INSIGHTS: Record<string, Record<string, string>> = {
   calgary: {
-    electrician:  'Years-to-buy is low (3.9 yrs), after-tax advantage is strong (TAI 90), and trades demand is solid — a city worth comparing first for electricians.',
-    nurse:        'No provincial PST means strong take-home pay; lower housing pressure (4.5 yrs) and stable healthcare employment make this one of the most cost-effective cities for nurses.',
+    electrician:  'No provincial PST (TAI 90) gives the strongest after-tax edge in Canada, and trades demand is solid — Calgary consistently ranks near the top for electricians despite rising housing costs.',
+    nurse:        'No provincial PST means strong take-home pay; housing pressure is moderate relative to Vancouver and Toronto, and stable healthcare employment make this a cost-effective city for nurses.',
     truck_driver: 'Logistics demand is concentrated, no provincial PST, lower living costs; ongoing urban expansion creates steady job supply.',
-    software_eng: 'Strong after-tax advantage and lower housing pressure (5.2 yrs) suit engineers prioritizing financial growth; tech ecosystem is smaller than Vancouver or Toronto.',
+    software_eng: 'Strong after-tax advantage (TAI 90) suits engineers prioritizing financial growth; tech ecosystem is smaller than Vancouver or Toronto, but housing pressure is moderate.',
     default:      'No provincial PST gives a clear after-tax edge; lower years-to-buy makes Calgary worth prioritizing for both technical and trades careers.',
   },
   toronto: {
@@ -837,7 +851,7 @@ const INSIGHTS: Record<string, Record<string, string>> = {
   },
   vancouver: {
     software_eng: 'Strong tech scene and attractive salaries, but price-to-income ratio is high — better suited for those who already own property or can accept high rent.',
-    electrician:  'High housing costs hit trades workers hard: buying takes 13 years — compare with Calgary (3.9 yrs) before deciding.',
+    electrician:  'High housing costs hit trades workers hard: buying takes significantly longer here than in Calgary or Edmonton — compare before deciding.',
     nurse:        'Healthcare demand is stable, but buying a home takes 12.8 years and rent consumes ~42% of income — requires careful long-term financial planning.',
     default:      'Climate and environment rank among the best in major cities, but housing costs are among the highest — a real trade-off between livability and affordability.',
   },

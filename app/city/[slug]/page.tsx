@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
-import { type OccFit, buildCityMatrix, computeScore } from '@/lib/fit-engine'
+import { type OccFit, buildCityMatrix, computeScore, eoiNum } from '@/lib/fit-engine'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface PriceAggregate { item_id: string; item_label: string; category: string; avg_price: number; sample_count: number; last_seen: string }
@@ -67,13 +67,13 @@ function getOccReality(cityName: string, occName: string, fit: OccFit) {
 }
 
 // ── Scenario-adjusted score ───────────────────────────────────────────────────
-// Uses computeScore from fit-engine (single source of truth for the formula).
-// eoi here is the city-level numeric index (city.eoi from CITY_BASE), not the
-// per-occupation string — scenario cards reflect city-wide pressure, not occ-specific.
-function getAdjScore(base: OccFit, priceMult: number, rentMult: number, tai: number, eoi: number, hai: number, eqi: number, tci: number, psi: number): number {
+// Adjusts the base OccFit score for a specific property-type multiplier.
+// Uses occupation-specific EOI (eoiNum(base.eoi)) so the displayed score
+// stays consistent with fit.score in the Rankings section (same single source of truth).
+function getAdjScore(base: OccFit, priceMult: number, rentMult: number, tai: number, _eoi: number, hai: number, eqi: number, tci: number, psi: number): number {
   const adjH = parseFloat((base.hpiYears * priceMult).toFixed(1))
   const adjR = Math.round(base.rpi * rentMult)
-  return computeScore(adjH, adjR, tai, eoi, hai, eqi, tci, psi)
+  return computeScore(adjH, adjR, tai, eoiNum(base.eoi), hai, eqi, tci, psi)
 }
 
 // ── Matrix tooltip ────────────────────────────────────────────────────────────
