@@ -235,44 +235,34 @@ export default function MethodologyPage() {
           </p>
 
           <div style={{ ...S.card, marginTop: 8 }}>
-            <h3 style={{ ...S.h3, marginBottom: 16 }}>Score structure (Model v4)</h3>
+            <h3 style={{ ...S.h3, marginBottom: 16 }}>Score structure (Model v4 / Platform v5.0)</h3>
 
-            {/* Visual formula blocks */}
+            {/* Score structure — direction only, no exact weights */}
             <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 16 }}>
               <div style={{ background: 'rgba(20,184,166,0.07)', border: '1px solid rgba(20,184,166,0.18)', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>HOUSING SCORE (52% of final score)</div>
-                <div style={{ color: '#14B8A6', fontSize: 14, fontWeight: 700, fontFamily: 'monospace', marginBottom: 6 }}>
-                  housingScore = hpiScore × 0.55 + rpiScore × 0.45
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, lineHeight: 1.7 }}>
-                  hpiScore: 92 (≤6 yrs) → 82 (≤8) → 70 (≤10) → 58 (≤12) → 45 (≤16) → 30 ({'>'} 16)<br />
-                  rpiScore: 90 ({'<'}25%) → 82 ({'<'}30%) → 72 ({'<'}35%) → 60 ({'<'}40%) → 48 ({'<'}45%) → 35 (≥45%)
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>HOUSING SCORE — primary component</div>
+                <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
+                  Derived from HPI Years and RPI %, with purchase burden weighted slightly more than rental burden. Both dimensions matter — a severe RPI cannot be offset by a low HPI Years, and vice versa. Housing pressure carries more weight in the final score than city quality.
                 </div>
               </div>
 
               <div style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.18)', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>CITY SCORE (48% of final score)</div>
-                <div style={{ color: '#60A5FA', fontSize: 14, fontWeight: 700, fontFamily: 'monospace', marginBottom: 6 }}>
-                  cityScore = EOI×0.22 + TAI×0.20 + HAI×0.20 + EQI×0.14 + TCI×0.12 + PSI×0.12
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, lineHeight: 1.7 }}>
-                  EOI is the only index that varies by occupation — the others are city-wide constants.
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>CITY SCORE — secondary component</div>
+                <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
+                  All six city indices (EOI, TAI, HAI, EQI, TCI, PSI) contribute positively — a higher value always improves the score. EOI is the only index that varies by occupation; the others are city-wide constants. EOI, TAI, and HAI are the primary city-score drivers; EQI, TCI, and PSI contribute as secondary factors.
                 </div>
               </div>
 
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>FINAL SCORE</div>
-                <div style={{ color: 'white', fontSize: 14, fontWeight: 700, fontFamily: 'monospace', marginBottom: 6 }}>
-                  fitScore = round(housingScore × 0.52 + cityScore × 0.48)
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12 }}>
-                  Clamped to [10, 99]. A score of 10 indicates severe housing or city pressure; 99 indicates ideal conditions for that occupation in that city.
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>WHAT WE DO NOT PUBLISH</div>
+                <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
+                  The exact weights assigned to each component and sub-index are not public. Releasing them would allow listings or postings to be tuned to score well rather than represent genuine affordability or demand. The direction and ordering above are sufficient to understand and challenge any result. For deeper questions, contact <a href="mailto:hello@lakive.com" style={{ color: '#60A5FA' }}>hello@lakive.com</a>.
                 </div>
               </div>
             </div>
 
             <p style={{ ...S.caption, marginTop: 16 }}>
-              Score weights reflect the view that housing affordability is the primary reason people leave a city, while city quality determines whether they want to stay once they can afford to. We do not publish the precise sub-weights of the six city indices to avoid gaming. The direction of each index is unambiguous: higher EOI / TAI / HAI / EQI / TCI / PSI always improves the score.
+              The final score is clamped to [10, 99]. A score below 40 indicates severe housing or city-quality constraints for this occupation in this city; above 85 indicates strong conditions on both dimensions.
             </p>
           </div>
 
@@ -362,8 +352,8 @@ export default function MethodologyPage() {
           <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 10, marginTop: 4 }}>
             {[
               {
-                version: 'Model v4 · Oct 2026',
-                changes: 'Current version. Single Source of Truth refactor: all scores computed from lib/fit-engine.ts; FIT_MATRIX (hardcoded values) fully removed. Housing weight raised to 52% (from 50%). RPI score table re-anchored to 35% threshold.',
+                version: 'Model v4 / Platform v5.0 · Oct 2026',
+                changes: 'Current version. Single Source of Truth refactor: all real-occupation scores computed from a central engine (lib/fit-engine.ts); static hardcoded data eliminated for all cities with live benchmark data. Housing affordability component weight increased relative to v3. RPI threshold re-calibrated. Expanded occupation coverage from 8 to 20 real occupation types.',
               },
               {
                 version: 'Model v3 · Jul 2026',
