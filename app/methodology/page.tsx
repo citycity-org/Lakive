@@ -158,7 +158,7 @@ export default function MethodologyPage() {
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
               <Row
                 label="EOI — Employment Opportunity Index"
-                value="Qualitative assessment of how well the city's economic base generates demand for the specific occupation. Rated High / Mid / Low; converted to numeric (High = 78, Mid = 62, Low = 45) for scoring."
+                value="Qualitative assessment of how well the city's economic base generates demand for the specific occupation. Rated High / Mid / Low and converted to a numeric score for the composite calculation."
                 note="Only manually-set index — updated annually"
               />
               <Row
@@ -361,7 +361,7 @@ export default function MethodologyPage() {
               },
               {
                 version: 'Model v2 · Mar 2026',
-                changes: 'Split housing score into HPI Years (purchase) and RPI % (rental), weighted separately. Introduced property-type selector (1BR / 2BR / 3BR / Townhouse / Detached). Added price-adjustment scenario multipliers.',
+                changes: 'Split housing score into two dimensions: HPI Years (purchase burden) and RPI % (rental burden). Introduced property-type selector (1BR / 2BR / 3BR / Townhouse / Detached). Added price-adjustment scenario multipliers.',
               },
               {
                 version: 'Model v1 · Jan 2026',
