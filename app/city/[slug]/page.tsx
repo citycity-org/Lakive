@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
 import { type OccFit, buildCityMatrix, computeScore, eoiNum } from '@/lib/fit-engine'
+import { ChartAttribution } from '@/app/components/ChartAttribution'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface PriceAggregate { item_id: string; item_label: string; category: string; avg_price: number; sample_count: number; last_seen: string }
@@ -747,6 +748,11 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                 <div style={{ padding: '10px 12px', background: `${vMain.color}0E`, border: `1px solid ${vMain.color}22`, borderRadius: 10 }}>
                   <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: 12, lineHeight: 1.6, margin: 0 }}>{summary}</p>
                 </div>
+
+                <ChartAttribution
+                  context={`${occName} × ${city.name} · ${pt.label}`}
+                  country={city.country ?? 'CA'}
+                />
               </div>
             </div>
           </div>
@@ -803,6 +809,11 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               </div>
             ))}
           </div>
+          <ChartAttribution
+            context={`Occupation Fit Matrix · ${city.name} · ${pt.label}`}
+            country={city.country ?? 'CA'}
+            mt={12}
+          />
         </section>
 
         {/* ── 3. CITY SNAPSHOT ──────────────────────────────────────────── */}

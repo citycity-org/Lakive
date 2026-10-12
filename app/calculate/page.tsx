@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import ShareModal from '@/components/ShareModal'
 import type { CityScoresResponse } from '@/app/api/city-scores/route'
+import { ChartAttribution } from '@/app/components/ChartAttribution'
 
 // ── Occupation ID mapping: calculate page → rent-vs-own page ───────────────────
 const CALC_OCC_TO_RVO: Record<string, string> = {
@@ -861,6 +862,12 @@ export default function CalculatePage() {
               ))}
             </div>
           )}
+
+          <ChartAttribution
+            context={`${occName || 'All Occupations'} · $${income.toLocaleString()} · ${cityName}`}
+            country="CA"
+            mt={12}
+          />
 
           {/* CTA */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:20 }}>

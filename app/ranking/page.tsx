@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { buildCityMatrix } from '@/lib/fit-engine'
+import { ChartAttribution } from '@/app/components/ChartAttribution'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type EoiVal = 'High'|'Mid'|'Low'
@@ -1511,6 +1512,12 @@ export default function RankingPage() {
             )
           })}
         </div>
+
+        <ChartAttribution
+          context={`City Rankings · ${occName} · ${PROP_TYPES.find(p=>p.id===propType)?.label ?? '2BR'}`}
+          country="CA"
+          mt={4}
+        />
 
         {/* ── More cities CTA ── */}
         <div style={{ textAlign:'center', marginBottom:28, padding:'20px 24px', background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16 }}>
