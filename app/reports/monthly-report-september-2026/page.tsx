@@ -32,6 +32,63 @@ function Body({ children }: { children: React.ReactNode }) {
   return <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.75, margin: '0 0 14px' }}>{children}</p>
 }
 
+// ── Four-layer structured analysis card ───────────────────────────────────────
+// Template for Observed → Seasonal Adjustment → Interpretation → Implications
+function FourLayerCard({ observed, seasonal, interpretation, implications }: {
+  observed: string; seasonal: string; interpretation: string; implications: string
+}) {
+  const layers = [
+    { label: 'Observed', icon: '📊', text: observed, border: '#3B82F6', bg: '#EFF6FF' },
+    { label: 'Seasonal Adjustment', icon: '📅', text: seasonal, border: GREY, bg: '#F8FAFC' },
+    { label: 'Interpretation', icon: '🔍', text: interpretation, border: TEAL, bg: '#F0FDFA' },
+    { label: 'Implications', icon: '→', text: implications, border: ORG, bg: '#FFF7ED' },
+  ]
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, margin: '16px 0' }}>
+      {layers.map(l => (
+        <div key={l.label} style={{ borderLeft: `3px solid ${l.border}`, background: l.bg, padding: '10px 14px', borderRadius: '0 8px 8px 0' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: l.border, marginBottom: 5 }}>
+            {l.icon} {l.label}
+          </div>
+          <p style={{ fontSize: 13, color: '#374151', margin: 0, lineHeight: 1.6 }}>{l.text}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── Indicator Divergence module ────────────────────────────────────────────────
+// Triggered when key indicators point in opposite directions
+function DivergenceModule({ divergences }: { divergences: Array<{ signal: string; up: string; down: string; explanation: string }> }) {
+  return (
+    <div style={{ background: '#FFFBEB', border: `1px solid ${AMBER}`, borderRadius: 12, padding: '20px 24px', margin: '16px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+        <span style={{ fontSize: 18 }}>⚡</span>
+        <div>
+          <div style={{ fontWeight: 800, color: AMBER, fontSize: 15 }}>指标分歧 · Indicator Divergence</div>
+          <div style={{ fontSize: 12, color: GREY, marginTop: 2 }}>Multiple indicators are moving in different directions this month. Here is why they don't contradict each other.</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {divergences.map((d, i) => (
+          <div key={i} style={{ background: '#fff', border: '1px solid #FDE68A', borderRadius: 8, padding: '12px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr 2fr', gap: 12, alignItems: 'start' }}>
+            <div>
+              <span style={{ color: GRN, fontWeight: 700, fontSize: 13 }}>↑ {d.up}</span>
+            </div>
+            <div>
+              <span style={{ color: RED, fontWeight: 700, fontSize: 13 }}>↓ {d.down}</span>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: AMBER, marginBottom: 3 }}>{d.signal}</div>
+              <p style={{ fontSize: 12, color: '#374151', margin: 0, lineHeight: 1.5 }}>{d.explanation}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Callout({ label, text, color = TEAL, bg = '#F0FDFA' }: { label: string; text: string; color?: string; bg?: string }) {
   return (
     <div style={{
@@ -161,7 +218,7 @@ function OccTable() {
     { occ: 'Nurse', city: 'Calgary', score: 86, hpi: 4.5, rpi: 24, eoi: 'High', note: 'Best nurse city nationally · housing stabilization extends 5-yr ownership window', sc: GRN, rc: GRN, ec: GRN },
     { occ: 'Nurse', city: 'Ottawa', score: 82, hpi: 6.5, rpi: 26, eoi: 'High', note: 'Federal healthcare stability · inflation-resilient wage contracts', sc: GRN, rc: GRN, ec: GRN },
     { occ: 'Nurse', city: 'Toronto', score: 72, hpi: 12.0, rpi: 40, eoi: 'High', note: 'High demand, high cost · CREA HPI improvement a long-term signal, not immediate relief', sc: AMBER, rc: AMBER, ec: GRN },
-    { occ: 'Electrician', city: 'Calgary', score: 91, hpi: 3.9, rpi: 23, eoi: 'High', note: '#1 trades city · home ownership in <4 yrs · demand steady against tariff headwinds', sc: GRN, rc: GRN, ec: GRN },
+    { occ: 'Electrician', city: 'Calgary', score: 80, hpi: 7.8, rpi: 23, eoi: 'High', note: '#1 trades city · home ownership in ~8 yrs (2BR) · demand steady against tariff headwinds', sc: GRN, rc: GRN, ec: GRN },
     { occ: 'Electrician', city: 'Edmonton', score: 79, hpi: 3.2, rpi: 20, eoi: 'Mid', note: 'Rising trades alternative · benchmark $426,900 · strong in-migration from eastern Canada', sc: GRN, rc: GRN, ec: AMBER },
     { occ: 'Software Eng.', city: 'Toronto', score: 88, hpi: 9.2, rpi: 33, eoi: 'High', note: 'Highest tech EOI in Canada · CREA improvement tentative · monitor Q4 tech hiring', sc: GRN, rc: GRN, ec: GRN },
     { occ: 'Software Eng.', city: 'Vancouver', score: 83, hpi: 9.5, rpi: 35, eoi: 'High', note: 'Strong ecosystem · benchmark $1,081,900 · tariff exposure via US-adjacent firms', sc: GRN, rc: GRN, ec: GRN },
@@ -296,7 +353,7 @@ export default function MonthlyReportSeptember2026() {
           <KpiTable />
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '24px 0 12px' }}>5 Actionable Takeaways</h3>
           {[
-            'Trades workers: Calgary remains the clearest opportunity — an electrician reaches home ownership in under 4 years (HPI: 3.9 yrs). The sixth consecutive BoC hold keeps mortgage conditions stable. Edmonton is emerging as a secondary option: benchmark $426,900 and rising in-migration make it worth evaluating against your specific household circumstances.',
+            'Trades workers: Calgary remains the clearest opportunity — an electrician reaches home ownership in roughly 8 years on a 2-bedroom scenario (HPI: 7.8 yrs). The sixth consecutive BoC hold keeps mortgage conditions stable. Edmonton is emerging as a secondary option: benchmark $426,900 and rising in-migration make it worth evaluating against your specific household circumstances.',
             'Healthcare workers: Ottawa and Calgary both score 80+ for nurses. With October 28 pricing ~95% hold probability, the current mortgage window is expected to persist into Q4. Calgary\'s no-PST structure provides the largest buffer against any cost-of-living increase driven by tariff pass-through.',
             'Tech professionals: Toronto\'s EOI of 92 holds. The city\'s tech labour market continues to absorb tariff-related uncertainty — US firms with Canadian operations have largely maintained hiring plans through Q3. Housing cost improvement is tentative; CREA\'s HPI narrowing to -3.0% YoY is a signal to monitor, not act on immediately.',
             'Renters: National rents are down 4.8% YoY but population growth has slowed to 0.5% YoY — the demand tailwind that pressured rents in 2023–24 has moderated. If October LFS data shows further employment weakness, rental softness may persist into Q1 2027. Current conditions favour locking in a lease at a discount rather than waiting.',
@@ -338,10 +395,11 @@ export default function MonthlyReportSeptember2026() {
           <Body>
             City-level variation is significant. Vancouver leads with $2,704 average asking rent, followed by Toronto at $2,570. Both remain well above pre-pandemic levels on a real basis. Halifax, at $2,356, continues to carry rent pressure disproportionate to its wage base — a pattern that has emerged consistently since Atlantic Canada's in-migration surge peaked in 2022. Calgary ($1,825) and Edmonton ($1,520) remain the most accessible rental markets among major cities, supported by a no-PST cost structure and active purpose-built supply pipelines.
           </Body>
-          <Callout
-            label="Lakive Interpretation:"
-            text="The 23rd month of rent decline is an important structural fact — but the population growth slowdown to 0.5% YoY is the driver that matters more for forward-looking assessment. When demand deceleration is the mechanism, the trajectory is likely to persist rather than reverse quickly. Renters who locked in leases in Q3 2026 are on the right side of the market. Those still searching should expect continued softness in major cities through Q1 2027, absent a significant immigration policy shift."
-            color={TEAL} bg="#F0FDFA"
+          <FourLayerCard
+            observed="National avg asking rent: CAD $2,035 (Sep 2026). Month-over-month: +$23 (+1.1%). Year-over-year: ▼4.2% — 23rd consecutive monthly decline. City range: Vancouver $2,704 · Toronto $2,570 · Calgary $1,825 · Edmonton $1,520."
+            seasonal="September is seasonally strong for rentals (students, end-of-summer arrivals). The +$23 MoM uptick reflects normal fall demand, not a reversal of the structural downtrend. Seasonally adjusted, the trend is still negative."
+            interpretation="The YoY decline is structural, not cyclical — driven by elevated supply completions and population growth slowing to 0.5% YoY. When demand deceleration is the mechanism, softness tends to persist rather than reverse quickly."
+            implications="For renters: Q3/Q4 2026 is a strong window to lock in leases at below-peak rates before any spring demand pickup. For buyers: rent relief reduces the urgency to exit renting immediately, but doesn't change the long-term ownership calculus in high-HPI cities."
           />
           <Callout
             label="⚠ Tariff risk:"
@@ -424,6 +482,34 @@ export default function MonthlyReportSeptember2026() {
           />
         </div>
 
+        {/* Indicator Divergence */}
+        <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
+          <SectionHeading num={7} title="指标分歧解释 · Why the Data Looks Contradictory" />
+          <Body>
+            September 2026 presents several pairs of indicators that appear to point in opposite directions. This is not an error — each pair reflects different underlying drivers. Understanding the divergence is as important as reading each number individually.
+          </Body>
+          <DivergenceModule divergences={[
+            {
+              signal: 'Rent ↓ + Employment ↓ (same cause)',
+              up: 'Rent falling (−4.2% YoY)',
+              down: 'Jobs falling (−68K Sep)',
+              explanation: 'Both are driven by the same underlying factor: demand deceleration. Population growth at 0.5% YoY means fewer new households entering rental markets, which softens rent. Fewer arrivals also means weaker labour demand. These are not independent improvements — the rent decline reflects weakening demand, not supply-side success.',
+            },
+            {
+              signal: 'Prices ↓ + Volume ↓ (buyer market not open)',
+              up: 'HPI narrowing (−3.0% YoY)',
+              down: 'Sales volume −6.9% YoY',
+              explanation: 'Home prices declining looks like a buyer opportunity, but sales volume falling simultaneously means the market is illiquid. Sellers are not capitulating — they are waiting. The price improvement is tentative, not a clear entry signal. Mid-tier cities (Calgary $569,800; Edmonton $426,900) are the exception: volume there is healthier.',
+            },
+            {
+              signal: 'Wages ↑ nominally, ↓ in real terms',
+              up: 'Wages +2.0% YoY nominal',
+              down: 'Real wages negative (below CPI)',
+              explanation: 'Nominal wage growth of 2.0% sounds positive, but CPI is running above that level. Real purchasing power — the amount of goods and housing a wage buys — has declined for two consecutive months. For workers evaluating relocation, nominal salary comparisons across cities are less meaningful than real-wage comparisons adjusted for local cost of living.',
+            },
+          ]} />
+        </div>
+
         {/* Insight of the Month */}
         <div style={{ background: NAVY, borderRadius: 14, padding: '28px 32px', marginBottom: 24, borderLeft: `5px solid ${AMBER}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -440,7 +526,7 @@ export default function MonthlyReportSeptember2026() {
 
         {/* City Insights */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
-          <SectionHeading num={7} title="Lakive City Insights" />
+          <SectionHeading num={8} title="Lakive City Insights" />
           <Body>Scores below are Lakive composite ratings (0–100) based on salary, housing affordability, tax burden, employment opportunity, and quality of life. Data version: Oct 2026 v1.</Body>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '20px 0 12px' }}>Cross-City Score: Key Occupations</h3>
           <OccTable />
@@ -493,7 +579,7 @@ export default function MonthlyReportSeptember2026() {
 
         {/* Looking Ahead */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
-          <SectionHeading num={8} title="Looking Ahead" />
+          <SectionHeading num={9} title="Looking Ahead" />
           <LookingAheadTable />
           <Callout
             label="Key watch:"
@@ -504,7 +590,7 @@ export default function MonthlyReportSeptember2026() {
 
         {/* Data Sources */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 40, border: '1px solid #E5E7EB' }}>
-          <SectionHeading num={9} title="Data Sources" />
+          <SectionHeading num={10} title="Data Sources" />
           <Body>
             Lakive's city scores (Score, HPI, RPI, EOI) are proprietary composites calculated from public government and industry data. Inputs include median occupational wages (Job Bank Canada), home benchmark prices (CREA), average asking rents (Rentals.ca × Urbanation), provincial tax schedules, and employment absorption rates (Statistics Canada). The composite weighting methodology is not disclosed. Scores are recalibrated with each major data release.
           </Body>

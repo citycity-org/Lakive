@@ -963,6 +963,16 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                 }
               </p>
             </div>
+
+            {/* ── Data Attribution ── */}
+            <div style={{ padding: '8px 22px 14px' }}>
+              <p style={{ color: 'rgba(255,255,255,0.16)', fontSize: 11, margin: 0, lineHeight: 1.7 }}>
+                {city.country === 'US'
+                  ? 'Rent: local MLS surveys · Metro area · Q3 2026 · Observed · Home prices: Zillow / local MLS · Metro area · Sep 2026 · Salary: BLS OES · State/Metro · May 2025'
+                  : 'Rent: CMHC Rental Market Report · CMA boundary · Oct 2026 · Observed (not seasonally adjusted) · Home prices: CREA MLS® · Board jurisdiction · Sep 2026 · Salary: StatCan Job Bank · Province/CMA · 2024–25'
+                }
+              </p>
+            </div>
           </div>
         </section>
 
@@ -1001,6 +1011,12 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               })}
             </div>
           </div>
+          <p style={{ color: 'rgba(255,255,255,0.16)', fontSize: 11, marginTop: 8, paddingLeft: 2, lineHeight: 1.6 }}>
+            {city.country === 'US'
+              ? 'City indices: BLS, Census ACS, EPA AQI, Walk Score, local government data · 2024–2026 · lakive.com/methodology'
+              : 'City indices: StatCan, CIHI, Environment Canada, CMHC · 2024–2026 · lakive.com/methodology'
+            }
+          </p>
         </section>
 
         {/* ── 7. OCCUPATION FIT RANKING ─────────────────────────────────── */}
