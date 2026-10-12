@@ -1057,7 +1057,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em' }}>FINAL VERDICT</span>
             {occRank > 0 && (
               <span style={{ marginLeft: 4, color: rankColor, fontSize: 12, fontWeight: 700 }}>
-                · Canada {occName} · {pt.label} Rank #{occRank}/{totalCities}
+                · {city.country === 'US' ? 'US' : 'Canada'} {occName} · {pt.label} Rank #{occRank}/{totalCities}
               </span>
             )}
           </div>

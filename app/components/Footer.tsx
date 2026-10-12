@@ -4,7 +4,7 @@ import { LakiveLogo } from './LakiveLogo'
 const SOCIALS = [
   {
     label: 'X',
-    href: 'https://x.com/lakiveofficiaal',
+    href: 'https://x.com/lakiveofficial',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L2.049 2.25H8.1l4.26 5.632 5.884-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -182,7 +182,7 @@ export default function Footer() {
             © 2026 Lakive. All Rights Reserved.
           </span>
           <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>
-            Data: StatCan · CMHC · CREA · CRA · Job Bank · CIHI
+            Data: StatCan · CMHC · BLS · Census Bureau · Job Bank · CareerOneStop
           </span>
         </div>
 

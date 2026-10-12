@@ -23,7 +23,8 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
   { url: '/reports/the-61-billion-paradox-cn',                      priority: 0.75, changeFrequency: 'yearly' },
   { url: '/reports/canada-q3-2026-economic-intelligence',           priority: 0.80, changeFrequency: 'yearly' },
   { url: '/prices',       priority: 0.75, changeFrequency: 'weekly'  },
-  { url: '/newsletter', priority: 0.75, changeFrequency: 'monthly' },
+  { url: '/newsletter',   priority: 0.75, changeFrequency: 'monthly' },
+  { url: '/methodology',  priority: 0.70, changeFrequency: 'monthly' },
   { url: '/about',      priority: 0.60, changeFrequency: 'monthly' },
   { url: '/contact',    priority: 0.55, changeFrequency: 'yearly'  },
 ]

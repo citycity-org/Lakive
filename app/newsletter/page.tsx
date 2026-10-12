@@ -28,16 +28,17 @@ const SAMPLE = {
   ],
 }
 
-function StatPill({ label, value, delta, unit = '' }: { label: string; value: string | number; delta?: number; unit?: string }) {
+function StatPill({ label, value, delta, unit = '', deltaUnit }: { label: string; value: string | number; delta?: number; unit?: string; deltaUnit?: string }) {
   const dir = delta !== undefined ? (delta > 0 ? '▲' : '▼') : null
   const col = delta !== undefined ? (delta > 0 ? '#34D399' : '#F87171') : 'rgba(255,255,255,0.55)'
+  const dUnit = deltaUnit ?? unit
   return (
     <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '14px 18px' }}>
       <div style={{ color: 'rgba(255,255,255,0.38)', fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
         <span style={{ color: 'white', fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em' }}>{value}{unit}</span>
         {dir && delta !== undefined && (
-          <span style={{ color: col, fontSize: 12, fontWeight: 700 }}>{dir} {Math.abs(delta)}{unit}</span>
+          <span style={{ color: col, fontSize: 12, fontWeight: 700 }}>{dir} {Math.abs(delta)}{dUnit}</span>
         )}
       </div>
     </div>
@@ -200,7 +201,7 @@ export default function NewsletterPage() {
               <StatPill label="HPI Years" value={SAMPLE.hpiYears} delta={SAMPLE.hpiDelta} />
               <StatPill label="Rent-to-Income %" value={SAMPLE.rpi} delta={SAMPLE.rpiDelta} unit="%" />
               <StatPill label="Employment Index" value={SAMPLE.eoi} delta={SAMPLE.eoiDelta} />
-              <StatPill label="Median 1BR Rent" value={`$${SAMPLE.medianRent.toLocaleString()}`} delta={SAMPLE.rentDelta} unit="%" />
+              <StatPill label="Median 1BR Rent" value={`$${SAMPLE.medianRent.toLocaleString()}`} delta={SAMPLE.rentDelta} deltaUnit="%" />
             </div>
           </div>
 

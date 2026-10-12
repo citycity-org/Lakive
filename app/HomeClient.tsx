@@ -766,13 +766,13 @@ export default function Home() {
               onClick={() => router.push('/newsletter')}>
               <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full text-xs font-semibold"
                 style={{ background: 'rgba(79,142,247,0.12)', color: '#93C5FD', border: '1px solid rgba(79,142,247,0.25)' }}>
-                Coming Next
+                Newsletter
               </div>
               <div className="text-sm font-semibold mb-2 text-white leading-snug">
-                More reports in Q3 &amp; Q4 2026
+                Monthly briefs · Deep research · City intelligence
               </div>
               <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.50)' }}>
-                Newcomer&apos;s Guide, Remote Worker Arbitrage, Calgary&apos;s Tax Advantage — subscribe to get notified.
+                Newcomer&apos;s Guide, Remote Worker Arbitrage, Calgary&apos;s Tax Advantage — subscribe to get each issue.
               </p>
               <div className="flex items-center gap-1 text-xs font-semibold transition-all group-hover:gap-2"
                 style={{ color: '#93C5FD' }}>

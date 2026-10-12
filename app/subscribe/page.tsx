@@ -169,6 +169,10 @@ function SubscribeContent() {
 
   const handleSubmit = async () => {
     if (!email || loading) return
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError('Please enter a valid email address')
+      return
+    }
     setLoading(true)
     setError('')
     try {
