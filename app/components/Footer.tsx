@@ -73,6 +73,7 @@ const NAV = [
     title: 'Company',
     links: [
       { label: 'About Lakive', href: '/about' },
+      { label: 'Methodology', href: '/methodology' },
       { label: 'Contact', href: '/contact' },
     ],
   },
