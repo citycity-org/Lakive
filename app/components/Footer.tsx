@@ -182,7 +182,7 @@ export default function Footer() {
             © 2026 Lakive. All Rights Reserved.
           </span>
           <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>
-            Data: StatCan · CMHC · BLS · Census Bureau · Job Bank · CareerOneStop
+            CA data: StatCan · CMHC · CREA · Job Bank · CIHI&ensp;·&ensp;US data: BLS · Census Bureau · CareerOneStop
           </span>
         </div>
 
