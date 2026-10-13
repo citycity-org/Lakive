@@ -64,7 +64,7 @@ export default function MethodologyPage() {
             Every number on this site comes from a defined formula applied to public data. This page explains what each indicator measures, where the data comes from, how often it is updated, and where the model falls short.
           </p>
           <p style={{ color: 'rgba(255,255,255,0.30)', fontSize: 13, lineHeight: 1.7, margin: 0, borderLeft: '3px solid rgba(20,184,166,0.40)', paddingLeft: 16 }}>
-            We do not publish the complete scoring weights. Releasing exact weights would allow actors to game the data — tuning listings or postings to score well rather than be genuinely affordable or in-demand. What we do publish is every indicator, its data source, and the direction of its effect on the score. That is enough to understand and challenge any result.
+            We do not publish the complete scoring weights. The specific weights and calibration parameters are proprietary analytical methodology — the core of how we translate public data into actionable city intelligence. What we do publish is every indicator, its data source, and the direction of its effect on the score. That is enough to understand and challenge any result.
           </p>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function MethodologyPage() {
         {/* ── 1. Indicator Definitions ────────────────────────────────────── */}
         <Section id="indicators" tag="Section 1" title="Indicator Definitions">
           <p style={S.body}>
-            Lakive tracks two housing-affordability metrics and six city-quality indices. The two affordability metrics are occupation-specific and property-type-specific. The six city indices are city-level — they do not vary by occupation.
+            Lakive tracks two housing-affordability metrics and six city-quality indices. The two affordability metrics are occupation-specific and property-type-specific. Five of the six city indices are city-level — they do not vary by occupation. The exception is EOI (Employment Opportunity Index), which is computed at the city × occupation level and produces a different value for each occupation in each city.
           </p>
 
           {/* Housing */}
@@ -100,7 +100,7 @@ export default function MethodologyPage() {
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
               <Row
                 label="HPI Years"
-                value={<>Reference price ÷ gross annual salary. Answers: <em>how many years of full pre-tax income to buy this property type?</em></>}
+                value={<>Reference property price ÷ gross annual occupational income. A comparative affordability ratio — <em>how many years of full pre-tax income equals the reference price?</em> This is not a purchase timeline; it does not model savings rate, down payment, or mortgage terms. It is used cross-city to show relative purchase burden for the same occupation.</>}
                 note="Lower = less burden"
               />
               <Row
@@ -112,8 +112,8 @@ export default function MethodologyPage() {
                 value="Occupation median salary sourced from Statistics Canada LFS (CA) or BLS OES (US). Fixed per city–occupation pair; does not reflect individual variation."
               />
               <Row
-                label="CA benchmark salary"
-                value="CAD 75,000 — used when no occupation data is available for a city, as a conservative floor."
+                label="CA calibration baseline"
+                value="CAD 75,000 — the median salary used to calibrate each city's benchmarkHpi. HPI Years for a given occupation are derived by scaling the benchmark via the ratio (benchmarkSalary ÷ occupationSalary). All 20 occupations carry explicit salary values; no occupation uses the $75K figure as a substitute."
               />
               <Row
                 label="HPI Level bands"
@@ -129,7 +129,7 @@ export default function MethodologyPage() {
               />
               <Row
                 label="RPI %"
-                value={<>Average 2-bedroom rent × 12 ÷ annual salary × 100. Answers: <em>what share of gross income goes to rent in a standard 2BR?</em></>}
+                value={<>Selected property-type rent × 12 ÷ annual salary × 100. Answers: <em>what share of gross income goes to rent for the selected property type?</em> The 2BR is the base benchmark. Other types apply calibration multipliers derived from observed market relativities (1BR ≈ 0.78×, 3BR ≈ 1.35×, Townhouse ≈ 1.50×, Detached ≈ 1.65×). These multipliers are estimates, not sourced directly per city from public data — they reflect typical relative rent differentials across Canadian and US markets.</>}
                 note="Lower = less burden"
               />
               <Row
@@ -256,7 +256,7 @@ export default function MethodologyPage() {
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 10, padding: '14px 18px' }}>
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>WHAT WE DO NOT PUBLISH</div>
                 <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
-                  The exact weights assigned to each component and sub-index are not public. Releasing them would allow listings or postings to be tuned to score well rather than represent genuine affordability or demand. The direction and ordering above are sufficient to understand and challenge any result. For deeper questions, contact <a href="mailto:hello@lakive.com" style={{ color: '#60A5FA' }}>hello@lakive.com</a>.
+                  The exact weights assigned to each component and sub-index are proprietary model parameters and are not published. They represent the core of our analytical methodology. The direction and ordering described above are sufficient to understand and challenge any result. For deeper questions, contact <a href="mailto:hello@lakive.com" style={{ color: '#60A5FA' }}>hello@lakive.com</a>.
                 </div>
               </div>
             </div>
@@ -267,13 +267,30 @@ export default function MethodologyPage() {
           </div>
 
           <div style={{ ...S.card, marginTop: 12 }}>
-            <h3 style={{ ...S.h3, marginBottom: 8 }}>Score interpretation</h3>
+            <h3 style={{ ...S.h3, marginBottom: 4 }}>Housing Pressure Level (separate from Fit Score)</h3>
+            <p style={{ ...S.body, marginBottom: 12, fontSize: 13 }}>
+              The Housing Pressure Level is derived independently from the Fit Score. It is set to <strong style={{ color: 'rgba(255,255,255,0.7)' }}>max(hpiLevel, rpiLevel)</strong> — whichever of the two housing dimensions is worse. L1 means low pressure; L5 means severe. This rating appears alongside the Fit Score on city pages to flag cases where a high composite score still carries a housing burden warning.
+            </p>
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
-              <Row label="85 – 99" value={<span style={S.teal}>Highly Recommended — strong affordability and city quality for this occupation</span>} />
-              <Row label="70 – 84" value={<span style={{ color: '#10B981' }}>Recommended — good overall balance; may carry housing pressure caveat</span>} />
-              <Row label="55 – 69" value={<span style={S.amber}>Moderate — viable but requires planning; likely elevated housing cost</span>} />
+              <Row label="L1" value={<span style={S.teal}>Low Pressure — both HPI and RPI within comfortable range</span>} />
+              <Row label="L2" value={<span style={{ color: '#10B981' }}>Manageable — affordable with standard financial planning</span>} />
+              <Row label="L3" value={<span style={S.amber}>Under Pressure — elevated housing cost; detailed budgeting required</span>} />
+              <Row label="L4" value={<span style={S.red}>High Pressure — significant housing burden for this occupation</span>} />
+              <Row label="L5" value={<span style={{ color: '#EF4444' }}>Severe — housing cost is a dominant constraint</span>} />
+            </div>
+          </div>
+
+          <div style={{ ...S.card, marginTop: 12 }}>
+            <h3 style={{ ...S.h3, marginBottom: 4 }}>Fit Score interpretation (10 – 99)</h3>
+            <p style={{ ...S.body, marginBottom: 12, fontSize: 13 }}>
+              The Fit Score is the composite of Housing Score and City Score described above. It reflects both housing affordability and city-quality conditions for a given occupation.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column' as const }}>
+              <Row label="85 – 99" value={<span style={S.teal}>Strong — affordability and city quality both favourable for this occupation</span>} />
+              <Row label="70 – 84" value={<span style={{ color: '#10B981' }}>Good — solid overall balance; minor housing or city caveat possible</span>} />
+              <Row label="55 – 69" value={<span style={S.amber}>Moderate — viable but elevated housing cost or weaker city conditions</span>} />
               <Row label="40 – 54" value={<span style={S.red}>Challenging — significant housing or city-quality constraints</span>} />
-              <Row label="10 – 39" value={<span style={{ color: '#EF4444' }}>Not Recommended — severe affordability or opportunity mismatch</span>} />
+              <Row label="10 – 39" value={<span style={{ color: '#EF4444' }}>Severe — strong affordability or opportunity mismatch</span>} />
             </div>
           </div>
         </Section>
