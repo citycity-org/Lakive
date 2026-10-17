@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from 'react'
 import { supabase } from '@/lib/supabase'
 import { type OccFit, buildCityMatrix, computeScore, eoiNum } from '@/lib/fit-engine'
+import { CITIES } from '@/app/guide/_data'
 import { ChartAttribution } from '@/app/components/ChartAttribution'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -538,7 +539,9 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   const fit      = matrix[occ] ?? matrix.electrician
   const hpiYears = liveHpi ?? parseFloat((fit.hpiYears * pt.priceMult).toFixed(1))
   const adjPrice = Math.round(city.basePrice * pt.priceMult)
-  const adjRent  = Math.round(city.medianRent * pt.rentMult)
+  // Use avgRent2BR from guide/_data (same source as the RPI model) so displayed rent matches the score
+  const baseRent = CITIES[slug]?.avgRent2BR ?? city.medianRent
+  const adjRent  = Math.round(baseRent * pt.rentMult)
   const adjRpi   = Math.round(fit.rpi * pt.rentMult)
   const occName  = OCC_NAMES[occ] ?? occ
   const ocrData  = getOccReality(city.name, occName, { ...fit, hpiYears, rpi: adjRpi })
@@ -894,15 +897,18 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               <div style={{ padding: '20px 22px', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 14 }}>
                   {[
-                    { label: '1 Bedroom', rent: Math.round(city.medianRent * 0.78), active: propType === '1br' },
-                    { label: '2 Bedrooms', rent: city.medianRent,                   active: propType === '2br' },
-                    { label: '3 Bedrooms', rent: Math.round(city.medianRent * 1.35),active: propType === '3br' },
+                    { label: '1 Bedroom', rent: Math.round(baseRent * 0.78), active: propType === '1br' },
+                    { label: '2 Bedrooms', rent: baseRent,                   active: propType === '2br' },
+                    { label: '3 Bedrooms', rent: Math.round(baseRent * 1.35),active: propType === '3br' },
                   ].map(r => (
                     <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: r.active ? 'rgba(79,142,247,0.10)' : 'rgba(255,255,255,0.025)', border: r.active ? '1px solid rgba(79,142,247,0.25)' : '1px solid transparent', borderRadius: 9 }}>
-                      <span style={{ color: r.active ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.3)', fontSize: 12 }}>{r.label} median rent</span>
+                      <span style={{ color: r.active ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.3)', fontSize: 12 }}>{r.label} avg asking rent</span>
                       <span style={{ color: r.active ? 'white' : 'rgba(255,255,255,0.55)', fontWeight: 800, fontSize: 14, fontFamily: 'monospace' }}>${r.rent.toLocaleString()}/mo</span>
                     </div>
                   ))}
+                </div>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.22)', marginBottom: 10, paddingLeft: 2 }}>
+                  Avg asking rent · Rentals.ca × Urbanation · same values used in RPI model
                 </div>
                 <div style={{ padding: '10px 12px', background: rc(adjRpi) + '0F', border: `1px solid ${rc(adjRpi)}22`, borderRadius: 10 }}>
                   <div style={{ color: 'rgba(255,255,255,0.38)', fontSize: 11, marginBottom: 3 }}>{occName} rent / income</div>
