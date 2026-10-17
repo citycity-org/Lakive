@@ -1000,7 +1000,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               <DimCard label="Employment (EOI)" val={city.eoi} color={city.eoi >= 75 ? '#14B8A6' : '#F59E0B'} note={`${occName} job density & growth`} />
               <DimCard label="Tax Index (TAI)" val={city.tai} color={city.tai >= 80 ? '#14B8A6' : city.tai >= 60 ? '#F59E0B' : '#E86C2F'} note={city.taiNote.split('(')[0].trim()} />
               <DimCard label="Rent Pressure (RPI)" val={adjRpi} unit="%" color={rc(adjRpi)} note={`${pt.label} · ${rl(adjRpi)}`} />
-              <DimCard label="Years to Buy (HPI)" val={hpiYears} unit=" yrs" color={hc(hpiYears)} note={`${pt.label} · ${hl(hpiYears)}`} />
+              <DimCard label="HEY (Housing Entry Years)" val={hpiYears} unit=" yrs" color={hc(hpiYears)} note={`${pt.label} · ${hl(hpiYears)}`} />
             </div>
           </div>
 

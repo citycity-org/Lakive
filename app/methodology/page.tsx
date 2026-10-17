@@ -99,8 +99,8 @@ export default function MethodologyPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
               <Row
-                label="HPI Years"
-                value={<>Reference property price ÷ gross annual occupational income. A comparative affordability ratio — <em>how many years of full pre-tax income equals the reference price?</em> This is not a purchase timeline; it does not model savings rate, down payment, or mortgage terms. It is used cross-city to show relative purchase burden for the same occupation.</>}
+                label="HEY — Housing Entry Years"
+                value={<>Reference property price ÷ gross annual occupational income. A comparative affordability ratio — <em>how many years of full pre-tax income equals the reference price?</em> This is not a purchase timeline; it does not model savings rate, down payment, or mortgage terms. It is used cross-city to show relative purchase burden for the same occupation. (Named HPI in reports published before November 2026 — same metric, renamed for clarity.)</>}
                 note="Lower = less burden"
               />
               <Row
@@ -113,10 +113,10 @@ export default function MethodologyPage() {
               />
               <Row
                 label="CA calibration baseline"
-                value="CAD 75,000 — the median salary used to calibrate each city's benchmarkHpi. HPI Years for a given occupation are derived by scaling the benchmark via the ratio (benchmarkSalary ÷ occupationSalary). All 20 occupations carry explicit salary values; no occupation uses the $75K figure as a substitute."
+                value="CAD 75,000 — the median salary used to calibrate each city's reference HEY. Housing Entry Years for a given occupation are derived by scaling the benchmark via the ratio (benchmarkSalary ÷ occupationSalary). All 20 occupations carry explicit salary values; no occupation uses the $75K figure as a substitute."
               />
               <Row
-                label="HPI Level bands"
+                label="HEY Level bands"
                 value={
                   <span style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 6 }}>
                     <span style={{ ...S.tag, background: 'rgba(20,184,166,0.15)', color: '#14B8A6' }}>L1 ≤ 5 yrs</span>
@@ -146,7 +146,7 @@ export default function MethodologyPage() {
               />
               <Row
                 label="Pressure Level"
-                value="max(hpiLevel, rpiLevel). The overall housing pressure rating is driven by whichever of the two dimensions is worse — you cannot escape a severe RPI with a good HPI."
+                value="max(heyLevel, rpiLevel). The overall housing pressure rating is driven by whichever of the two dimensions is worse — you cannot escape a severe RPI with a low HEY."
               />
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function MethodologyPage() {
               <div style={{ background: 'rgba(20,184,166,0.07)', border: '1px solid rgba(20,184,166,0.18)', borderRadius: 10, padding: '14px 18px' }}>
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>HOUSING SCORE — primary component</div>
                 <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
-                  Derived from HPI Years and RPI %, with purchase burden weighted slightly more than rental burden. Both dimensions matter — a severe RPI cannot be offset by a low HPI Years, and vice versa. Housing pressure carries more weight in the final score than city quality.
+                  Derived from HEY (Housing Entry Years) and RPI %, with purchase burden weighted slightly more than rental burden. Both dimensions matter — a severe RPI cannot be offset by a low HEY, and vice versa. Housing pressure carries more weight in the final score than city quality.
                 </div>
               </div>
 
@@ -269,10 +269,10 @@ export default function MethodologyPage() {
           <div style={{ ...S.card, marginTop: 12 }}>
             <h3 style={{ ...S.h3, marginBottom: 4 }}>Housing Pressure Level (separate from Fit Score)</h3>
             <p style={{ ...S.body, marginBottom: 12, fontSize: 13 }}>
-              The Housing Pressure Level is derived independently from the Fit Score. It is set to <strong style={{ color: 'rgba(255,255,255,0.7)' }}>max(hpiLevel, rpiLevel)</strong> — whichever of the two housing dimensions is worse. L1 means low pressure; L5 means severe. This rating appears alongside the Fit Score on city pages to flag cases where a high composite score still carries a housing burden warning.
+              The Housing Pressure Level is derived independently from the Fit Score. It is set to <strong style={{ color: 'rgba(255,255,255,0.7)' }}>max(heyLevel, rpiLevel)</strong> — whichever of the two housing dimensions is worse. L1 means low pressure; L5 means severe. This rating appears alongside the Fit Score on city pages to flag cases where a high composite score still carries a housing burden warning.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
-              <Row label="L1" value={<span style={S.teal}>Low Pressure — both HPI and RPI within comfortable range</span>} />
+              <Row label="L1" value={<span style={S.teal}>Low Pressure — both HEY and RPI within comfortable range</span>} />
               <Row label="L2" value={<span style={{ color: '#10B981' }}>Manageable — affordable with standard financial planning</span>} />
               <Row label="L3" value={<span style={S.amber}>Under Pressure — elevated housing cost; detailed budgeting required</span>} />
               <Row label="L4" value={<span style={S.red}>High Pressure — significant housing burden for this occupation</span>} />
@@ -327,11 +327,11 @@ export default function MethodologyPage() {
             {[
               {
                 title: 'Single benchmark property type',
-                body: 'HPI Years uses one property benchmark per city — a 2-bedroom condo composite in most Canadian cities, or ZHVI for a given tier in US cities. It does not reflect the full spread of prices within a city. Neighbourhoods vary widely.',
+                body: 'HEY (Housing Entry Years) uses one property benchmark per city — a 2-bedroom condo composite in most Canadian cities, or ZHVI for a given tier in US cities. It does not reflect the full spread of prices within a city. Neighbourhoods vary widely.',
               },
               {
                 title: 'Pre-tax salary denominator',
-                body: 'RPI and HPI Years use gross annual salary. After-tax take-home varies by province / state and individual circumstances. The TCI index partially accounts for tax burden at the city level, but individual tax situations differ.',
+                body: 'RPI and HEY (Housing Entry Years) use gross annual salary. After-tax take-home varies by province / state and individual circumstances. The TAI index partially accounts for tax burden at the city level, but individual tax situations differ.',
               },
               {
                 title: 'No household-size adjustment',
@@ -378,7 +378,7 @@ export default function MethodologyPage() {
               },
               {
                 version: 'Model v2 · Mar 2026',
-                changes: 'Split housing score into two dimensions: HPI Years (purchase burden) and RPI % (rental burden). Introduced property-type selector (1BR / 2BR / 3BR / Townhouse / Detached). Added price-adjustment scenario multipliers.',
+                changes: 'Split housing score into two dimensions: HEY/Housing Entry Years (purchase burden) and RPI % (rental burden). Introduced property-type selector (1BR / 2BR / 3BR / Townhouse / Detached). Added price-adjustment scenario multipliers. (Metric previously labelled HPI Years — same calculation, renamed Nov 2026.)',
               },
               {
                 version: 'Model v1 · Jan 2026',
