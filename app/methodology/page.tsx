@@ -181,6 +181,11 @@ export default function MethodologyPage() {
                 label="PSI — Public Safety Index"
                 value="Violent crime rate and property crime rate per 100,000. Sources: Statistics Canada UCR Survey (CA), FBI UCR / NIBRS (US). Inverted — lower crime → higher index."
               />
+              <Row
+                label="EDI — Education Index"
+                value="School quality ratings, post-secondary institution density, and literacy indicators. Displayed on city pages as a reference indicator for users evaluating family and long-term settlement decisions. EDI is informational only — it does not contribute to the composite Fit Score."
+                note="Reference only · not in composite score"
+              />
             </div>
           </div>
         </Section>

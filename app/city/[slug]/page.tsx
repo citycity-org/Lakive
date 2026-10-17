@@ -1012,6 +1012,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
               {[
                 { label: 'Healthcare (HAI)', val: city.hai, note: 'Wait times + coverage' },
+                { label: 'Education (EDI)',   val: city.edi, note: 'Schools + universities · reference only' },
                 { label: 'Environment (EQI)', val: city.eqi, note: 'Air + green space + water' },
                 { label: 'Transit (TCI)',     val: city.tci, note: 'Walk + transit coverage' },
                 { label: 'Safety (PSI)',      val: city.psi, note: 'Community safety index' },
