@@ -98,8 +98,8 @@ function IndicatorCard({
         </span>
         {isLive && (
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#14B8A6', letterSpacing: '0.06em' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#14B8A6', display: 'inline-block', animation: 'boc-pulse 2s infinite' }} />
-            LIVE
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#14B8A6', display: 'inline-block' }} />
+            Auto-updated
           </span>
         )}
       </div>
@@ -141,7 +141,7 @@ function CompactDelta({ value, prev, unit = '%' }: { value: number; prev: number
 type RowFreq = 'live' | 'monthly' | 'weekly'
 
 const FREQ_STYLE: Record<RowFreq, { label: string; color: string; bg: string }> = {
-  live:    { label: 'LIVE',    color: '#14B8A6', bg: 'rgba(20,184,166,0.12)' },
+  live:    { label: 'Auto-updated', color: '#14B8A6', bg: 'rgba(20,184,166,0.12)' },
   monthly: { label: 'Monthly', color: 'rgba(255,255,255,0.35)', bg: 'rgba(255,255,255,0.06)' },
   weekly:  { label: 'Weekly',  color: '#93C5FD', bg: 'rgba(147,197,253,0.10)' },
 }
@@ -167,7 +167,7 @@ function CompactRow({
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{
           width: 6, height: 6, borderRadius: '50%', background: dotColor, flexShrink: 0,
-          animation: frequency === 'live' ? 'boc-pulse 2s infinite' : undefined,
+          animation: undefined,
         }} />
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontWeight: 600 }}>{label}</span>
       </div>
@@ -209,7 +209,7 @@ function CompactCard({
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
         <span style={{
           width: 6, height: 6, borderRadius: '50%', background: dotColor, flexShrink: 0,
-          animation: frequency === 'live' ? 'boc-pulse 2s infinite' : undefined,
+          animation: undefined,
         }} />
         <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.50)' }}>{label}</span>
       </div>

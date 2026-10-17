@@ -1012,7 +1012,6 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
               {[
                 { label: 'Healthcare (HAI)', val: city.hai, note: 'Wait times + coverage' },
-                { label: 'Education (EDI)',   val: city.edi, note: 'Schools + universities' },
                 { label: 'Environment (EQI)', val: city.eqi, note: 'Air + green space + water' },
                 { label: 'Transit (TCI)',     val: city.tci, note: 'Walk + transit coverage' },
                 { label: 'Safety (PSI)',      val: city.psi, note: 'Community safety index' },
@@ -1266,7 +1265,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             : 'Data: CMHC · StatCan · CIHI · Environment Canada · Job Bank · CRA'
           }<br />
           Years to buy = {pt.label} reference price ÷ pre-tax occupation income. Lower = less housing burden.<br />
-          Lakive Life System™ v5.0 · Oct 2026 · lakive.com
+          Lakive City Intelligence · v5.0 · Oct 2026 · lakive.com
         </p>
       </div>
     </main>
