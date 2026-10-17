@@ -270,6 +270,15 @@ export default function Home() {
   const [topSlot, setTopSlot] = useState<'a' | 'b'>('a')
   const switchCount  = useRef(0)
 
+  // ── Initial play: trigger slot A manually on mount ─────────────────────────
+  // autoPlay is intentionally NOT on the <video> element. If it were, the browser
+  // would keep autoPlay on the DOM node permanently — including when we swap src
+  // into the hidden slot, which would cause it to silently play in the background
+  // and appear mid-video when we crossfade it in. Manual play avoids this.
+  useEffect(() => {
+    videoARef.current?.play().catch(() => {})
+  }, [])
+
   // ── Hero selector state ─────────────────────────────────────────────────────
   const [heroOccupation, setHeroOccupation] = useState('')
   const [heroCity,       setHeroCity]       = useState('')
@@ -292,17 +301,27 @@ export default function Home() {
       const inRef    = incoming === 'b' ? videoBRef : videoARef
       const outRef   = incoming === 'b' ? videoARef : videoBRef
 
-      // Start the incoming video playing before it fades in
-      inRef.current?.play().catch(() => {})
+      // Always restart the incoming clip from the beginning before fading it in.
+      // This prevents the hidden slot from appearing mid-video: even though the
+      // video element is opacity:0, some browsers will advance its currentTime
+      // while it's paused-but-loaded. Explicit reset guarantees a clean start.
+      if (inRef.current) {
+        inRef.current.currentTime = 0
+        inRef.current.play().catch(() => {})
+      }
       setTopSlot(incoming)
 
-      // After the 1 s crossfade completes, reload the now-hidden slot with the next clip
+      // After the 1.2 s crossfade completes, reload the now-hidden slot with
+      // the next clip. pause() first to stop any residual playback.
       setTimeout(() => {
         const nextIdx = (count + 1) % VIDEO_SRCS.length
         if (outRef.current) {
           outRef.current.pause()
           outRef.current.src = VIDEO_SRCS[nextIdx]
           outRef.current.load()
+          // load() on a new src resets currentTime to 0 automatically.
+          // The slot stays paused here — no autoPlay on the element means
+          // the browser will not start playing it in the background.
         }
       }, 1200)
     }, 10000)
@@ -346,7 +365,7 @@ export default function Home() {
         <video
           ref={videoARef}
           src={VIDEO_SRCS[0]}
-          autoPlay muted loop playsInline preload="auto"
+          muted loop playsInline preload="auto"
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'cover',
