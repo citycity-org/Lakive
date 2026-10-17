@@ -186,10 +186,10 @@ function CompactRow({
 
 // ── Compact card (one indicator, fills 1/3 width) ─────────────────────────────
 function CompactCard({
-  label, displayValue, value, prev, unit = '%', frequency,
+  label, displayValue, value, prev, unit = '%', frequency, date,
 }: {
   label: string; displayValue: string; value: number; prev: number
-  unit?: string; frequency: RowFreq
+  unit?: string; frequency: RowFreq; date?: string
 }) {
   const diff = value - prev
   const improved = diff < 0
@@ -217,12 +217,19 @@ function CompactCard({
       <div style={{ fontSize: 26, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em', marginBottom: 10 }}>
         {displayValue}
       </div>
-      {/* Delta + badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      {/* Delta + badge + date */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <CompactDelta value={value} prev={prev} unit={unit} />
-        <span style={{ fontSize: 10, fontWeight: 700, color: freq.color, background: freq.bg, padding: '1px 6px', borderRadius: 4, letterSpacing: '0.03em' }}>
-          {freq.label}
-        </span>
+        {frequency === 'live' && (
+          <span style={{ fontSize: 10, fontWeight: 700, color: freq.color, background: freq.bg, padding: '1px 6px', borderRadius: 4, letterSpacing: '0.03em' }}>
+            {freq.label}
+          </span>
+        )}
+        {date && (
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)', letterSpacing: '0.02em' }}>
+            as of {date}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -237,11 +244,14 @@ function CompactCards({ config, liveRate }: { config: CountryConfig; liveRate?: 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
       <CompactCard label={`${config.centralBank.shortName} Rate`} displayValue={rateDisplay}
-        value={rate} prev={config.rate.prev} frequency={isCA ? 'live' : 'monthly'} />
+        value={rate} prev={config.rate.prev} frequency={isCA ? 'live' : 'monthly'}
+        date={config.rate.date} />
       <CompactCard label="CPI" displayValue={`${config.cpi.value}%`}
-        value={config.cpi.value} prev={config.cpi.prev} frequency="monthly" />
+        value={config.cpi.value} prev={config.cpi.prev} frequency="monthly"
+        date={config.cpi.date} />
       <CompactCard label="Unemployment" displayValue={`${config.unemployment.value}%`}
-        value={config.unemployment.value} prev={config.unemployment.prev} frequency="monthly" />
+        value={config.unemployment.value} prev={config.unemployment.prev} frequency="monthly"
+        date={config.unemployment.date} />
     </div>
   )
 }
@@ -602,7 +612,7 @@ export function MarketPulse({ compact = false }: { compact?: boolean }) {
           background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
           borderRadius: 10, fontSize: 11, color: 'rgba(255,255,255,0.22)', lineHeight: 1.6,
         }}>
-          Lakive housing scores (HPI Years, RPI) are updated separately, tied to CREA, CMHC, and Rentals.ca release calendars.
+          Lakive housing scores (HEY, RPI) are updated separately, tied to CREA, CMHC, and Rentals.ca release calendars.
           Macro indicators provide economic context and do not automatically trigger score changes.
         </div>
       </div>

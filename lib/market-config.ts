@@ -57,9 +57,9 @@ export const CA_CONFIG: CountryConfig = {
     date: 'Sep 2026',
     source: 'Statistics Canada LFS',
   },
-  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca, Sep 2026). BoC decision Oct 28 — next key signal.',
-  lastReviewed: '2026-10-09',
-  updatedAt: '2026-10-09 PDT',
+  housingNote: 'Rents fell for a 23rd consecutive month: $2,035 national avg asking rent, −4.8% YoY (Rentals.ca, Sep 2026). BoC decision Oct 28 — next key signal.',
+  lastReviewed: '2026-10-16',
+  updatedAt: '2026-10-16 PDT',
   sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'Rentals.ca × Urbanation'],
 }
 

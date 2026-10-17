@@ -38,7 +38,7 @@ export default function PulsePage() {
             <ContextCard
               icon="🏠"
               title="How This Affects Scores"
-              body="Lakive city scores (HPI Years, RPI) are based on CREA, CMHC, and Rentals.ca data and are updated on a separate calendar. Macro indicators provide economic context and do not automatically change individual city scores."
+              body="Lakive city scores (HEY, RPI) are based on CREA, CMHC, and Rentals.ca data and are updated on a separate calendar. Macro indicators provide economic context and do not automatically change individual city scores."
             />
             <ContextCard
               icon="📊"
