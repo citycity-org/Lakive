@@ -1291,7 +1291,7 @@ export default function RankingPage() {
             </p>
           </div>
           <div style={{ display:'flex', gap:8, alignSelf:'flex-start', marginTop:4 }}>
-            <a href={`/calculate?occupation=${occ}`}
+            <a href={occ ? `/calculate?occupation=${occ}` : '/calculate'}
               style={{ padding:'9px 16px', borderRadius:10, background:'rgba(79,142,247,0.12)', border:'1px solid rgba(79,142,247,0.28)', color:'#60A5FA', fontSize:13, fontWeight:700, textDecoration:'none', whiteSpace:'nowrap' }}>
               Calculate with my numbers →
             </a>
@@ -1540,7 +1540,7 @@ export default function RankingPage() {
               Rankings show the full market picture. Enter your income, family situation, and housing budget to get your personal City Fit results.
             </p>
           </div>
-          <a href={`/calculate?occupation=${occ}`}
+          <a href={occ ? `/calculate?occupation=${occ}` : '/calculate'}
             style={{ padding:'13px 22px', borderRadius:12, background:'linear-gradient(135deg,#4F8EF7,#5B5CF0)', color:'white', fontSize:14, fontWeight:700, textDecoration:'none', flexShrink:0, whiteSpace:'nowrap' }}>
             Get My Personal Results →
           </a>

@@ -158,12 +158,12 @@ export default function MethodologyPage() {
             <div style={{ display: 'flex', flexDirection: 'column' as const }}>
               <Row
                 label="EOI — Employment Opportunity Index"
-                value="Qualitative assessment of how well the city's economic base generates demand for the specific occupation. Rated High / Mid / Low and converted to a numeric score for the composite calculation."
+                value="Qualitative assessment of how well the city's economic base generates demand for the specific occupation. Rated High / Mid / Low and converted to a numeric score for the composite calculation. EOI is the only index that varies by occupation — all other five are city-level constants."
                 note="Only manually-set index — updated annually"
               />
               <Row
-                label="TAI — Transit & Access Index"
-                value="Composite of transit mode share, commute times, walkability, and inter-city connectivity. Sources: GTFS feeds, Census journey-to-work, Walk Score API."
+                label="TAI — Tax Advantage Index"
+                value="Combined effective tax burden on median occupational income, including provincial/state income tax, sales tax, and property tax. Inverted — lower tax burden → higher TAI. Alberta's no-PST structure produces high TAI; Québec's combined QST+provincial income tax produces lower TAI."
               />
               <Row
                 label="HAI — Healthcare Access Index"
@@ -174,8 +174,8 @@ export default function MethodologyPage() {
                 value="Annual AQI average, green-space coverage, and extreme-weather event frequency. Sources: EPA AirNow (US), Environment Canada AQHI (CA), NASA MODIS land cover."
               />
               <Row
-                label="TCI — Tax & Cost Index"
-                value="Combined effective tax rate on median income including provincial/state income tax, sales tax, and property tax. Inverted — lower tax burden → higher index."
+                label="TCI — Transit & Connectivity Index"
+                value="Composite of transit mode share, commute times, walkability, and inter-city connectivity. Sources: GTFS feeds, Census journey-to-work, Walk Score API. Higher TCI means shorter commutes and better multi-modal access."
               />
               <Row
                 label="PSI — Public Safety Index"
@@ -249,7 +249,7 @@ export default function MethodologyPage() {
               <div style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.18)', borderRadius: 10, padding: '14px 18px' }}>
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', marginBottom: 8 }}>CITY SCORE — secondary component</div>
                 <div style={{ color: 'rgba(255,255,255,0.70)', fontSize: 13, lineHeight: 1.7 }}>
-                  All six city indices (EOI, TAI, HAI, EQI, TCI, PSI) contribute positively — a higher value always improves the score. EOI is the only index that varies by occupation; the others are city-wide constants. EOI, TAI, and HAI are the primary city-score drivers; EQI, TCI, and PSI contribute as secondary factors.
+                  All six city indices (EOI, TAI, HAI, EQI, TCI, PSI) contribute positively — a higher value always improves the score. EOI is the only index that varies by occupation; the other five are city-wide constants. EOI, TAI (Tax Advantage), and HAI are the primary city-score drivers; EQI, TCI (Transit), and PSI contribute as secondary factors.
                 </div>
               </div>
 
@@ -308,7 +308,7 @@ export default function MethodologyPage() {
               <Row label="LFS / BLS monthly" value="Second Friday of each month (CA) · Third Friday of each month (US). Employment, unemployment rate, and labour force participation." />
               <Row label="Housing prices" value="CMHC: monthly, ~15th of following month. Zillow ZHVI: monthly, ~mid-month. CREA MLS HPI: monthly, ~15th of following month." />
               <Row label="Rental rates" value="Rentals.ca: monthly National Rent Report, ~end of following month. HUD FMR: annually, October. Apartment List: monthly." />
-              <Row label="City indices" value="TAI, HAI, EQI, TCI, PSI: annually, Q1 of each year (January – March), incorporating prior-year data." />
+              <Row label="City indices" value="TAI (Tax), HAI, EQI, TCI (Transit), PSI: annually, Q1 of each year (January – March), incorporating prior-year data." />
               <Row label="EOI (Employment Opportunity)" value="Annually, reviewed with LFS Annual Survey data. Significant sector shifts may trigger interim updates." />
               <Row label="Fit scores" value="Recalculated automatically whenever an underlying data input changes. No scheduled cadence — always reflect the latest available data." />
             </div>

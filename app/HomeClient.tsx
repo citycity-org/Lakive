@@ -415,7 +415,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-1.5 mb-5 px-3 py-1 rounded-full text-xs font-medium"
               style={{ background: 'rgba(79,142,247,0.15)', border: '1px solid rgba(79,142,247,0.3)', color: '#93C5FD' }}>
               <div className="w-1.5 h-1.5 rounded-full bg-[#4F8EF7] animate-pulse" />
-              27 Cities · Canada &amp; USA
+              Cities across Canada &amp; the US
             </div>
 
             {/* H1 */}

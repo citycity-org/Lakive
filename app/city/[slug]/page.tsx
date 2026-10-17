@@ -22,9 +22,9 @@ function getVerdict(score: number, hpiYears?: number, rpi?: number) {
 // ── Color helpers ─────────────────────────────────────────────────────────────
 const sc = (s: number) => s >= 80 ? '#14B8A6' : s >= 70 ? '#4F8EF7' : s >= 55 ? '#F59E0B' : s >= 40 ? '#E86C2F' : '#EF4444'
 const hc = (y: number) => y<=5?'#14B8A6':y<=8?'#10B981':y<=12?'#F59E0B':y<=18?'#E86C2F':'#EF4444'
-const hl = (y: number) => y<=5?'L1 Lower Pressure':y<=8?'L2 Manageable':y<=12?'L3 Under Pressure':y<=18?'L4 Difficult':'L5 Severe Pressure'
+const hl = (y: number) => y<=5?'L1 Low Pressure':y<=8?'L2 Manageable':y<=12?'L3 Under Pressure':y<=18?'L4 High Pressure':'L5 Severe'
 const rc = (r: number) => r<=25?'#14B8A6':r<=30?'#10B981':r<=38?'#F59E0B':r<=50?'#E86C2F':'#EF4444'
-const rl = (r: number) => r<=25?'L1 Lower Pressure':r<=30?'L2 Manageable':r<=38?'L3 Under Pressure':r<=50?'L4 Difficult':'L5 Severe Pressure'
+const rl = (r: number) => r<=25?'L1 Low Pressure':r<=30?'L2 Manageable':r<=38?'L3 Under Pressure':r<=50?'L4 High Pressure':'L5 Severe'
 const dc = (v: number) => v >= 80 ? '#14B8A6' : v >= 65 ? '#60A5FA' : '#F59E0B'
 
 // ── Dynamic headline ──────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ function getOccReality(cityName: string, occName: string, fit: OccFit) {
   ]
   let hiddenRisk: string
   if (highHpi && highRpi) hiddenRisk = `${occName} employment in ${cityName} is ${goodJob ? 'strong' : 'limited'}, but dual housing and rent pressure will steadily erode disposable income — long-term asset accumulation may lag other cities significantly.`
-  else if (highHpi) hiddenRisk = `The core risk is housing cost. ${occName} price-to-income in ${cityName} is roughly ${fit.hpiYears}×. Without dual income or family assets, the path to ownership is long.`
+  else if (highHpi) hiddenRisk = `The core risk is housing cost. ${occName} price-to-income in ${cityName} is roughly ${fit.hpiYears} yrs. Without dual income or family assets, the path to ownership is long.`
   else if (highRpi) hiddenRisk = `Rent consumes ${fit.rpi}% of income, above the healthy 30% threshold. Even if buying is feasible, high rent during the transition period slows down savings.`
   else hiddenRisk = `Current data is relatively favorable, but watch long-term trends in home prices and rent, plus income volatility from industry cycles — these could shift today's advantage.`
   return { bestFor, hardFor, hiddenRisk }
@@ -81,7 +81,7 @@ function getAdjScore(base: OccFit, priceMult: number, rentMult: number, tai: num
 function getMatrixNote(occName: string, cityName: string, fit: OccFit) {
   const v   = getVerdict(fit.score, fit.hpiYears, fit.rpi)
   const job = fit.eoi === 'High' ? 'Strong job market' : fit.eoi === 'Mid' ? 'Decent job market' : 'Limited job market'
-  const h   = fit.hpiYears > 14 ? `Price/income ${fit.hpiYears}×, extremely difficult to buy` : fit.hpiYears > 9 ? `Price/income ${fit.hpiYears}×, significant pressure` : `Price/income ${fit.hpiYears}× (relatively manageable)`
+  const h   = fit.hpiYears > 14 ? `Price/income ${fit.hpiYears} yrs, extremely difficult to buy` : fit.hpiYears > 9 ? `Price/income ${fit.hpiYears} yrs, significant pressure` : `Price/income ${fit.hpiYears} yrs (relatively manageable)`
   return `${job}; ${h}; rent ${fit.rpi}% of income (${rl(fit.rpi)}). Overall: ${v.label}.`
 }
 
@@ -794,7 +794,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                         {sel && <span style={{ fontSize: 8, color: '#93C5FD' }}>●</span>}
                       </div>
                       <div style={{ color: sc(o.adjScore), fontWeight: 800, fontSize: 14, fontFamily: 'monospace' }}>{o.adjScore}</div>
-                      <div style={{ color: hc(o.adjHpi), fontSize: 14, fontWeight: 800, fontFamily: 'monospace' }}>{o.adjHpi}×</div>
+                      <div style={{ color: hc(o.adjHpi), fontSize: 14, fontWeight: 800, fontFamily: 'monospace' }}>{o.adjHpi} yrs</div>
                       <div style={{ color: rc(o.adjRpiO), fontSize: 14, fontWeight: 800, fontFamily: 'monospace' }}>{o.adjRpiO}%</div>
                       <div style={{ color: o.fit.eoi === 'High' ? '#14B8A6' : o.fit.eoi === 'Mid' ? '#F59E0B' : '#EF4444', fontSize: 13, fontWeight: 700 }}>{o.fit.eoi}</div>
                       <div>

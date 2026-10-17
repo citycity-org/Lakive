@@ -104,7 +104,7 @@ function Callout({ label, text, color = TEAL, bg = '#F0FDFA' }: { label: string;
 // ── KPI summary table ─────────────────────────────────────────────────────────
 function KpiTable() {
   const rows = [
-    { label: 'National Avg. Asking Rent (Sep 2026)', value: 'CAD $2,034', signal: '▼ 4.2% YoY · 24th consecutive month of decline', color: GRN },
+    { label: 'National Avg. Asking Rent (Sep 2026)', value: 'CAD $2,035', signal: '▼ 4.8% YoY · 23rd consecutive month of decline', color: GRN },
     { label: 'Unemployment Rate (Sep 2026)', value: '6.5%', signal: '▲ 0.1pp · employment rate 60.6% · participation 64.8% (lowest since 1997)', color: RED },
     { label: 'Net Jobs (Sep 2026)', value: '−68,000', signal: 'Second consecutive decline · Quebec hardest hit · below all forecasts', color: RED },
     { label: 'BoC Policy Rate', value: '2.25%', signal: '— Held · 6th consecutive hold · next decision Oct 28 · ~95% hold probability', color: GRN },
@@ -140,7 +140,7 @@ function ChangesTable() {
   const rows = [
     { dir: '⚠', label: 'Counter-Tariffs', prev: 'CA$26.3B (prior)', now: 'CA$27.6B effective Sep 8 · trade war escalation continues', good: false },
     { dir: '▼', label: 'CREA HPI (YoY)', prev: '▼ 1.1% YoY (Jul)', now: '▼ 3.0% YoY (Aug) · smallest decline since Oct 2025', good: true },
-    { dir: '▼', label: 'National avg. asking rent', prev: 'CAD $2,012 (Aug)', now: 'CAD $2,034 (Sep) · ▼ 4.2% YoY · 24th consecutive month', good: true },
+    { dir: '▼', label: 'National avg. asking rent', prev: 'CAD $2,012 (Aug)', now: 'CAD $2,035 (Sep) · ▼ 4.8% YoY · 23rd consecutive month', good: true },
     { dir: '—', label: 'BoC Policy Rate', prev: '2.25%', now: '2.25% · 6th consecutive hold · Oct 28 next · rate cut odds rising post-jobs miss', good: false },
     { dir: '▲', label: 'Unemployment rate', prev: '6.4% (Aug)', now: '6.5% (Sep) · −68K jobs · employment rate 60.6% · 2nd straight decline', good: false },
     { dir: '▼', label: 'Population growth (YoY)', prev: '~1.1% (2025)', now: '0.5% YoY · sharp slowdown · reduced rental demand pressure', good: false },
@@ -396,7 +396,7 @@ export default function MonthlyReportSeptember2026() {
             City-level variation is significant. Vancouver leads with $2,704 average asking rent, followed by Toronto at $2,570. Both remain well above pre-pandemic levels on a real basis. Halifax, at $2,356, continues to carry rent pressure disproportionate to its wage base — a pattern that has emerged consistently since Atlantic Canada's in-migration surge peaked in 2022. Calgary ($1,825) and Edmonton ($1,520) remain the most accessible rental markets among major cities, supported by a no-PST cost structure and active purpose-built supply pipelines.
           </Body>
           <FourLayerCard
-            observed="National avg asking rent: CAD $2,035 (Sep 2026). Month-over-month: +$23 (+1.1%). Year-over-year: ▼4.2% — 23rd consecutive monthly decline. City range: Vancouver $2,704 · Toronto $2,570 · Calgary $1,825 · Edmonton $1,520."
+            observed="National avg asking rent: CAD $2,035 (Sep 2026). Month-over-month: +$23 (+1.1%). Year-over-year: ▼4.8% — 23rd consecutive monthly decline. City range: Vancouver $2,704 · Toronto $2,570 · Calgary $1,825 · Edmonton $1,520."
             seasonal="September is seasonally strong for rentals (students, end-of-summer arrivals). The +$23 MoM uptick reflects normal fall demand, not a reversal of the structural downtrend. Seasonally adjusted, the trend is still negative."
             interpretation="The YoY decline is structural, not cyclical — driven by elevated supply completions and population growth slowing to 0.5% YoY. When demand deceleration is the mechanism, softness tends to persist rather than reverse quickly."
             implications="For renters: Q3/Q4 2026 is a strong window to lock in leases at below-peak rates before any spring demand pickup. For buyers: rent relief reduces the urgency to exit renting immediately, but doesn't change the long-term ownership calculus in high-HPI cities."
@@ -491,7 +491,7 @@ export default function MonthlyReportSeptember2026() {
           <DivergenceModule divergences={[
             {
               signal: 'Rent ↓ + Employment ↓ (same cause)',
-              up: 'Rent falling (−4.2% YoY)',
+              up: 'Rent falling (−4.8% YoY)',
               down: 'Jobs falling (−68K Sep)',
               explanation: 'Both are driven by the same underlying factor: demand deceleration. Population growth at 0.5% YoY means fewer new households entering rental markets, which softens rent. Fewer arrivals also means weaker labour demand. These are not independent improvements — the rent decline reflects weakening demand, not supply-side success.',
             },
@@ -606,7 +606,7 @@ export default function MonthlyReportSeptember2026() {
               <tbody>
                 {[
                   ['Rental Market', 'Rentals.ca × Urbanation', 'Monthly (~8th)'],
-                  ['Employment', 'Statistics Canada LFS', 'Monthly (first Friday)'],
+                  ['Employment', 'Statistics Canada LFS', 'Monthly (second Friday)'],
                   ['Home Prices', 'CREA National Statistics', 'Monthly (15–18th)'],
                   ['Affordability', 'RBC Housing Affordability Report', 'Quarterly'],
                   ['Interest Rate', 'Bank of Canada', '8× per year'],
