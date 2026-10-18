@@ -1216,7 +1216,9 @@ export default function RankingPage() {
           <div style={{ marginBottom:20 }}>
             <h1 style={{ color:'white', fontSize:28, fontWeight:900, margin:'0 0 6px', letterSpacing:'-0.5px' }}>City Rankings</h1>
             <p style={{ color:'rgba(255,255,255,0.32)', fontSize:13, margin:0 }}>
-              Not a "best city" ranking — a fit score for your occupation across cities in Canada and the US.
+              {occ
+                ? `Not a "best city" ranking — a fit score for ${occName} across cities in Canada and the US.`
+                : 'A composite city index across Canada and the US — select an occupation for a personalized fit ranking.'}
             </p>
           </div>
 
@@ -1399,7 +1401,7 @@ export default function RankingPage() {
                         <span style={{ padding:'2px 7px', borderRadius:6, background:'rgba(79,142,247,0.15)', border:'1px solid rgba(79,142,247,0.30)', color:'#60A5FA', fontSize:10, fontWeight:700 }}>Your City</span>
                       )}
                     </div>
-                    <div className="metrics-row" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}>
+                    <div className="metrics-row" style={{ display:'grid', gridTemplateColumns: mode==='full' ? 'repeat(4,1fr)' : 'repeat(3,1fr)', gap:12 }}>
                       {(mode==='full' ? (isUnemployed ? [
                         { label:'Employment',   val:String(city.eoi),  color:dc(city.eoi),                mono:true  },
                         { label:'Tax Index',    val:String(city.tai),  color:dc(city.tai),                mono:true  },
@@ -1415,6 +1417,8 @@ export default function RankingPage() {
                         { label:'Employment',   val:String(city.eoi), color:dc(city.eoi), mono:true },
                         { label:'Healthcare',   val:String(city.hai), color:dc(city.hai), mono:true },
                         { label:'Environment',  val:String(city.eqi), color:dc(city.eqi), mono:true },
+                        { label:'Transit',      val:String(city.tci), color:dc(city.tci), mono:true },
+                        { label:'Safety',       val:String(city.psi), color:dc(city.psi), mono:true },
                       ]).map((m: { label:string; val:string; color:string; mono:boolean; tip?:string })=>(
                         <div key={m.label} title={m.tip ?? ''}>
                           <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginBottom:2 }}>{m.label}</div>
@@ -1584,7 +1588,7 @@ export default function RankingPage() {
             StatCan · CMHC · Job Bank · CRA & Provincial Tax Authorities · CIHI · ECCC
           </p>
           <p style={{ color:'rgba(255,255,255,0.40)', fontSize:11, marginTop:6 }}>
-            All metrics are normalized through the Lakive model and do not represent official rankings. Results are for reference only and do not constitute financial or immigration advice. Salary data: Jul 2026 · Housing prices: Jul 2026 · CPI &amp; unemployment: auto-updated.
+            All metrics are normalized through the Lakive model and do not represent official rankings. Results are for reference only and do not constitute financial or immigration advice. Salary data: 2025–2026 · Housing benchmarks: Sep 2026 · CPI &amp; unemployment: auto-updated.
           </p>
         </div>
       </div>
