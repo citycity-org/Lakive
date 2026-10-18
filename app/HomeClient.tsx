@@ -284,10 +284,13 @@ export default function Home() {
   const [heroCity,       setHeroCity]       = useState('')
 
   const handleHeroGo = useCallback(() => {
+    if (!heroOccupation) return
     if (heroOccupation === 'other') {
-      router.push(heroCity ? `/ranking?region=all` : '/ranking')
-    } else {
+      router.push('/ranking')
+    } else if (heroCity) {
       router.push(`/calculate?city=${heroCity}&occupation=${heroOccupation}`)
+    } else {
+      router.push(`/ranking?occupation=${heroOccupation}`)
     }
   }, [heroCity, heroOccupation, router])
 
@@ -488,15 +491,19 @@ export default function Home() {
             {/* CTA button */}
             <button
               onClick={handleHeroGo}
-              disabled={!heroOccupation || !heroCity}
+              disabled={!heroOccupation}
               className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity active:opacity-75"
               style={{
                 background: 'linear-gradient(135deg, #4F8EF7, #5B5CF0)',
-                opacity: heroOccupation && heroCity ? 1 : 0.45,
-                cursor: heroOccupation && heroCity ? 'pointer' : 'default',
+                opacity: heroOccupation ? 1 : 0.45,
+                cursor: heroOccupation ? 'pointer' : 'default',
               }}
             >
-              {heroOccupation && heroCity ? 'View My City Fit Score →' : 'Select occupation & city above'}
+              {heroOccupation && heroCity
+                ? 'View My City Fit Score →'
+                : heroOccupation
+                ? 'Browse City Rankings →'
+                : 'Select occupation above'}
             </button>
 
             {/* Quick links */}
