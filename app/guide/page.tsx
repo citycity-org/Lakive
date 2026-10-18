@@ -90,7 +90,19 @@ const CITY_STATS: Record<string, { label: string; hpi: number; rpi: number; note
   seattle:             { label: 'Seattle, WA',            hpi: 8.8,  rpi: 21.3, note: 'No state income tax · Amazon/Microsoft', currency: 'USD' },
   boston:              { label: 'Boston, MA',             hpi: 11.8, rpi: 24.4, note: 'Biotech & universities hub', currency: 'USD' },
   'new-york':          { label: 'New York City, NY',      hpi: 14.8, rpi: 29.2, note: 'Finance capital · Highest diversity', currency: 'USD' },
-  'san-francisco':     { label: 'San Francisco, CA',      hpi: 15.6, rpi: 27.6, note: 'Top tech salaries · Extreme housing', currency: 'USD' },
+  'san-francisco':     { label: 'San Francisco, CA',      hpi: 15.6, rpi: 27.6, note: 'Top tech salaries · Extreme housing',     currency: 'USD' },
+  // ── Additional US cities ─────────────────────────────────────────────────────
+  'austin':            { label: 'Austin, TX',             hpi: 6.25, rpi: 31.7, note: 'No state income tax · Fast-growing tech hub', currency: 'USD' },
+  'chicago':           { label: 'Chicago, IL',            hpi: 4.9,  rpi: 40.6, note: 'Flat 4.95% state tax · Diversified economy',  currency: 'USD' },
+  'los-angeles':       { label: 'Los Angeles, CA',        hpi: 10.0, rpi: 44.8, note: 'High CA taxes · Entertainment & tech hub',     currency: 'USD' },
+  'denver':            { label: 'Denver, CO',             hpi: 7.0,  rpi: 32.6, note: 'Flat 4.4% state tax · Aerospace & tech',       currency: 'USD' },
+  'miami':             { label: 'Miami, FL',              hpi: 9.2,  rpi: 58.0, note: 'No state income tax · LatAm finance hub',      currency: 'USD' },
+  'dallas':            { label: 'Dallas, TX',             hpi: 5.0,  rpi: 28.2, note: 'No state income tax · Major financial center', currency: 'USD' },
+  'atlanta':           { label: 'Atlanta, GA',            hpi: 4.9,  rpi: 31.4, note: 'Flat 5.49% state tax · SE economic capital',   currency: 'USD' },
+  'phoenix':           { label: 'Phoenix, AZ',            hpi: 5.8,  rpi: 32.9, note: 'Flat 2.5% state tax · Fast-growing tech hub',  currency: 'USD' },
+  'washington-dc':     { label: 'Washington DC',          hpi: 6.1,  rpi: 37.3, note: 'Federal hub · Amazon HQ2 · Recession-resistant', currency: 'USD' },
+  'houston':           { label: 'Houston, TX',            hpi: 4.3,  rpi: 25.8, note: 'No state income tax · Energy capital',          currency: 'USD' },
+  'nashville':         { label: 'Nashville, TN',          hpi: 6.5,  rpi: 34.8, note: 'No state income tax · Healthcare & tech',       currency: 'USD' },
 }
 
 // ── Inner component (needs useSearchParams inside Suspense) ───────────────────
@@ -259,7 +271,7 @@ function GuidePageInner() {
               <div className="grid sm:grid-cols-2 gap-4">
                 {([
                   { id: 'CA', flag: '🇨🇦', label: 'Canada', sub: '12 cities', color: '#F87171' },
-                  { id: 'US', flag: '🇺🇸', label: 'United States', sub: '4 cities', color: '#4F8EF7' },
+                  { id: 'US', flag: '🇺🇸', label: 'United States', sub: '15 cities', color: '#4F8EF7' },
                 ] as const).map(c => (
                   <button key={c.id} onClick={() => nav({ mode: 'city', country: c.id })}
                     className="rounded-2xl p-6 text-left transition-all"
