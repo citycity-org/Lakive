@@ -309,7 +309,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'MA deed excise: $4.56 per $1,000 of purchase price (~0.456%)',
   },
   austin: {
-    name: 'Austin', nameEn: 'Austin', province: 'Texas', short: 'TX',
+    name: 'Austin', nameEn: 'Austin', province: 'Texas', short: 'TX', country: 'US',
     score: 74, eoi: 82, tai: 88, hai: 72, eqi: 72, tci: 38, psi: 68, edi: 78,
     medianRent: 1900, basePrice: 450000, propertyTaxRate: 0.0183,
     industries: ['Tech & Semiconductors', 'Government & University (UT)', 'Clean Energy', 'Entertainment & Music'],
@@ -321,7 +321,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'TX has no state transfer/deed tax — only minor recording fees (~$50–100)',
   },
   chicago: {
-    name: 'Chicago', nameEn: 'Chicago', province: 'Illinois', short: 'IL',
+    name: 'Chicago', nameEn: 'Chicago', province: 'Illinois', short: 'IL', country: 'US',
     score: 70, eoi: 82, tai: 55, hai: 85, eqi: 68, tci: 82, psi: 62, edi: 88,
     medianRent: 2200, basePrice: 318000, propertyTaxRate: 0.0155,
     industries: ['Finance & Trading (CME)', 'Healthcare & Life Sciences', 'Tech & Fintech', 'Logistics & Manufacturing'],
@@ -333,7 +333,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'IL/Chicago RETT: ~1.5% combined state + city transfer tax',
   },
   'los-angeles': {
-    name: 'Los Angeles', nameEn: 'Los Angeles', province: 'California', short: 'CA',
+    name: 'Los Angeles', nameEn: 'Los Angeles', province: 'California', short: 'CA', country: 'US',
     score: 62, eoi: 88, tai: 32, hai: 78, eqi: 68, tci: 52, psi: 55, edi: 92,
     medianRent: 2800, basePrice: 750000, propertyTaxRate: 0.0074,
     industries: ['Entertainment & Media', 'Tech & Aerospace', 'International Trade (LA Port)', 'Fashion & Creative'],
@@ -352,7 +352,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'CA documentary transfer tax: ~0.11% state + 0.45% LA county/city (~0.56% combined)',
   },
   denver: {
-    name: 'Denver', nameEn: 'Denver', province: 'Colorado', short: 'CO',
+    name: 'Denver', nameEn: 'Denver', province: 'Colorado', short: 'CO', country: 'US',
     score: 72, eoi: 72, tai: 75, hai: 78, eqi: 85, tci: 62, psi: 74, edi: 78,
     medianRent: 1900, basePrice: 490000, propertyTaxRate: 0.0062,
     industries: ['Aerospace & Defence', 'Energy & Clean Tech', 'Tech (Google, AWS offices)', 'Biotech & Life Sciences'],
@@ -364,7 +364,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'CO deed transfer tax: 0.01% (very low) — primarily a recording fee',
   },
   miami: {
-    name: 'Miami', nameEn: 'Miami', province: 'Florida', short: 'FL',
+    name: 'Miami', nameEn: 'Miami', province: 'Florida', short: 'FL', country: 'US',
     score: 65, eoi: 72, tai: 88, hai: 72, eqi: 60, tci: 45, psi: 65, edi: 75,
     medianRent: 2900, basePrice: 552000, propertyTaxRate: 0.0171,
     industries: ['Finance & Private Banking', 'International Trade', 'Tourism & Hospitality', 'Real Estate & Construction'],
@@ -376,7 +376,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'FL documentary stamp tax: 0.7% of purchase price',
   },
   dallas: {
-    name: 'Dallas', nameEn: 'Dallas', province: 'Texas', short: 'TX',
+    name: 'Dallas', nameEn: 'Dallas', province: 'Texas', short: 'TX', country: 'US',
     score: 75, eoi: 80, tai: 88, hai: 75, eqi: 60, tci: 42, psi: 70, edi: 82,
     medianRent: 1600, basePrice: 340000, propertyTaxRate: 0.0208,
     industries: ['Finance & Corporate HQs', 'Tech (AT&T, Texas Instruments)', 'Healthcare (UT Southwestern)', 'Logistics & Distribution'],
@@ -388,7 +388,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'TX has no state transfer/deed tax — only minor recording fees (~$50–100)',
   },
   atlanta: {
-    name: 'Atlanta', nameEn: 'Atlanta', province: 'Georgia', short: 'GA',
+    name: 'Atlanta', nameEn: 'Atlanta', province: 'Georgia', short: 'GA', country: 'US',
     score: 70, eoi: 78, tai: 65, hai: 78, eqi: 72, tci: 55, psi: 68, edi: 82,
     medianRent: 1700, basePrice: 318000, propertyTaxRate: 0.0115,
     industries: ['Corporate HQs (Coca-Cola, Delta, UPS)', 'Media & Film', 'Tech (Microsoft, Google)', 'Healthcare & Life Sciences'],
@@ -400,7 +400,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'GA intangible recording tax: ~0.1% of purchase price',
   },
   phoenix: {
-    name: 'Phoenix', nameEn: 'Phoenix', province: 'Arizona', short: 'AZ',
+    name: 'Phoenix', nameEn: 'Phoenix', province: 'Arizona', short: 'AZ', country: 'US',
     score: 68, eoi: 70, tai: 80, hai: 72, eqi: 55, tci: 40, psi: 68, edi: 72,
     medianRent: 1700, basePrice: 360000, propertyTaxRate: 0.0087,
     industries: ['Semiconductors (Intel, TSMC)', 'Finance & Banking Operations', 'Healthcare (Banner, Mayo)', 'Logistics & Manufacturing'],
@@ -412,7 +412,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'AZ has no state real property transfer tax — only minor recording fees',
   },
   'washington-dc': {
-    name: 'Washington DC', nameEn: 'Washington DC', province: 'District of Columbia', short: 'DC',
+    name: 'Washington DC', nameEn: 'Washington DC', province: 'District of Columbia', short: 'DC', country: 'US',
     score: 68, eoi: 85, tai: 48, hai: 82, eqi: 72, tci: 80, psi: 78, edi: 85,
     medianRent: 2800, basePrice: 549000, propertyTaxRate: 0.0085,
     industries: ['Government & Federal Contracting', 'Cybersecurity & Defence Tech', 'Biotech (MD suburbs)', 'Finance & Consulting'],
@@ -424,7 +424,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'DC recordation and transfer tax: ~2.25% combined on purchases over $400K',
   },
   houston: {
-    name: 'Houston', nameEn: 'Houston', province: 'Texas', short: 'TX',
+    name: 'Houston', nameEn: 'Houston', province: 'Texas', short: 'TX', country: 'US',
     score: 72, eoi: 75, tai: 88, hai: 78, eqi: 52, tci: 38, psi: 65, edi: 82,
     medianRent: 1400, basePrice: 280000, propertyTaxRate: 0.0231,
     industries: ['Energy (ExxonMobil, Shell, ConocoPhillips)', 'Texas Medical Center', 'Petrochemical & Engineering', 'Logistics & Port of Houston'],
@@ -436,7 +436,7 @@ const CITY_BASE: Record<string, {
     transferTaxNote: 'TX has no state transfer/deed tax — only minor recording fees (~$50–100)',
   },
   nashville: {
-    name: 'Nashville', nameEn: 'Nashville', province: 'Tennessee', short: 'TN',
+    name: 'Nashville', nameEn: 'Nashville', province: 'Tennessee', short: 'TN', country: 'US',
     score: 70, eoi: 68, tai: 90, hai: 75, eqi: 72, tci: 35, psi: 68, edi: 72,
     medianRent: 1800, basePrice: 403000, propertyTaxRate: 0.0071,
     industries: ['Healthcare IT (HCA, Vanderbilt)', 'Country Music & Entertainment', 'Tech (Amazon, Oracle)', 'Logistics & Distribution'],
