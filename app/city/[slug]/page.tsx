@@ -563,8 +563,10 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   const highRisk   = tieredOccs.filter(o => o.adjScore < 55)
 
   const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville']
+  const cityCountry  = city.country ?? 'CA'
   const rankList     = ALL_CITY_IDS
     .filter(id => CITY_BASE[id])
+    .filter(id => (CITY_BASE[id].country ?? 'CA') === cityCountry)
     .map(id => {
       const c   = CITY_BASE[id]
       const m   = buildCityMatrix(id, c)
