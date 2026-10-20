@@ -726,7 +726,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                     {occRank > 0 && (
                       <a href={`/ranking?occupation=${occ}&current=${slug}&housing=${propType}`}
                         style={{ display: 'inline-flex', alignItems: 'center', gap: 3, padding: '4px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: rankColor, textDecoration: 'none' }}>
-                        <span style={{ fontSize: 10, opacity: 0.5 }}>Rank</span>#{occRank}<span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10 }}>/{totalCities}</span>
+                        <span style={{ fontSize: 10, opacity: 0.5 }}>Rank</span> #{occRank}
                       </a>
                     )}
                   </div>
@@ -1092,7 +1092,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em' }}>FINAL VERDICT</span>
             {occRank > 0 && (
               <span style={{ marginLeft: 4, color: rankColor, fontSize: 12, fontWeight: 700 }}>
-                · {city.country === 'US' ? 'US' : 'Canada'} {occName} · {pt.label} Rank #{occRank}/{totalCities}
+                · {city.country === 'US' ? 'US' : 'Canada'} {occName} · {pt.label} Rank #{occRank}
               </span>
             )}
           </div>
