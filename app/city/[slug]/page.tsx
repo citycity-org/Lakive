@@ -1274,7 +1274,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             : 'Data: CMHC · StatCan · CIHI · Environment Canada · Job Bank · CRA'
           }<br />
           Years to buy = {pt.label} reference price ÷ pre-tax occupation income. Lower = less housing burden.<br />
-          Lakive City Intelligence · v5.0 · Oct 2026 · lakive.com
+          Lakive City Intelligence · Data: Oct 2026 · lakive.com
         </p>
       </div>
     </main>

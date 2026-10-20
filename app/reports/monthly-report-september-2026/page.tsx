@@ -299,7 +299,7 @@ export default function MonthlyReportSeptember2026() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: TEAL, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Monthly Report</span>
             <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>·</span>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', letterSpacing: '0.06em' }}>September 2026</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', letterSpacing: '0.06em' }}>Sep 2026</span>
             <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>·</span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)' }}>Data version Oct 2026 v1</span>
           </div>
@@ -419,6 +419,7 @@ export default function MonthlyReportSeptember2026() {
             RBC affordability data for Q2 2026 shows nationally at 52.8% of median pre-tax household income — a reading that reflects mortgage costs, property taxes, and utilities relative to household earnings. Vancouver carries the highest burden at 83.9%, followed by Toronto at 64.1%. Calgary (41.3%) and Edmonton (36.8%) remain below the national average, with affordability conditions consistent with productive homeownership for households with stable employment.
           </Body>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '20px 0 12px' }}>Lakive City Scores — September 2026</h3>
+          <p style={{ fontSize: 11, color: GREY, margin: '-4px 0 10px', fontStyle: 'italic' }}>Scores reflect the Sep 2026 data snapshot. Current values on <a href="/ranking" style={{ color: NAVY }}>lakive.com/ranking</a> may differ as data is updated.</p>
           <CityScoreTable />
           <Callout
             label="Lakive Interpretation:"
@@ -527,7 +528,7 @@ export default function MonthlyReportSeptember2026() {
         {/* City Insights */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={8} title="Lakive City Insights" />
-          <Body>Scores below are Lakive composite ratings (0–100) based on salary, housing affordability, tax burden, employment opportunity, and quality of life. Data version: Oct 2026 v1.</Body>
+          <Body>Scores below are Lakive composite ratings (0–100) based on salary, housing affordability, tax burden, employment opportunity, and quality of life. These are Sep 2026 data snapshots — current values may differ.</Body>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '20px 0 12px' }}>Cross-City Score: Key Occupations</h3>
           <OccTable />
 

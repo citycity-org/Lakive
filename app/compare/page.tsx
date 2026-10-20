@@ -889,8 +889,8 @@ function ComparePageInner() {
               <div style={{ color:'rgba(255,255,255,0.38)', fontSize:11, fontWeight:700, letterSpacing:'0.06em' }}>Housing Scenario</div>
               <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginTop:2 }}>
                 Affects fit score, rent & housing pressure
-                {ready && <span style={{ color:'rgba(255,255,255,0.22)', marginLeft:4 }}>
-                  · {isCrossCountry ? `${US_IDS.has(slugA) ? 'USD' : 'CAD'} vs ${US_IDS.has(slugB) ? 'USD' : 'CAD'}` : US_IDS.has(slugA) ? 'USD' : 'CAD'}
+                {slugA && <span style={{ color:'rgba(255,255,255,0.22)', marginLeft:4 }}>
+                  · {slugA && slugB && isCrossCountry ? 'CAD / USD' : US_IDS.has(slugA) ? 'USD' : 'CAD'}
                 </span>}
               </div>
             </div>
