@@ -672,7 +672,7 @@ function ComparePageInner() {
   const rankB       = rankList.findIndex(c => c.id === slugB) + 1
   const totalCities = rankList.length
 
-  const US_IDS = new Set(['seattle', 'san-francisco', 'new-york', 'boston'])
+  const US_IDS = new Set(['seattle', 'san-francisco', 'new-york', 'boston', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville'])
   const isCrossCountry = ready && (US_IDS.has(slugA) !== US_IDS.has(slugB))
 
   const aWins    = adjA.score >= adjB.score
@@ -848,7 +848,12 @@ function ComparePageInner() {
           <div className="cmp-housing" style={{ display:'flex', alignItems:'center', gap:12, marginBottom:28, padding:'12px 16px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:14 }}>
             <div>
               <div style={{ color:'rgba(255,255,255,0.38)', fontSize:11, fontWeight:700, letterSpacing:'0.06em' }}>Housing Scenario</div>
-              <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginTop:2 }}>Affects fit score, rent & housing pressure</div>
+              <div style={{ color:'rgba(255,255,255,0.42)', fontSize:11, marginTop:2 }}>
+                Affects fit score, rent & housing pressure
+                {ready && <span style={{ color:'rgba(255,255,255,0.22)', marginLeft:4 }}>
+                  · {isCrossCountry ? `${US_IDS.has(slugA) ? 'USD' : 'CAD'} vs ${US_IDS.has(slugB) ? 'USD' : 'CAD'}` : US_IDS.has(slugA) ? 'USD' : 'CAD'}
+                </span>}
+              </div>
             </div>
             <div className="cmp-housing-btns" style={{ display:'flex', flexDirection:'column', gap:3, marginLeft:'auto' }}>
               <div className="cmp-prop-row1" style={{ display:'flex', gap:3, background:'rgba(255,255,255,0.05)', borderRadius:10, padding:3 }}>
