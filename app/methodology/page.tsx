@@ -404,7 +404,7 @@ export default function MethodologyPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
           <p style={S.caption}>
             Questions or corrections → <a href="mailto:hello@lakive.com" style={{ color: '#4F8EF7' }}>hello@lakive.com</a><br />
-            Last updated: October 2026 · Lakive City Intelligence Platform v5.0
+            Last updated: Oct 2026 · Lakive City Intelligence Platform v5.0
           </p>
           <div style={{ display: 'flex', gap: 16 }}>
             <Link href="/ranking" style={{ color: '#60A5FA', fontSize: 13, textDecoration: 'none' }}>Rankings →</Link>

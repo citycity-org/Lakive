@@ -500,7 +500,7 @@ export default function EducationLicensingPage() {
         {/* Footer note */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 24 }}>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)', lineHeight: 1.7 }}>
-            This index is provided for informational purposes only and does not constitute legal, immigration, or professional advice. Regulatory body names, URLs, and requirements are subject to change. Last reviewed: July 2026. Always consult the official regulatory body for current requirements.
+            This index is provided for informational purposes only and does not constitute legal, immigration, or professional advice. Regulatory body names, URLs, and requirements are subject to change. Last reviewed: Jul 2026. Always consult the official regulatory body for current requirements.
           </p>
           <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
             <Link href="/guide" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>← Back to Guides</Link>

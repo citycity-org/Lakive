@@ -683,7 +683,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
                     <span style={{ color: 'rgba(255,255,255,0.38)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>Housing Scenario</span>
-                    <span style={{ color: 'rgba(255,255,255,0.20)', fontSize: 10 }}>affects rent, price & housing pressure</span>
+                    <span style={{ color: 'rgba(255,255,255,0.20)', fontSize: 10 }}>affects rent, price & housing pressure · {city.country === 'US' ? 'USD' : 'CAD'}</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 3, background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: 3 }}>
                     {PROP_TYPES.slice(0,3).map(p => (
@@ -930,7 +930,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
                   {[
                     { label: `${pt.label} reference price`, value: `$${adjPrice.toLocaleString()}`, color: 'rgba(255,255,255,0.75)' },
-                    { label: city.country === 'US' ? 'Est. Transfer Tax' : 'Est. PTT', value: `$${taxAmt.toLocaleString()}`, color: 'rgba(255,255,255,0.50)', note: 'Excl. first-time buyer exemptions & other applicable taxes' },
+                    { label: city.country === 'US' ? 'Est. Transfer Tax' : 'Est. Property Transfer Tax (PTT)', value: `$${taxAmt.toLocaleString()}`, color: 'rgba(255,255,255,0.50)', note: 'Excl. first-time buyer exemptions & other applicable taxes' },
                     { label: 'Est. Annual Property Tax', value: `$${propTax.toLocaleString()}`, color: 'rgba(255,255,255,0.50)' },
                   ].map(r => (
                     <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '8px 12px', background: 'rgba(255,255,255,0.025)', borderRadius: 9 }}>

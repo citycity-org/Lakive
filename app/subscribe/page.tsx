@@ -191,7 +191,7 @@ function SubscribeContent() {
   }
 
   const backLabel = fromPage === 'calculate' ? 'Cost Calculator'
-                  : fromPage === 'compare'   ? 'City Compare'
+                  : fromPage === 'compare'   ? 'Compare Cities'
                   : 'City Rankings'
 
   return (

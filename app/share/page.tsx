@@ -41,7 +41,7 @@ const OCCUPATION_NAMES: Record<string, string> = {
 }
 
 const CARD_TYPES = [
-  { id: 'compare', icon: '⚖️', name: 'City Compare' },
+  { id: 'compare', icon: '⚖️', name: 'Compare Cities' },
   { id: 'buy',     icon: '🏠', name: 'Home Ownership' },
   { id: 'rent',    icon: '🔑', name: 'Rent Burden' },
   { id: 'career',  icon: '💼', name: 'Career Fit' },

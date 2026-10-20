@@ -739,7 +739,7 @@ function ComparePageInner() {
           <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:28 }}>
             <a href="/" style={{ color:'rgba(255,255,255,0.50)', fontSize:12, textDecoration:'none' }}>Home</a>
             <span style={{ color:'rgba(255,255,255,0.38)', fontSize:12 }}>/</span>
-            <span style={{ color:'rgba(255,255,255,0.42)', fontSize:12 }}>City Compare</span>
+            <span style={{ color:'rgba(255,255,255,0.42)', fontSize:12 }}>Compare Cities</span>
           </div>
 
           {/* ── Selectors row ── */}
