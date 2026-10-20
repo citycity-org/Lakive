@@ -41,6 +41,26 @@ const CITY_BASE: Record<string, {
   'san-francisco': { name:'San Francisco',   short:'SFO', province:'California',    eoi:95, tai:35, hai:75, eqi:70, tci:75, psi:55, edi:90, medianRent:3500,  basePrice:1250000, taiNote:'CA top rate 13.3%' },
   'new-york':      { name:'New York City',   short:'NYC', province:'New York',      eoi:92, tai:30, hai:78, eqi:62, tci:88, psi:58, edi:92, medianRent:3700,  basePrice:1100000, taiNote:'NY+NYC tax up to 14.8%' },
   boston:          { name:'Boston',          short:'BOS', province:'Massachusetts', eoi:85, tai:60, hai:80, eqi:75, tci:72, psi:68, edi:88, medianRent:3100,  basePrice:850000,  taiNote:'MA flat 5% state tax' },
+  // ── Additional CA cities ──────────────────────────────────────────────────
+  edmonton:            { name:'Edmonton',          short:'YEG', province:'Alberta',             eoi:62, tai:90, hai:80, eqi:78, tci:42, psi:76, edi:68, medianRent:1650, basePrice:440000,  taiNote:'GST 5% only (no PST)' },
+  winnipeg:            { name:'Winnipeg',           short:'YWG', province:'Manitoba',            eoi:58, tai:65, hai:82, eqi:74, tci:38, psi:72, edi:65, medianRent:1450, basePrice:370000,  taiNote:'GST 5% + PST 7% (Manitoba)' },
+  halifax:             { name:'Halifax',            short:'YHZ', province:'Nova Scotia',         eoi:55, tai:55, hai:76, eqi:82, tci:40, psi:70, edi:60, medianRent:1950, basePrice:520000,  taiNote:'HST 15% (Nova Scotia)' },
+  'quebec-city':       { name:'Québec City',        short:'YQB', province:'Québec',              eoi:55, tai:42, hai:80, eqi:80, tci:45, psi:72, edi:58, medianRent:1400, basePrice:380000,  taiNote:'GST 5% + QST 9.975% (~15%)' },
+  hamilton:            { name:'Hamilton',           short:'YHM', province:'Ontario',             eoi:65, tai:68, hai:78, eqi:72, tci:50, psi:70, edi:70, medianRent:1900, basePrice:680000,  taiNote:'HST 13% (Ontario)' },
+  'kitchener-waterloo':{ name:'Kitchener-Waterloo', short:'YKF', province:'Ontario',             eoi:68, tai:68, hai:78, eqi:76, tci:48, psi:72, edi:75, medianRent:1800, basePrice:650000,  taiNote:'HST 13% (Ontario)' },
+  victoria:            { name:'Victoria',           short:'YYJ', province:'British Columbia',    eoi:55, tai:72, hai:70, eqi:90, tci:55, psi:78, edi:58, medianRent:2400, basePrice:820000,  taiNote:'GST 5% + PST 7% (BC)' },
+  // ── Additional US cities ──────────────────────────────────────────────────
+  austin:              { name:'Austin',             short:'AUS', province:'Texas',               eoi:82, tai:88, hai:72, eqi:72, tci:38, psi:68, edi:78, medianRent:1900, basePrice:450000,  taiNote:'No state income tax; TX sales tax 8.25%' },
+  chicago:             { name:'Chicago',            short:'ORD', province:'Illinois',            eoi:82, tai:55, hai:85, eqi:68, tci:82, psi:62, edi:88, medianRent:2200, basePrice:318000,  taiNote:'IL flat 4.95%; combined sales tax ~10.25%' },
+  'los-angeles':       { name:'Los Angeles',        short:'LAX', province:'California',          eoi:88, tai:32, hai:78, eqi:68, tci:52, psi:55, edi:92, medianRent:2800, basePrice:750000,  taiNote:'CA income tax 1–13.3%; sales tax 10.25%' },
+  denver:              { name:'Denver',             short:'DEN', province:'Colorado',            eoi:72, tai:75, hai:78, eqi:85, tci:62, psi:74, edi:78, medianRent:1900, basePrice:490000,  taiNote:'CO flat 4.4% income tax; sales tax 8.81%' },
+  miami:               { name:'Miami',              short:'MIA', province:'Florida',             eoi:72, tai:88, hai:72, eqi:60, tci:45, psi:65, edi:75, medianRent:2900, basePrice:552000,  taiNote:'No state income tax; FL sales tax 7%' },
+  dallas:              { name:'Dallas',             short:'DFW', province:'Texas',               eoi:80, tai:88, hai:75, eqi:60, tci:42, psi:70, edi:82, medianRent:1600, basePrice:340000,  taiNote:'No state income tax; TX sales tax 8.25%' },
+  atlanta:             { name:'Atlanta',            short:'ATL', province:'Georgia',             eoi:78, tai:65, hai:78, eqi:72, tci:55, psi:68, edi:82, medianRent:1700, basePrice:318000,  taiNote:'GA flat 5.49% income tax; sales tax 8%' },
+  phoenix:             { name:'Phoenix',            short:'PHX', province:'Arizona',             eoi:70, tai:80, hai:72, eqi:55, tci:40, psi:68, edi:72, medianRent:1700, basePrice:360000,  taiNote:'AZ flat 2.5% income tax; sales tax 8.6%' },
+  'washington-dc':     { name:'Washington DC',      short:'DCA', province:'District of Columbia',eoi:85, tai:48, hai:82, eqi:72, tci:80, psi:78, edi:85, medianRent:2800, basePrice:549000,  taiNote:'DC income tax up to 10.75%' },
+  houston:             { name:'Houston',            short:'IAH', province:'Texas',               eoi:75, tai:88, hai:78, eqi:52, tci:38, psi:65, edi:82, medianRent:1400, basePrice:280000,  taiNote:'No state income tax; TX sales tax 8.25%' },
+  nashville:           { name:'Nashville',          short:'BNA', province:'Tennessee',           eoi:68, tai:90, hai:75, eqi:72, tci:35, psi:68, edi:72, medianRent:1800, basePrice:403000,  taiNote:'No state income tax; TN sales tax 9.75%' },
 }
 
 // ── Fit matrix ────────────────────────────────────────────────────────────────
@@ -279,6 +299,25 @@ const FIT_MATRIX: Record<string, Record<string, OccFit>> = {
     unemployed:    { score:26, hpiYears:35.0, rpi:118,eoi:'Low'  },
     retired:       { score:44, hpiYears:20.5, rpi:76, eoi:'Low'  },
   },
+  // ── Additional cities — real occupation scores populated by buildCityMatrix() ──
+  edmonton:            { self_employed:{ score:68, hpiYears:7.5,  rpi:34, eoi:'Low' }, freelancer:{ score:58, hpiYears:8.8,  rpi:40, eoi:'Low' }, unemployed:{ score:32, hpiYears:18.0, rpi:88, eoi:'Low' }, retired:{ score:54, hpiYears:11.0, rpi:52, eoi:'Low' } },
+  winnipeg:            { self_employed:{ score:62, hpiYears:6.5,  rpi:32, eoi:'Low' }, freelancer:{ score:52, hpiYears:7.8,  rpi:38, eoi:'Low' }, unemployed:{ score:30, hpiYears:15.5, rpi:80, eoi:'Low' }, retired:{ score:50, hpiYears:9.5,  rpi:48, eoi:'Low' } },
+  halifax:             { self_employed:{ score:55, hpiYears:9.5,  rpi:44, eoi:'Low' }, freelancer:{ score:46, hpiYears:11.0, rpi:52, eoi:'Low' }, unemployed:{ score:28, hpiYears:22.0, rpi:96, eoi:'Low' }, retired:{ score:44, hpiYears:13.0, rpi:60, eoi:'Low' } },
+  'quebec-city':       { self_employed:{ score:58, hpiYears:6.8,  rpi:32, eoi:'Low' }, freelancer:{ score:50, hpiYears:8.0,  rpi:38, eoi:'Low' }, unemployed:{ score:30, hpiYears:16.0, rpi:82, eoi:'Low' }, retired:{ score:52, hpiYears:9.8,  rpi:48, eoi:'Low' } },
+  hamilton:            { self_employed:{ score:56, hpiYears:12.0, rpi:46, eoi:'Low' }, freelancer:{ score:48, hpiYears:14.0, rpi:54, eoi:'Low' }, unemployed:{ score:28, hpiYears:28.0, rpi:108,eoi:'Low' }, retired:{ score:42, hpiYears:17.0, rpi:64, eoi:'Low' } },
+  'kitchener-waterloo':{ self_employed:{ score:58, hpiYears:11.5, rpi:44, eoi:'Low' }, freelancer:{ score:50, hpiYears:13.5, rpi:52, eoi:'Low' }, unemployed:{ score:28, hpiYears:27.0, rpi:104,eoi:'Low' }, retired:{ score:44, hpiYears:16.5, rpi:62, eoi:'Low' } },
+  victoria:            { self_employed:{ score:52, hpiYears:14.5, rpi:58, eoi:'Low' }, freelancer:{ score:44, hpiYears:17.0, rpi:68, eoi:'Low' }, unemployed:{ score:26, hpiYears:34.0, rpi:120,eoi:'Low' }, retired:{ score:40, hpiYears:20.5, rpi:80, eoi:'Low' } },
+  austin:              { self_employed:{ score:65, hpiYears:9.2,  rpi:38, eoi:'Low' }, freelancer:{ score:56, hpiYears:11.0, rpi:46, eoi:'Low' }, unemployed:{ score:30, hpiYears:22.0, rpi:88, eoi:'Low' }, retired:{ score:50, hpiYears:13.5, rpi:55, eoi:'Low' } },
+  chicago:             { self_employed:{ score:55, hpiYears:7.5,  rpi:42, eoi:'Low' }, freelancer:{ score:46, hpiYears:9.0,  rpi:50, eoi:'Low' }, unemployed:{ score:28, hpiYears:15.5, rpi:95, eoi:'Low' }, retired:{ score:42, hpiYears:11.5, rpi:58, eoi:'Low' } },
+  'los-angeles':       { self_employed:{ score:50, hpiYears:16.5, rpi:58, eoi:'Low' }, freelancer:{ score:42, hpiYears:19.5, rpi:70, eoi:'Low' }, unemployed:{ score:22, hpiYears:38.0, rpi:128,eoi:'Low' }, retired:{ score:38, hpiYears:22.5, rpi:82, eoi:'Low' } },
+  denver:              { self_employed:{ score:60, hpiYears:10.5, rpi:40, eoi:'Low' }, freelancer:{ score:52, hpiYears:12.5, rpi:48, eoi:'Low' }, unemployed:{ score:28, hpiYears:25.0, rpi:90, eoi:'Low' }, retired:{ score:46, hpiYears:15.5, rpi:58, eoi:'Low' } },
+  miami:               { self_employed:{ score:52, hpiYears:12.5, rpi:62, eoi:'Low' }, freelancer:{ score:44, hpiYears:15.0, rpi:74, eoi:'Low' }, unemployed:{ score:24, hpiYears:28.5, rpi:118,eoi:'Low' }, retired:{ score:42, hpiYears:18.0, rpi:80, eoi:'Low' } },
+  dallas:              { self_employed:{ score:65, hpiYears:7.5,  rpi:34, eoi:'Low' }, freelancer:{ score:56, hpiYears:9.0,  rpi:42, eoi:'Low' }, unemployed:{ score:32, hpiYears:17.0, rpi:80, eoi:'Low' }, retired:{ score:52, hpiYears:11.0, rpi:50, eoi:'Low' } },
+  atlanta:             { self_employed:{ score:62, hpiYears:8.0,  rpi:38, eoi:'Low' }, freelancer:{ score:52, hpiYears:9.5,  rpi:46, eoi:'Low' }, unemployed:{ score:30, hpiYears:18.5, rpi:86, eoi:'Low' }, retired:{ score:48, hpiYears:11.5, rpi:54, eoi:'Low' } },
+  phoenix:             { self_employed:{ score:58, hpiYears:9.0,  rpi:40, eoi:'Low' }, freelancer:{ score:50, hpiYears:10.5, rpi:48, eoi:'Low' }, unemployed:{ score:28, hpiYears:20.5, rpi:88, eoi:'Low' }, retired:{ score:46, hpiYears:13.0, rpi:56, eoi:'Low' } },
+  'washington-dc':     { self_employed:{ score:55, hpiYears:11.5, rpi:58, eoi:'Low' }, freelancer:{ score:46, hpiYears:14.0, rpi:70, eoi:'Low' }, unemployed:{ score:26, hpiYears:27.5, rpi:112,eoi:'Low' }, retired:{ score:42, hpiYears:17.5, rpi:76, eoi:'Low' } },
+  houston:             { self_employed:{ score:65, hpiYears:6.5,  rpi:30, eoi:'Low' }, freelancer:{ score:55, hpiYears:7.8,  rpi:36, eoi:'Low' }, unemployed:{ score:32, hpiYears:14.5, rpi:72, eoi:'Low' }, retired:{ score:52, hpiYears:9.5,  rpi:44, eoi:'Low' } },
+  nashville:           { self_employed:{ score:62, hpiYears:9.5,  rpi:42, eoi:'Low' }, freelancer:{ score:52, hpiYears:11.0, rpi:50, eoi:'Low' }, unemployed:{ score:30, hpiYears:21.5, rpi:88, eoi:'Low' }, retired:{ score:48, hpiYears:13.5, rpi:58, eoi:'Low' } },
 }
 
 // ── Override stale FIT_MATRIX values with fit-engine computed data ─────────────
@@ -290,7 +329,7 @@ for (const slug of Object.keys(CITY_BASE) as Array<keyof typeof CITY_BASE>) {
   if (FIT_MATRIX[slug]) Object.assign(FIT_MATRIX[slug], buildCityMatrix(slug as string, cb))
 }
 
-const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'seattle', 'san-francisco', 'new-york', 'boston']
+const ALL_CITY_IDS = ['vancouver', 'toronto', 'calgary', 'montreal', 'ottawa', 'edmonton', 'winnipeg', 'halifax', 'quebec-city', 'hamilton', 'kitchener-waterloo', 'victoria', 'seattle', 'san-francisco', 'new-york', 'boston', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville']
 
 const OCCUPATIONS = [
   // Healthcare
