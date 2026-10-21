@@ -274,6 +274,7 @@ function CityProfile({ city }: { city: typeof CITIES[0] }) {
         <div style={{textAlign:'right'}}>
           <div style={{color:'#fff',fontSize:34,fontWeight:900,lineHeight:1}}>{city.fitScore}</div>
           <div style={{color:'rgba(255,255,255,0.75)',fontSize:11}}>City Fit Score</div>
+          <div style={{color:'rgba(255,255,255,0.38)',fontSize:10,marginTop:3}}>Avg across all occupations</div>
         </div>
       </div>
       <div style={{padding:'16px 24px'}}>
@@ -381,7 +382,7 @@ export default function CanadaCitiesReport2026() {
             The Defining Chart: Affordability vs. Opportunity
           </h2>
           <p style={{color:'#6b7280',fontSize:14,margin:'0 0 18px',lineHeight:1.6}}>
-            City Fit Score (higher = better overall fit) vs. HPI Years (home price ÷ annual salary, lower = more affordable).
+            City Fit Score (housing affordability + city quality composite, averaged across all occupations; higher = better overall fit) vs. HPI Years (home price ÷ annual salary, lower = more affordable). Note: City Fit Score differs from City Score — City Score is the pure 6-indicator city index (EOI, TAI, HAI, EQI, TCI, PSI) shown on individual city pages.
             {' '}<strong style={{color:'#374151'}}>The ideal quadrant is top-left.</strong>
             {' '}Hover over a city to see its full snapshot.
           </p>
