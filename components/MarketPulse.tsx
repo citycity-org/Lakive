@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {
   CA_CONFIG, US_CONFIG,
   rateInsight, cpiInsight, unemploymentInsight,
-  type CountryConfig, type Indicator,
+  type CountryConfig,
 } from '@/lib/market-config'
 
 // ── City news types ───────────────────────────────────────────────────────────
@@ -256,6 +256,36 @@ function CompactCards({ config, liveRate }: { config: CountryConfig; liveRate?: 
   )
 }
 
+// ── Extended indicator mini-card ──────────────────────────────────────────────
+function ExtendedCard({
+  label, displayValue, note, date, source, delta,
+}: {
+  label: string; displayValue: string; note: string
+  date: string; source: string; delta: number
+}) {
+  const dotColor = delta === 0 ? 'rgba(255,255,255,0.22)' : delta > 0 ? '#E86C2F' : '#14B8A6'
+  return (
+    <div style={{
+      padding: '14px 16px',
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(255,255,255,0.07)',
+      borderRadius: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+        <span style={{ width: 5, height: 5, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
+        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase' }}>
+          {label}
+        </span>
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em', marginBottom: 4 }}>
+        {displayValue}
+      </div>
+      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>{note}</div>
+      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.22)' }}>{date} · {source}</div>
+    </div>
+  )
+}
+
 // ── Country block (full) ──────────────────────────────────────────────────────
 function FullCountry({ config, liveRate }: { config: CountryConfig; liveRate?: number | null }) {
   const country = config.name === 'Canada' ? 'CA' : 'US'
@@ -296,6 +326,67 @@ function FullCountry({ config, liveRate }: { config: CountryConfig; liveRate?: n
         <span style={{ color: 'rgba(79,142,247,0.7)', fontWeight: 700, marginRight: 4 }}>🏠 Housing</span>
         {config.housingNote}
       </div>
+
+      {/* ── Extended indicators (CA only) ───────────────────────── */}
+      {(config.cpiExGasoline || config.cpiRent || config.housingPricesHPI || config.housingStarts || config.rentalMarket) && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 10 }}>
+            Extended Indicators
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
+            {config.cpiExGasoline && (
+              <ExtendedCard
+                label="CPI ex. Gasoline"
+                displayValue={`${config.cpiExGasoline.value}%`}
+                note="YoY"
+                date={config.cpiExGasoline.date}
+                source={config.cpiExGasoline.source}
+                delta={config.cpiExGasoline.value - config.cpiExGasoline.prev}
+              />
+            )}
+            {config.cpiRent && (
+              <ExtendedCard
+                label="CPI Rent"
+                displayValue={`+${config.cpiRent.value}%`}
+                note="YoY"
+                date={config.cpiRent.date}
+                source={config.cpiRent.source}
+                delta={config.cpiRent.value - config.cpiRent.prev}
+              />
+            )}
+            {config.rentalMarket && (
+              <ExtendedCard
+                label="Avg Asking Rent"
+                displayValue={`$${config.rentalMarket.value.toLocaleString()}`}
+                note="−4.2% YoY"
+                date={config.rentalMarket.date}
+                source={config.rentalMarket.source}
+                delta={0}
+              />
+            )}
+            {config.housingPricesHPI && (
+              <ExtendedCard
+                label="MLS HPI"
+                displayValue={`${config.housingPricesHPI.value}%`}
+                note="YoY"
+                date={config.housingPricesHPI.date}
+                source={config.housingPricesHPI.source}
+                delta={config.housingPricesHPI.value - config.housingPricesHPI.prev}
+              />
+            )}
+            {config.housingStarts && (
+              <ExtendedCard
+                label="Housing Starts"
+                displayValue={config.housingStarts.value.toLocaleString()}
+                note="SAAR"
+                date={config.housingStarts.date}
+                source={config.housingStarts.source}
+                delta={0}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

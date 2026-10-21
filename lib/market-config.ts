@@ -24,7 +24,12 @@ export type CountryConfig = {
   centralBank: { name: string; shortName: string }
   rate: Indicator & { rangeHigh?: number }   // rangeHigh for US Fed target range
   cpi: Indicator
+  cpiExGasoline?: Indicator   // CPI excl. gasoline YoY% (CA only)
+  cpiRent?: Indicator         // CPI Rent component YoY% (CA only)
   unemployment: Indicator
+  housingPricesHPI?: Indicator  // MLS HPI composite YoY% (CA only, CREA)
+  housingStarts?: Indicator     // Housing starts SAAR (CA only, CMHC)
+  rentalMarket?: Indicator      // National avg asking rent, YoY% (CA only, Rentals.ca × Urbanation)
   housingNote: string  // 1-line housing market summary for this month
   lastReviewed: string     // "2026-07-25"
   updatedAt: string        // "2026-07-25 10:30 PDT" — shown in source footer
@@ -41,26 +46,56 @@ export const CA_CONFIG: CountryConfig = {
   centralBank: { name: 'Bank of Canada', shortName: 'BoC' },
   rate: {
     value: 2.25,        // FALLBACK — live value fetched from BoC Valet API
-    prev: 2.25,         // previous meeting rate (Jul 15 2026: unchanged)
-    date: 'Jul 15, 2026',
+    prev: 2.25,         // Sep 2 2026: unchanged (held at 2.25%)
+    date: 'Sep 2, 2026',
     source: 'Bank of Canada',
   },
   cpi: {
-    value: 3.0,              // Jul 2026 CPI released Aug 19 — StatsCan auto-fetch active
-    prev: 2.8,
-    date: 'Jul 2026',
+    value: 3.1,              // Sep 2026 CPI released Oct 21 — StatsCan auto-fetch active
+    prev: 3.0,               // Aug 2026 was 3.0% YoY
+    date: 'Sep 2026',
+    source: 'Statistics Canada',
+  },
+  cpiExGasoline: {
+    value: 2.2,              // Sep 2026 CPI excl. gasoline YoY
+    prev: 2.2,               // prev not disclosed in source; placeholder = same
+    date: 'Sep 2026',
+    source: 'Statistics Canada',
+  },
+  cpiRent: {
+    value: 2.8,              // Sep 2026 CPI Rent component YoY
+    prev: 2.8,               // prev not disclosed in source; placeholder = same
+    date: 'Sep 2026',
     source: 'Statistics Canada',
   },
   unemployment: {
     value: 6.5,              // Sep 2026 LFS released Oct 9 — −68K jobs, rate rose 0.1pp to 6.5%, employment rate 60.6%, participation 64.8%
-    prev: 6.4,               // Aug 2026 was 6.4% (held)
+    prev: 6.4,               // Aug 2026 was 6.4%
     date: 'Sep 2026',
     source: 'Statistics Canada LFS',
   },
-  housingNote: 'Rents fell for a 23rd consecutive month: $2,035 national avg asking rent, −4.8% YoY (Rentals.ca, Sep 2026). BoC decision Oct 28 — next key signal.',
-  lastReviewed: '2026-10-16',
-  updatedAt: '2026-10-16 PDT',
-  sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'Rentals.ca × Urbanation'],
+  housingPricesHPI: {
+    value: -3.4,             // Sep 2026 MLS HPI composite YoY
+    prev: -3.4,              // prev not disclosed in source; placeholder = same
+    date: 'Sep 2026',
+    source: 'CREA',
+  },
+  housingStarts: {
+    value: 248896,           // Sep 2026 SAAR (seasonally adjusted annualized rate)
+    prev: 248896,            // prev not disclosed in source; placeholder = same
+    date: 'Sep 2026',
+    source: 'CMHC',
+  },
+  rentalMarket: {
+    value: 2034,             // Sep 2026 national avg asking rent (2BR), Rentals.ca × Urbanation
+    prev: 2034,              // prev not disclosed in source; placeholder = same (YoY change: −4.2%)
+    date: 'Sep 2026',
+    source: 'Rentals.ca × Urbanation',
+  },
+  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca × Urbanation, Sep 2026). MLS HPI −3.4% YoY (CREA). BoC decision Oct 28 — next key signal.',
+  lastReviewed: '2026-10-20',
+  updatedAt: 'Oct 20, 2026',
+  sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'CREA', 'Rentals.ca × Urbanation'],
 }
 
 // ── United States ────────────────────────────────────────────────────────────
