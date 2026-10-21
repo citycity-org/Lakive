@@ -211,7 +211,7 @@ export default function VancouverReportPage() {
           </p>
 
           <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 14, lineHeight: 1.85, marginBottom: 0 }}>
-            What the EIU does not measure: whether a nurse earning $92,703 can afford a two-bedroom apartment without spending the majority of her take-home income on rent. Whether a teacher on $86,444 can realistically save for a down payment within a decade. These are not niche concerns — they describe the financial reality of most of Vancouver&apos;s working population.
+            What the EIU does not measure: whether a nurse earning $92,703 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>(BC · Job Bank, 2023–24)</span> can afford a two-bedroom apartment without spending the majority of her take-home income on rent. Whether a teacher on $86,444 can realistically save for a down payment within a decade. These are not niche concerns — they describe the financial reality of most of Vancouver&apos;s working population.
           </p>
         </section>
 
@@ -318,7 +318,7 @@ export default function VancouverReportPage() {
 
           {/* Pull quote */}
           <div style={{ borderLeft: '3px solid #F59E0B', paddingLeft: 20, margin: '0 0 24px', color: 'rgba(255,255,255,0.72)', fontSize: 14, fontStyle: 'italic', lineHeight: 1.75 }}>
-            A registered nurse earning $92,703 faces a composite benchmark HPI of <strong style={{ fontStyle: 'normal', color: '#F59E0B' }}>13.1 years</strong> and an after-tax rent burden of <strong style={{ fontStyle: 'normal', color: '#F59E0B' }}>53.3%</strong>. If 20% of the income remaining after rent were saved toward a down payment, accumulating a 20% deposit on a benchmark-priced home would take well over 15 years — a simplified static estimate that does not account for home-price growth or investment returns.
+            A registered nurse earning $92,703 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>(BC · Job Bank, 2023–24)</span> faces a composite benchmark HPI of <strong style={{ fontStyle: 'normal', color: '#F59E0B' }}>13.1 years</strong> and an after-tax rent burden of <strong style={{ fontStyle: 'normal', color: '#F59E0B' }}>53.3%</strong>. If 20% of the income remaining after rent were saved toward a down payment, accumulating a 20% deposit on a benchmark-priced home would take well over 15 years — a simplified static estimate that does not account for home-price growth or investment returns.
           </div>
 
           <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 14, lineHeight: 1.85, marginBottom: 0 }}>
