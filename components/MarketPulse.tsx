@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {
   CA_CONFIG, US_CONFIG,
   rateInsight, cpiInsight, unemploymentInsight,
-  type CountryConfig,
+  type CountryConfig, type Indicator,
 } from '@/lib/market-config'
 
 // ── City news types ───────────────────────────────────────────────────────────
