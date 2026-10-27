@@ -26,6 +26,16 @@ create index if not exists shared_insights_content_hash_idx on shared_insights(c
 create index if not exists shared_insights_created_at_idx   on shared_insights(created_at);
 create index if not exists shared_insights_accessed_at_idx  on shared_insights(last_accessed_at);
 
+-- Grants (required for Data API access from Oct 30 2026 onwards)
+-- New projects, preview branches, and `supabase db reset` need explicit GRANTs.
+grant select, insert, update
+  on public.shared_insights
+  to anon, authenticated;
+
+grant select, insert, update, delete
+  on public.shared_insights
+  to service_role;
+
 -- RLS: public read; insert from anon (server-side API route)
 alter table shared_insights enable row level security;
 

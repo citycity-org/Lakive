@@ -36,6 +36,26 @@ CREATE TABLE IF NOT EXISTS city_occupation_scores (
 CREATE INDEX IF NOT EXISTS cos_city_idx ON city_occupation_scores(city_id);
 CREATE INDEX IF NOT EXISTS cos_occ_idx  ON city_occupation_scores(occupation_id);
 
+-- ── Grants (required for Data API access from Oct 30 2026 onwards) ───────────
+-- New projects, preview branches, and `supabase db reset` need explicit GRANTs.
+-- Existing production tables keep their current grants unaffected.
+
+GRANT SELECT
+  ON public.city_indices
+  TO anon, authenticated;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+  ON public.city_indices
+  TO service_role;
+
+GRANT SELECT
+  ON public.city_occupation_scores
+  TO anon, authenticated;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+  ON public.city_occupation_scores
+  TO service_role;
+
 -- ── RLS ───────────────────────────────────────────────────────────────────────
 
 ALTER TABLE city_indices            ENABLE ROW LEVEL SECURITY;
