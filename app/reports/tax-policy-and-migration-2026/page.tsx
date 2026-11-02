@@ -73,12 +73,12 @@ function CaseTable() {
     ['Annual income', '$180,000', '$2,500,000'],
     ['WA SB 6346 applies?', 'No — under $1M threshold', 'Yes — 9.9% on $1,500,000'],
     ['New tax liability (2028)', '$0', '$148,500/year'],
-    ['Seattle median rent (2BR)', '$2,700/mo ($32,400/yr)', '$2,700/mo ($32,400/yr)'],
-    ['Dallas median rent (2BR)', '$1,600/mo ($19,200/yr)', '$1,600/mo ($19,200/yr)'],
-    ['Annual rent saving (Dallas)', '$13,200', '$13,200'],
-    ['Total annual saving (Dallas)', '$13,200 (housing only)', '$161,700 (tax + housing)'],
-    ['Typical salary shift in Dallas', '–5 to –10% (shallower job market)', '–10 to –15% (fewer comparable roles)'],
-    ['Net financial case for move', 'Weak to neutral: housing savings likely offset by salary reduction', 'Strong: tax savings alone likely exceed any salary adjustment'],
+    ['Seattle median rent (2BR)', '$2,500/mo ($30,000/yr) ¹', '$2,500/mo ($30,000/yr) ¹'],
+    ['Dallas median rent (2BR)', '$1,850/mo ($22,200/yr) ¹', '$1,850/mo ($22,200/yr) ¹'],
+    ['Annual rent saving (Dallas)', '$7,800', '$7,800'],
+    ['Total annual saving (Dallas)', '$7,800 (housing only)', '$156,300 (tax + housing)'],
+    ['Typical salary shift in Dallas', '–5 to –10% vs. Seattle ²', 'Income structure differs — equity, advisory, and capital income are largely location-portable; standard salary benchmarks do not apply'],
+    ['Net financial case for move', 'Weak to neutral: housing savings likely offset by salary reduction', 'Strong: tax savings dominate at this income level'],
     ['Non-financial factors', 'Professional network, Amazon/Microsoft ecosystem, family ties', 'Capital gains planning, business location, legal challenge outcome'],
     ['Research verdict', 'Migration effect small (Young et al. 2016 applies)', 'Migration effect larger (Moretti & Kleven findings apply)'],
   ]
@@ -214,19 +214,20 @@ export default function TaxMigrationReport() {
         {/* Section 3 */}
         <div style={s.section}>
           <h2 style={s.h2}>3.  Case Study: Washington State and the Income-Level Divide</h2>
-          <p style={s.p}>Washington State enacted SB 6346 in March 2026, signed by Governor Bob Ferguson on March 30. The law establishes a 9.9% personal income tax on household income above $1 million, effective January 1, 2028. As of this report's publication date, the tax has not taken effect; legal challenges are anticipated, with opponents arguing it may constitute an unconstitutional graduated income tax. [<a href="#ref-6" style={{ color: '#2DD4BF' }}>6</a>]</p>
+          <p style={s.p}>Washington State enacted SB 6346 in March 2026, signed by Governor Bob Ferguson on March 30. The law establishes a 9.9% personal income tax on household income above $1 million, effective January 1, 2028. A legal challenge was filed on the day of signing, with opponents arguing it constitutes an unconstitutional graduated income tax. Separately, Initiative 645 — a citizen initiative to repeal the tax before it takes effect — was certified for the ballot on July 15, 2026 and is scheduled for a statewide vote on November 3, 2026. <em style={{ color: '#64748B' }}>Status as of October 28, 2026. This report will be updated following the November 3 vote.</em> [<a href="#ref-6" style={{ color: '#2DD4BF' }}>6</a>]</p>
           <p style={s.p}>The Washington case illustrates a point the academic literature consistently makes: the same tax policy creates very different migration incentives depending on who you are. The table below compares two Seattle residents — a senior software engineer and a high-income tech founder — both considering a move to Dallas.</p>
 
           <CaseTable />
 
-          <p style={{ ...s.p, marginTop: 24 }}>The key insight: for the software engineer, SB 6346 is irrelevant — the $1M threshold is far above their income. The migration calculus turns entirely on housing costs versus salary differences, and the net financial case for moving is weak to neutral. For the tech founder, the tax liability is $148,500 per year — a figure that changes the calculation materially.</p>
+          <p style={{ ...s.pSmall, marginTop: 12 }}>¹ Approximate 2-bedroom median rents: Apartment List / Trulia, Q3–Q4 2026 estimates. ² Salary shift for Scenario A is an illustrative assumption for comparison purposes; actual outcomes vary by role and employer.</p>
+          <p style={{ ...s.p, marginTop: 16 }}>The key insight: for the software engineer, SB 6346 is irrelevant — the $1M threshold is far above their income. The migration calculus turns entirely on housing costs versus salary differences, and the net financial case for moving is weak to neutral. For the tech founder, the tax liability is $148,500 per year — a figure that changes the calculation materially. At that income level, earnings are typically diversified across salary, equity, consulting, and capital gains; most are location-portable, so standard salary-reduction benchmarks do not apply.</p>
           <p style={s.p}>This is consistent with Young et al. (2016): at the median-to-high end of professional incomes, taxes rarely drive relocation decisions on their own. At the very top of the income distribution, Moretti & Wilson (2017) and Kleven et al. (2014) show the effect becomes meaningful. Policy analysis that treats these two populations as one will systematically overestimate migration response for most workers and underestimate it for a small, high-income segment.</p>
         </div>
 
         {/* Section 4 */}
         <div style={s.section}>
           <h2 style={s.h2}>4.  Canada: Taxation and Interprovincial Migration</h2>
-          <p style={s.p}>Canadian provinces differ substantially in income taxes, sales taxes, housing costs, and employment conditions. Recent net migration toward Alberta reflects a combination of factors: wage levels in the energy sector, relatively affordable housing, the absence of a provincial sales tax, and family circumstances. Attributing migration flows to tax rates alone overstates what descriptive statistics can demonstrate.</p>
+          <p style={s.p}>Canadian provinces differ substantially in income taxes, sales taxes, housing costs, and employment conditions. Recent net migration toward Alberta reflects a combination of factors: wage levels in the energy sector, relatively affordable housing, the absence of a provincial sales tax, and family circumstances. (Statistics Canada, interprovincial migration estimates, 2023–2025.) Attributing migration flows to tax rates alone overstates what descriptive statistics can demonstrate.</p>
           <p style={s.p}>Rigorous analysis requires combining Statistics Canada interprovincial migration data with published provincial tax schedules, occupation-level wages, and housing cost benchmarks. For parallel U.S. research, the Census Bureau's American Community Survey state-to-state flows and the IRS State and County Migration Data provide the most granular publicly available evidence. [<a href="#ref-7" style={{ color: '#2DD4BF' }}>7</a>, <a href="#ref-8" style={{ color: '#2DD4BF' }}>8</a>]</p>
           <p style={s.pSmall}>Methodological note: changes to IRS statistical methodology in recent years limit direct comparisons across some periods. The Lavecchia et al. (2026) paper cited above is an IZA working paper; readers should treat its quantitative estimates as preliminary pending peer-reviewed publication.</p>
         </div>
@@ -239,7 +240,7 @@ export default function TaxMigrationReport() {
             'Correlation between low-tax environments and positive migration flows does not establish causation. Employment growth, housing supply, cost of living, and climate independently drive migration.',
             'Findings from top-earning scientists or millionaires are not transferable to median-wage households. The income segment studied is the primary determinant of the elasticity found.',
             'Tax comparisons require aligned reference years, consistent filing assumptions, and matched effective-rate definitions. Comparing nominal statutory rates across jurisdictions without these controls is methodologically unsound.',
-            'For Washington State: as of publication, SB 6346 has not taken effect and is subject to legal challenge. Migration effects attributed to it in current media coverage reflect expectation, not observed behavior.',
+            'For Washington State: as of publication (October 28, 2026), SB 6346 has not taken effect. A legal challenge has been filed and a repeal initiative (I-645) is on the November 3, 2026 ballot. Migration effects attributed to it in current media coverage reflect expectation, not observed behavior.',
           ].map((b, i) => (
             <p key={i} style={{ ...s.bullet, paddingLeft: 28 }}>
               <span style={{ position: 'absolute', left: 0, color: '#2DD4BF', fontWeight: 700 }}>·</span>
