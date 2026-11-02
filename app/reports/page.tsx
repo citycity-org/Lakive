@@ -243,6 +243,38 @@ export default function ReportsPage() {
             Also Published
           </div>
 
+          {/* Tax Policy & Migration — Research Report */}
+          <div style={{ background: 'linear-gradient(135deg,rgba(249,115,22,0.08),rgba(45,212,191,0.04))', border: '1px solid rgba(249,115,22,0.25)', borderRadius: 24, overflow: 'hidden', marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 0 }}>
+              <div style={{ width: 5, background: 'linear-gradient(to bottom,#F97316,#2DD4BF)', borderRadius: '4px 0 0 4px' }} />
+              <div style={{ padding: '28px 32px 24px' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 14 }}>
+                  <Tag label="Research Report" color="#F97316" bg="rgba(249,115,22,0.12)" />
+                  <Tag label="USA · Canada" color="#93C5FD" bg="rgba(79,142,247,0.08)" />
+                  <Tag label="Tax Policy · Migration" color="#FCD34D" bg="rgba(245,158,11,0.08)" />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginLeft: 4 }}>October 2026</span>
+                </div>
+                <h3 style={{ fontSize: 'clamp(16px,2.5vw,20px)', fontWeight: 800, lineHeight: 1.25, margin: '0 0 10px', letterSpacing: '-0.01em' }}>
+                  Tax Policy and Human Migration
+                </h3>
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, lineHeight: 1.7, maxWidth: 600, margin: '0 0 20px' }}>
+                  Do taxes drive people to move? A review of five peer-reviewed studies — including Washington State&apos;s 2026 millionaires&apos; tax — shows the answer depends heavily on income level and occupation. With evidence comparison table and case study.
+                </p>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 20, background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.20)', color: '#F97316', fontSize: 11, fontWeight: 700 }}>
+                    ✓ Published October 28, 2026
+                  </span>
+                  <Link href="/reports/tax-policy-and-migration-2026" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 12, background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.28)', color: '#F97316', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                    Read report →
+                  </Link>
+                  <a href="/reports/pdf/Lakive_Tax_Policy_Migration_Report_2026.pdf" target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                    ↓ PDF
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Monthly Report August 2026 */}
           <div style={{ background: 'linear-gradient(135deg,rgba(20,184,166,0.08),rgba(245,158,11,0.03))', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 24, overflow: 'hidden', marginBottom: 20 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 0 }}>
