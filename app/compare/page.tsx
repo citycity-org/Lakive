@@ -922,18 +922,57 @@ function ComparePageInner() {
             </div>
           </div>
 
-          {/* ── NOT READY: prompt ── */}
+          {/* ── NOT READY: prompt + example preview ── */}
           {!ready && (
-            <div style={{ background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:20, padding:'48px 32px', textAlign:'center' }}>
-              <div style={{ fontSize:32, marginBottom:16 }}>🏙️</div>
-              <h2 style={{ color:'white', fontSize:20, fontWeight:800, margin:'0 0 10px' }}>Select two cities and your occupation</h2>
-              <p style={{ color:'rgba(255,255,255,0.42)', fontSize:14, margin:'0 0 24px', lineHeight:1.6 }}>
-                Once selected, a full multi-dimension comparison<br/>report will be generated automatically
-              </p>
-              <div style={{ display:'flex', justifyContent:'center', gap:16, flexWrap:'wrap' }}>
-                {!slugA && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(79,142,247,0.40)', color:'rgba(79,142,247,0.70)', fontSize:13 }}>① Select City A</div>}
-                {!slugB && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(20,184,166,0.40)', color:'rgba(20,184,166,0.70)', fontSize:13 }}>② Select City B</div>}
-                {!occ   && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(255,255,255,0.20)', color:'rgba(255,255,255,0.40)', fontSize:13 }}>③ Select Occupation</div>}
+            <div>
+              {/* Checklist of remaining selections */}
+              <div style={{ display:'flex', justifyContent:'center', gap:12, flexWrap:'wrap', marginBottom:32 }}>
+                {!slugA && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(20,184,166,0.40)', color:'rgba(20,184,166,0.70)', fontSize:13, fontWeight:600 }}>① Select City A ↑</div>}
+                {!slugB && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(20,184,166,0.30)', color:'rgba(20,184,166,0.55)', fontSize:13, fontWeight:600 }}>② Select City B ↑</div>}
+                {!occ   && <div style={{ padding:'8px 16px', borderRadius:10, border:'1px dashed rgba(255,255,255,0.18)', color:'rgba(255,255,255,0.38)', fontSize:13, fontWeight:600 }}>③ Select Occupation ↑</div>}
+              </div>
+
+              {/* Example preview — what a comparison looks like */}
+              <div style={{ background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:20, padding:'28px 32px', opacity:0.55 }}>
+                <div style={{ color:'rgba(255,255,255,0.30)', fontSize:11, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:18 }}>
+                  Example · Electrician · Calgary vs Vancouver
+                </div>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', gap:16, alignItems:'center', marginBottom:24 }}>
+                  {/* City A example */}
+                  <div style={{ background:'rgba(20,184,166,0.06)', border:'1px solid rgba(20,184,166,0.18)', borderRadius:14, padding:'18px 20px' }}>
+                    <div style={{ color:'rgba(255,255,255,0.55)', fontSize:12, fontWeight:700, marginBottom:6 }}>Calgary, AB</div>
+                    <div style={{ color:'#14B8A6', fontSize:36, fontWeight:900, fontFamily:'monospace', lineHeight:1 }}>82</div>
+                    <div style={{ color:'rgba(255,255,255,0.30)', fontSize:11, marginTop:4 }}>City Fit Score</div>
+                    <div style={{ marginTop:12, display:'flex', flexDirection:'column', gap:6 }}>
+                      {[['Years to buy','3.9 yrs','#14B8A6'],['Rent / income','24%','#14B8A6'],['Employment','Strong','#14B8A6']].map(([l,v,c])=>(
+                        <div key={l} style={{ display:'flex', justifyContent:'space-between', fontSize:12 }}>
+                          <span style={{ color:'rgba(255,255,255,0.35)' }}>{l}</span>
+                          <span style={{ color:c, fontWeight:700 }}>{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ color:'rgba(255,255,255,0.20)', fontSize:13, fontWeight:700, textAlign:'center' }}>vs</div>
+                  {/* City B example */}
+                  <div style={{ background:'rgba(249,115,22,0.05)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:14, padding:'18px 20px' }}>
+                    <div style={{ color:'rgba(255,255,255,0.55)', fontSize:12, fontWeight:700, marginBottom:6 }}>Vancouver, BC</div>
+                    <div style={{ color:'#F59E0B', fontSize:36, fontWeight:900, fontFamily:'monospace', lineHeight:1 }}>51</div>
+                    <div style={{ color:'rgba(255,255,255,0.30)', fontSize:11, marginTop:4 }}>City Fit Score</div>
+                    <div style={{ marginTop:12, display:'flex', flexDirection:'column', gap:6 }}>
+                      {[['Years to buy','13.0 yrs','#EF4444'],['Rent / income','43%','#F59E0B'],['Employment','Strong','#14B8A6']].map(([l,v,c])=>(
+                        <div key={l} style={{ display:'flex', justifyContent:'space-between', fontSize:12 }}>
+                          <span style={{ color:'rgba(255,255,255,0.35)' }}>{l}</span>
+                          <span style={{ color:c, fontWeight:700 }}>{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ background:'rgba(20,184,166,0.06)', border:'1px solid rgba(20,184,166,0.15)', borderRadius:12, padding:'12px 16px', textAlign:'center' }}>
+                  <span style={{ color:'rgba(255,255,255,0.35)', fontSize:13 }}>
+                    Calgary leads by <strong style={{ color:'#14B8A6' }}>+31 pts</strong> — driven by housing (3.3× faster to buy) and after-tax income (no provincial tax)
+                  </span>
+                </div>
               </div>
             </div>
           )}

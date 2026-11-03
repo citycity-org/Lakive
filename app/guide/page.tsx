@@ -375,9 +375,37 @@ function GuidePageInner() {
           </div>
         )}
 
+        {/* ── Popular topics (only on landing) ─────────────────────────────── */}
+        {!mode && (
+          <div className="mt-10 mb-2">
+            <p className="text-xs font-semibold mb-4 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              Popular questions
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {TOPICS.slice(0, 4).map(t => (
+                <div key={t.label} className="rounded-xl p-4"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span>{t.icon}</span>
+                    <span className="text-sm font-semibold" style={{ color: 'white' }}>{t.label}</span>
+                  </div>
+                  <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.38)' }}>{t.desc}</p>
+                  <div className="flex flex-col gap-1">
+                    {t.links.slice(0, 2).map(l => (
+                      <a key={l.href} href={l.href} className="text-xs" style={{ color: '#14B8A6', textDecoration: 'none' }}>
+                        → {l.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Bottom browse all (only on landing) ───────────────────────────── */}
         {!mode && (
-          <div className="mt-4 text-center">
+          <div className="mt-8 text-center">
             <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.25)' }}>
               Or browse all 150 guides directly
             </p>

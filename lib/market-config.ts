@@ -45,9 +45,9 @@ export const CA_CONFIG: CountryConfig = {
   currency: 'CAD',
   centralBank: { name: 'Bank of Canada', shortName: 'BoC' },
   rate: {
-    value: 2.25,        // FALLBACK — live value fetched from BoC Valet API
-    prev: 2.25,         // Sep 2 2026: unchanged (held at 2.25%)
-    date: 'Sep 2, 2026',
+    value: 2.50,        // FALLBACK — live value fetched from BoC Valet API; Oct 28 2026: +0.25% hike
+    prev: 2.25,         // Sep 2 2026: held at 2.25%
+    date: 'Oct 28, 2026',
     source: 'Bank of Canada',
   },
   cpi: {
@@ -92,7 +92,7 @@ export const CA_CONFIG: CountryConfig = {
     date: 'Sep 2026',
     source: 'Rentals.ca × Urbanation',
   },
-  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca × Urbanation, Sep 2026). MLS HPI −3.4% YoY (CREA). BoC decision Oct 28 — next key signal.',
+  housingNote: 'Rents fell for a 24th consecutive month: $2,034 national avg asking rent, −4.2% YoY (Rentals.ca × Urbanation, Sep 2026). MLS HPI −3.4% YoY (CREA). BoC raised rates +0.25% to 2.50% on Oct 28, 2026.',
   lastReviewed: '2026-10-20',
   updatedAt: 'Oct 20, 2026',
   sources: ['Bank of Canada', 'Statistics Canada', 'CMHC', 'CREA', 'Rentals.ca × Urbanation'],

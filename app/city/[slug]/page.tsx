@@ -735,7 +735,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                 {/* 3 key metrics */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
                   {[
-                    { label: 'Employment',    value: fit.eoi,              sub: fit.eoi === 'High' ? 'Strong' : fit.eoi === 'Mid' ? 'Moderate' : 'Limited', color: fit.eoi === 'High' ? '#14B8A6' : fit.eoi === 'Mid' ? '#F59E0B' : '#EF4444' },
+                    { label: 'Employment',    value: fit.eoi === 'High' ? 'Strong' : fit.eoi === 'Mid' ? 'Moderate' : 'Limited', sub: '', color: fit.eoi === 'High' ? '#14B8A6' : fit.eoi === 'Mid' ? '#F59E0B' : '#EF4444' },
                     { label: 'Rent / Income', value: `${adjRpi}%`,         sub: rl(adjRpi), color: rc(adjRpi) },
                     { label: 'Years to Buy',  value: `${hpiYears} yrs`,    sub: hl(hpiYears), color: hc(hpiYears) },
                   ].map(m => (

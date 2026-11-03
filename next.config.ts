@@ -53,6 +53,12 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { source: '/guides',         destination: '/guide',          permanent: true },
+      { source: '/guides/:path*',  destination: '/guide/:path*',   permanent: true },
+    ]
+  },
   async headers() {
     const rules = [
       {

@@ -38,7 +38,7 @@ export default function NavBar() {
     textDecoration: 'none',
     transition: 'all 0.15s',
     ...(isActive(href)
-      ? { background: 'rgba(79,142,247,0.18)', color: '#93C5FD', border: '1px solid rgba(79,142,247,0.30)' }
+      ? { background: 'rgba(20,184,166,0.12)', color: '#14B8A6', border: '1px solid rgba(20,184,166,0.28)' }
       : { color: 'rgba(255,255,255,0.55)', border: '1px solid transparent' }),
   })
 
@@ -97,22 +97,22 @@ export default function NavBar() {
           style={{
             width: 40, height: 40, borderRadius: 10, flexShrink: 0,
             alignItems: 'center', justifyContent: 'center',
-            background: open ? 'rgba(79,142,247,0.18)' : 'rgba(255,255,255,0.06)',
-            border: `1px solid ${open ? 'rgba(79,142,247,0.30)' : 'rgba(255,255,255,0.10)'}`,
+            background: open ? 'rgba(20,184,166,0.12)' : 'rgba(255,255,255,0.06)',
+            border: `1px solid ${open ? 'rgba(20,184,166,0.28)' : 'rgba(255,255,255,0.10)'}`,
             cursor: 'pointer', padding: 0,
           }}>
           <span style={{ display: 'flex', flexDirection: 'column', gap: 4, width: 18 }}>
             <span style={{
-              height: 2, borderRadius: 2, background: open ? '#93C5FD' : 'rgba(255,255,255,0.75)',
+              height: 2, borderRadius: 2, background: open ? '#14B8A6' : 'rgba(255,255,255,0.75)',
               transition: 'transform 0.2s, opacity 0.2s',
               transform: open ? 'translateY(6px) rotate(45deg)' : 'none',
             }} />
             <span style={{
-              height: 2, borderRadius: 2, background: open ? '#93C5FD' : 'rgba(255,255,255,0.75)',
+              height: 2, borderRadius: 2, background: open ? '#14B8A6' : 'rgba(255,255,255,0.75)',
               transition: 'opacity 0.2s', opacity: open ? 0 : 1,
             }} />
             <span style={{
-              height: 2, borderRadius: 2, background: open ? '#93C5FD' : 'rgba(255,255,255,0.75)',
+              height: 2, borderRadius: 2, background: open ? '#14B8A6' : 'rgba(255,255,255,0.75)',
               transition: 'transform 0.2s, opacity 0.2s',
               transform: open ? 'translateY(-6px) rotate(-45deg)' : 'none',
             }} />

@@ -366,7 +366,7 @@ export default function CalculatePage() {
             Can you afford to live there?
           </h1>
           <p style={{ color:'rgba(255,255,255,0.42)', fontSize:14, margin:'0 0 28px', lineHeight:1.6 }}>
-            {cityFromURL ? '2 steps to your personalized City Fit Report' : '3 steps to your personalized City Fit Report'}
+            {cityFromURL ? '2 steps to your personalized City Fit Report' : '4 steps to your personalized City Fit Report'}
           </p>
 
           {/* ── Step progress bar ── */}
@@ -583,6 +583,31 @@ export default function CalculatePage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ── Preview of what you'll get (steps 1–3 only) ────────────────────── */}
+      {step < 4 && (
+        <div style={{ maxWidth:640, margin:'32px auto 0', padding:'0 24px 60px' }}>
+          <div style={{ background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16, padding:'22px 24px' }}>
+            <div style={{ color:'rgba(255,255,255,0.28)', fontSize:11, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16 }}>
+              What you'll get
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12 }}>
+              {[
+                { icon:'🎯', label:'City Fit Score', desc:'0–100 score matched to your occupation and income' },
+                { icon:'🏠', label:'Years to Own', desc:'How many income-years to afford a 2BR home' },
+                { icon:'💰', label:'Rent Pressure', desc:'% of take-home pay needed for median 2BR rent' },
+                { icon:'📊', label:'6-Dimension Map', desc:'Employment, housing, taxes, income, lifestyle, safety' },
+              ].map(item => (
+                <div key={item.label} style={{ background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'14px 14px' }}>
+                  <div style={{ fontSize:20, marginBottom:8 }}>{item.icon}</div>
+                  <div style={{ color:'rgba(255,255,255,0.70)', fontSize:12, fontWeight:700, marginBottom:4 }}>{item.label}</div>
+                  <div style={{ color:'rgba(255,255,255,0.32)', fontSize:11, lineHeight:1.55 }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
