@@ -540,7 +540,7 @@ export default function Home() {
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1 h-6 rounded-full" style={{ background: '#14B8A6' }} />
             <h2 className="text-xl font-bold text-white">Start with your situation</h2>
-            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Where are you in your journey?</span>
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.50)' }}>Where are you in your journey?</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -617,9 +617,9 @@ export default function Home() {
 
           {/* Section header */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-6 rounded-full" style={{ background: '#4F8EF7' }} />
+            <div className="w-1 h-6 rounded-full" style={{ background: '#14B8A6' }} />
             <h2 className="text-xl font-bold text-white">City Insights</h2>
-            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Data-driven urban intelligence</span>
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.50)' }}>Data-driven urban intelligence</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -647,7 +647,7 @@ export default function Home() {
 
                 {/* Arrow */}
                 <div className="mt-4 flex items-center gap-1 text-xs font-medium transition-all group-hover:gap-2"
-                  style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  style={{ color: 'rgba(255,255,255,0.50)' }}>
                   Learn more <span>→</span>
                 </div>
               </a>
@@ -662,10 +662,10 @@ export default function Home() {
 
           {/* Section header */}
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-1 h-6 rounded-full" style={{ background: '#FDE047' }} />
+            <div className="w-1 h-6 rounded-full" style={{ background: '#14B8A6' }} />
             <h2 className="text-xl font-bold text-white">Popular Comparisons</h2>
           </div>
-          <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.30)', paddingLeft: '16px' }}>
+          <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.50)', paddingLeft: '16px' }}>
             Your career shapes your city experience — measured in years to own a home
           </p>
 
@@ -692,7 +692,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-baseline gap-1">
                         <span className="text-xl font-black font-mono" style={{ color: city.color }}>{city.years}</span>
-                        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>yrs income</span>
+                        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.52)' }}>yrs income</span>
                       </div>
                     </div>
                   ))}
@@ -706,12 +706,12 @@ export default function Home() {
                   }} />
                 </div>
 
-                <div className="text-xs group-hover:opacity-80" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  {cmp.cityA.name} takes <strong style={{ color: 'rgba(255,255,255,0.6)' }}>{(cmp.cityA.years / cmp.cityB.years).toFixed(1)}x</strong> longer than {cmp.cityB.name}
+                <div className="text-xs group-hover:opacity-80" style={{ color: 'rgba(255,255,255,0.52)' }}>
+                  {cmp.cityA.name} takes <strong style={{ color: 'rgba(255,255,255,0.75)' }}>{(cmp.cityA.years / cmp.cityB.years).toFixed(1)}x</strong> longer than {cmp.cityB.name}
                 </div>
 
                 <div className="mt-3 flex items-center gap-1 text-xs font-medium transition-all group-hover:gap-2"
-                  style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  style={{ color: 'rgba(255,255,255,0.50)' }}>
                   View full comparison <span>→</span>
                 </div>
               </a>
@@ -736,9 +736,9 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 rounded-full" style={{ background: '#14B8A6' }} />
               <h2 className="text-xl font-bold text-white">Published Reports</h2>
-              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Lakive Research</span>
+              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.50)' }}>Lakive Research</span>
             </div>
-            <a href="/reports" style={{ padding: '7px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            <a href="/reports" style={{ padding: '7px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.65)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               All reports →
             </a>
           </div>
@@ -761,7 +761,7 @@ export default function Home() {
               <div className="flex items-center gap-3 mt-auto">
                 <span className="text-xs font-semibold" style={{ color: '#EF4444' }}>Read report →</span>
                 <a href="/reports/pdf/Lakive_Canada_Cities_on_the_Rise_2026.pdf" download onClick={e => e.stopPropagation()}
-                  className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.30)', textDecoration: 'none' }}>↓ PDF</a>
+                  className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>↓ PDF</a>
               </div>
             </div>
 
@@ -782,7 +782,7 @@ export default function Home() {
               <div className="flex items-center gap-3 mt-auto">
                 <span className="text-xs font-semibold" style={{ color: '#4F8EF7' }}>Read report →</span>
                 <a href="/reports/pdf/Lakive_Vancouver_Worker_Affordability_Issue_Brief_H1_2026.pdf" download onClick={e => e.stopPropagation()}
-                  className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.30)', textDecoration: 'none' }}>↓ PDF</a>
+                  className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>↓ PDF</a>
               </div>
             </div>
 

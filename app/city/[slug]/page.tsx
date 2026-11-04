@@ -745,8 +745,8 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                     <div key={m.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 9 }}>
                       <span style={{ color: 'rgba(255,255,255,0.38)', fontSize: 12 }}>{m.label}</span>
                       <div style={{ textAlign: 'right' }}>
-                        <span style={{ color: m.color, fontWeight: 800, fontSize: 14, fontFamily: 'monospace' }}>{m.value}</span>
-                        <span style={{ color: m.color, fontSize: 10, marginLeft: 5, opacity: 0.75 }}>{m.sub}</span>
+                        <span style={{ color: m.color, fontWeight: 800, fontSize: 14, fontFamily: 'monospace', display: 'block' }}>{m.value}</span>
+                        {m.sub && <span style={{ color: m.color, fontSize: 10, opacity: 0.65, display: 'block', marginTop: 2, lineHeight: 1.2 }}>{m.sub}</span>}
                       </div>
                     </div>
                   ))}

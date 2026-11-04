@@ -1215,7 +1215,7 @@ export default function RankingPage() {
 
           <div style={{ marginBottom:20 }}>
             <h1 style={{ color:'white', fontSize:28, fontWeight:900, margin:'0 0 6px', letterSpacing:'-0.5px' }}>City Rankings</h1>
-            <p style={{ color:'rgba(255,255,255,0.32)', fontSize:13, margin:0 }}>
+            <p style={{ color:'rgba(255,255,255,0.55)', fontSize:13, margin:0 }}>
               {occ
                 ? `Not a "best city" ranking — a fit score for ${occName} across cities in Canada and the US.`
                 : 'A composite city index across Canada and the US — select an occupation for a personalized fit ranking.'}
@@ -1334,7 +1334,7 @@ export default function RankingPage() {
                 <p style={{ color:'rgba(255,255,255,0.50)', fontSize:13, margin:'0 0 4px', lineHeight:1.65 }}>
                   Sorted by: <strong style={{ color:'rgba(255,255,255,0.70)' }}>Employment Opportunity (EOI)</strong> first, then overall score.
                 </p>
-                <p style={{ color:'rgba(255,255,255,0.35)', fontSize:12, margin:'0 0 10px' }}>
+                <p style={{ color:'rgba(255,255,255,0.55)', fontSize:12, margin:'0 0 10px' }}>
                   Current scores weight employment opportunity, cost of living, and city environment. Housing metrics will be included once you enter income.
                 </p>
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:8 }}>
@@ -1525,7 +1525,7 @@ export default function RankingPage() {
 
         {/* ── More cities CTA ── */}
         <div style={{ textAlign:'center', marginBottom:28, padding:'20px 24px', background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16 }}>
-          <p style={{ color:'rgba(255,255,255,0.35)', fontSize:13, margin:'0 0 12px' }}>
+          <p style={{ color:'rgba(255,255,255,0.55)', fontSize:13, margin:'0 0 12px' }}>
             Showing {allCities.length} {regionObj.label} {allCities.length === 1 ? 'city' : 'cities'} · Compare any two cities side-by-side
           </p>
           <a href="/compare"
@@ -1560,7 +1560,7 @@ export default function RankingPage() {
                   ? `Top city for job seekers: ${allCities[0].city.name} (score: ${allCities[0].fit.score})`
                   : `📬 Subscribe to ${allCities[0].city.name} × ${occName} Report`}
               </div>
-              <div style={{ color:'rgba(255,255,255,0.40)', fontSize:12 }}>
+              <div style={{ color:'rgba(255,255,255,0.58)', fontSize:12 }}>
                 {isUnemployed
                   ? 'Results vary by income, occupation, and housing needs'
                   : 'Monthly brief + quarterly report · Free · Unsubscribe anytime'}
