@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function NotFound() {
   const links = [
-    { href: '/ranking',   label: 'City Rankings',       desc: 'Compare 27 cities across Canada and the US',   color: '#14B8A6' },
+    { href: '/ranking',   label: 'City Rankings',       desc: 'See how cities rank on affordability, jobs, and fit',   color: '#14B8A6' },
     { href: '/calculate', label: 'Calculate My Fit',     desc: 'Enter your occupation and income to get a score', color: '#4F8EF7' },
     { href: '/compare',   label: 'Compare Two Cities',   desc: 'Side-by-side: rent, years to buy, fit score',  color: '#8B5CF6' },
     { href: '/reports',   label: 'Research Reports',     desc: 'Data-driven reports on city affordability',    color: '#F97316' },
