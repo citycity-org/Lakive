@@ -637,7 +637,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
       {/* ── 1. HERO ───────────────────────────────────────────────────────── */}
       <div style={{ background: 'linear-gradient(160deg,#0d1117 0%,#151827 70%,#1a2035 100%)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         {/* City skyline illustration */}
-        <CitySkyline slug={slug} style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 'auto', opacity: 0.38, pointerEvents: 'none', zIndex: 0 }} />
+        <CitySkyline slug={slug} style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 'auto', opacity: 0.52, pointerEvents: 'none', zIndex: 0 }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 32px 48px', position: 'relative', zIndex: 1 }}>
           <a href="/ranking" style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, display: 'inline-block', marginBottom: 28, textDecoration: 'none' }}>← Back to Rankings</a>
 
