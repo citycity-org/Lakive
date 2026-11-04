@@ -6,7 +6,7 @@ const G = 205           // ground line y (canvas is 900 × 220)
 const F  = 'rgba(255,255,255,0.07)'   // far/background buildings
 const M  = 'rgba(255,255,255,0.12)'   // mid buildings
 const N  = 'rgba(255,255,255,0.18)'   // near / foreground buildings
-const TL = 'rgba(20,184,166,0.45)'    // teal landmark accent
+const TL = 'rgba(20,184,166,0.32)'    // teal landmark accent
 const WA = 'rgba(15,45,130,0.40)'     // water
 const MT = 'rgba(20,35,90,0.50)'      // mountain / terrain
 
@@ -31,9 +31,9 @@ function Vancouver() {
     {/* Foreground cluster */}
     {B(480,110,18,N)} {B(540,140,20,N)} {B(595,122,18,N)} {B(640,148,22,N)} {B(700,115,20,N)}
     {/* Harbour Centre — thin shaft + observation disc */}
-    <rect x={486} y={G-168} width={10} height={163} fill={TL} />
-    <ellipse cx={491} cy={G-174} rx={28} ry={13} fill={TL} opacity={0.9} />
-    <rect x={493} y={G-192} width={4} height={18} fill={TL} opacity={0.7} />
+    <rect x={488} y={G-165} width={6} height={160} fill={TL} />
+    <ellipse cx={491} cy={G-170} rx={18} ry={8} fill={TL} opacity={0.85} />
+    <rect x={490} y={G-183} width={3} height={14} fill={TL} opacity={0.6} />
   </>
 }
 
@@ -576,7 +576,7 @@ export function CitySkyline({ slug, style, className }: Props) {
     <svg
       viewBox="0 0 900 220"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMax slice"
+      preserveAspectRatio="xMidYMax meet"
       aria-hidden="true"
       style={style}
       className={className}
