@@ -12,7 +12,7 @@ export default function NavBar() {
     { href: '/ranking',    label: 'Rankings'   },
     { href: '/compare',    label: 'Compare'    },
     { href: '/reports',    label: 'Reports'    },
-    { href: '/guide',      label: 'Guides'     },
+    { href: '/guides',     label: 'Guides'     },
     { href: '/pulse',      label: 'Pulse'      },
   ]
 

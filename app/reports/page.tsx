@@ -166,14 +166,14 @@ function Tag({ label, color = 'rgba(255,255,255,0.50)', bg = 'rgba(255,255,255,0
 }
 
 // ── Button helpers ─────────────────────────────────────────────────────────
-function ReadBtn({ href, gradient, color, label = 'Read report →' }: { href: string; gradient?: string; color?: string; label?: string }) {
+function ReadBtn({ href, label = 'Read report →' }: { href: string; label?: string }) {
   return (
     <Link href={href} style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
       padding: '9px 20px', borderRadius: 10,
-      background: gradient ?? `rgba(255,255,255,0.07)`,
-      border: gradient ? 'none' : `1px solid rgba(255,255,255,0.14)`,
-      color: gradient ? 'white' : (color ?? 'rgba(255,255,255,0.70)'),
+      background: 'rgba(255,255,255,0.08)',
+      border: '1px solid rgba(255,255,255,0.20)',
+      color: 'rgba(255,255,255,0.90)',
       fontSize: 13, fontWeight: 700, textDecoration: 'none',
     }}>
       {label}
@@ -214,7 +214,7 @@ export default function ReportsPage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '56px 24px 48px', background: 'linear-gradient(160deg,#0d1117 0%,#111827 60%,#1a2035 100%)' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 14px', borderRadius: 20, background: 'rgba(79,142,247,0.10)', border: '1px solid rgba(79,142,247,0.25)', marginBottom: 20 }}>
             <span style={{ fontSize: 12 }}>📑</span>
             <span style={{ color: '#93C5FD', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>LAKIVE CITY FIT REPORTS</span>
@@ -275,15 +275,12 @@ export default function ReportsPage() {
                     Do taxes drive people to move? A review of five peer-reviewed studies — including Washington State&apos;s 2026 millionaires&apos; tax — shows the answer depends heavily on income level and occupation. With evidence comparison table and case study.
                   </p>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                    <PubDate date="October 28, 2026" color="#F97316" />
-                    <ReadBtn href="/reports/tax-policy-and-migration-2026" gradient="linear-gradient(135deg,#F97316,#2DD4BF)" />
+                    <PubDate date="Oct 28, 2026" color="#F97316" />
+                    <ReadBtn href="/reports/tax-policy-and-migration-2026" />
                     <PdfBtn href="/reports/pdf/Lakive_Tax_Policy_Migration_Report_2026.pdf" />
                   </div>
                 </div>
-                <div style={{ flexShrink: 0, display: 'none' }} className="lk-desktop-only">
-                  <ThumbTax />
-                </div>
-                <div style={{ flexShrink: 0 }}>
+                <div style={{ flexShrink: 0 }} className="lk-desktop-only">
                   <ThumbTax />
                 </div>
               </div>
@@ -316,10 +313,10 @@ export default function ReportsPage() {
                     Six BoC holds at 2.25%, rents down for a 23rd month, CA$27.6B in new counter-tariffs. Lakive city scores for 7 cities + Oct 28 BoC preview.
                   </p>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center', marginTop: 'auto' as const }}>
-                    <PubDate date="October 5, 2026" color="#14B8A6" />
+                    <PubDate date="Oct 5, 2026" color="#14B8A6" />
                   </div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
-                    <ReadBtn href="/reports/monthly-report-september-2026" gradient="linear-gradient(135deg,#14B8A6,#D97706)" />
+                    <ReadBtn href="/reports/monthly-report-september-2026" />
                     <PdfBtn href="/reports/pdf/Lakive_Monthly_Report_September_2026.pdf" />
                   </div>
                 </div>
@@ -343,10 +340,10 @@ export default function ReportsPage() {
                     GDP stalling at 1.1%, youth unemployment 12.9%, mortgage burden at 51% of median income. City intelligence matrix across 9 metros.
                   </p>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center', marginTop: 'auto' as const }}>
-                    <PubDate date="September 19, 2026" color="#8B5CF6" />
+                    <PubDate date="Sep 19, 2026" color="#8B5CF6" />
                   </div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
-                    <ReadBtn href="/reports/canada-q3-2026-economic-intelligence" gradient="linear-gradient(135deg,#8B5CF6,#4F8EF7)" />
+                    <ReadBtn href="/reports/canada-q3-2026-economic-intelligence" />
                   </div>
                 </div>
               </div>
@@ -369,11 +366,11 @@ export default function ReportsPage() {
                     In Q2 2026, non-residents made a record C$61.3B acquisition of Canadian bonds. Why hasn&apos;t that translated into housing access or wage gains?
                   </p>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center', marginTop: 'auto' as const }}>
-                    <PubDate date="September 14, 2026" color="#4F8EF7" />
+                    <PubDate date="Sep 14, 2026" color="#4F8EF7" />
                   </div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
-                    <ReadBtn href="/reports/the-61-billion-paradox" gradient="linear-gradient(135deg,#4F8EF7,#14B8A6)" />
-                    <ReadBtn href="/reports/the-61-billion-paradox-cn" label="阅读中文版" />
+                    <ReadBtn href="/reports/the-61-billion-paradox" />
+                    <ReadBtn href="/reports/the-61-billion-paradox-cn" label="阅读中文版 →" />
                   </div>
                 </div>
               </div>
@@ -408,7 +405,7 @@ export default function ReportsPage() {
                       August 2026: BoC first inflation warning, labour market shed 42K jobs, rents down 22nd month.
                     </p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                      <PubDate date="September 5, 2026" color="#14B8A6" />
+                      <PubDate date="Sep 5, 2026" color="#14B8A6" />
                       <ReadBtn href="/reports/monthly-report-august-2026" />
                       <PdfBtn href="/reports/pdf/Lakive_Monthly_Report_August_2026_v1.pdf" />
                     </div>
@@ -435,7 +432,7 @@ export default function ReportsPage() {
                       IWG ranked Vancouver #5 workcation city. The Lakive City Matrix™ tells a different story for nurses, electricians, and teachers.
                     </p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                      <PubDate date="August 15, 2026" color="#185FA5" />
+                      <PubDate date="Aug 15, 2026" color="#185FA5" />
                       <ReadBtn href="/reports/workcation-mirage" />
                       <PdfBtn href="/reports/pdf/workcation-mirage.pdf" />
                     </div>
@@ -462,7 +459,7 @@ export default function ReportsPage() {
                       July 2026: 21st consecutive rent decline (CAD $2,033), unemployment 6.5%, BoC hold at 2.25%.
                     </p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                      <PubDate date="August 5, 2026" color="#14B8A6" />
+                      <PubDate date="Aug 5, 2026" color="#14B8A6" />
                       <ReadBtn href="/reports/monthly-report-july-2026" />
                       <PdfBtn href="/reports/pdf/Lakive_Monthly_Report_July_2026_v2.pdf" />
                     </div>
@@ -489,7 +486,7 @@ export default function ReportsPage() {
                       Employment Opportunity Index, housing affordability, and City Fit Score across 5 cities, broken down by occupation.
                     </p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                      <PubDate date="July 2026" color="#EF4444" />
+                      <PubDate date="Jul 2026" color="#EF4444" />
                       <ReadBtn href="/reports/canada-cities-on-the-rise-2026" />
                       <PdfBtn href="/reports/pdf/Lakive_Canada_Cities_on_the_Rise_2026.pdf" />
                     </div>
