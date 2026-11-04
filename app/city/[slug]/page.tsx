@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, use } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { type OccFit, buildCityMatrix, computeScore, eoiNum } from '@/lib/fit-engine'
 import { CITIES } from '@/app/guide/_data'
@@ -494,6 +495,11 @@ function SecHeader({ title, sub }: { title: string; sub: string }) {
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function CityPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
+  const searchParams = useSearchParams()
+  const fromRegion = searchParams.get('from_region')
+  const backHref = fromRegion && fromRegion !== 'canada'
+    ? `/ranking?region=${fromRegion}`
+    : '/ranking'
   const city     = CITY_BASE[slug] ?? CITY_BASE.vancouver
   // buildCityMatrix computes all hpiYears/rpi/score values at runtime from _data.ts
   // — no more hardcoded FIT_MATRIX; updating _data.ts propagates everywhere.
@@ -639,7 +645,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
         {/* City skyline illustration */}
         <CitySkyline slug={slug} style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 'auto', opacity: 0.52, pointerEvents: 'none', zIndex: 0 }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 32px 48px', position: 'relative', zIndex: 1 }}>
-          <a href="/ranking" style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, display: 'inline-block', marginBottom: 28, textDecoration: 'none' }}>← Back to Rankings</a>
+          <a href={backHref} style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, display: 'inline-block', marginBottom: 28, textDecoration: 'none' }}>← Back to Rankings</a>
 
           <div className="hero-grid">
             {/* Left */}

@@ -985,8 +985,8 @@ const UNEMPLOYED_INSIGHTS: Record<string, string> = {
 
 // ── US city IDs (no /city/ page — use guide instead) ─────────────────────────
 const US_CITY_IDS = new Set(['seattle', 'san-francisco', 'new-york', 'boston', 'austin', 'chicago', 'los-angeles', 'denver', 'miami', 'dallas', 'atlanta', 'phoenix', 'washington-dc', 'houston', 'nashville'])
-const cityDetailLink = (id: string, occ: string) =>
-  US_CITY_IDS.has(id) ? `/guide/${occ || 'software-engineer'}/${id}` : `/city/${id}?occupation=${occ}`
+const cityDetailLink = (id: string, occ: string, region: string) =>
+  US_CITY_IDS.has(id) ? `/guide/${occ || 'software-engineer'}/${id}` : `/city/${id}?occupation=${occ}&from_region=${region}`
 
 // ── Auto-generate ranking title ───────────────────────────────────────────────
 function getRankingTitle(regionLabel:string, occName:string, sortId:string):string {
@@ -1447,7 +1447,7 @@ export default function RankingPage() {
                       <p style={{ color:'rgba(255,255,255,0.55)', fontSize:12, lineHeight:1.65, margin:0 }}>{insight}</p>
                     </div>
                     <div style={{ display:'flex', gap:14, paddingTop:6, borderTop:'1px solid rgba(255,255,255,0.06)' }}>
-                      <a href={cityDetailLink(id, occ)}
+                      <a href={cityDetailLink(id, occ, region)}
                         onClick={e=>e.stopPropagation()}
                         className="quick-link"
                         style={{ color:'#60A5FA', fontSize:12, fontWeight:600, textDecoration:'none' }}>
@@ -1497,7 +1497,7 @@ export default function RankingPage() {
                         <div style={{ color:'rgba(255,255,255,0.55)', fontSize:10, marginBottom:2 }}>Personalized</div>
                         <div style={{ color:'white', fontWeight:700, fontSize:12 }}>Calculate for {city.name} →</div>
                       </a>
-                      <a href={cityDetailLink(id, occ)}
+                      <a href={cityDetailLink(id, occ, region)}
                         onClick={e=>e.stopPropagation()}
                         style={{ display:'block', padding:'12px 14px', borderRadius:12, textDecoration:'none', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.10)', textAlign:'center' }}>
                         <div style={{ color:'rgba(255,255,255,0.50)', fontSize:11, marginBottom:2 }}>Deep dive</div>
