@@ -505,17 +505,13 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   // — no more hardcoded FIT_MATRIX; updating _data.ts propagates everywhere.
   const matrix   = buildCityMatrix(slug, city)
 
-  const [occ,        setOcc      ] = useState('electrician')
+  const initialOcc = searchParams.get('occupation') || 'software_eng'
+  const [occ,        setOcc      ] = useState(initialOcc)
   const [propType,   setPropType ] = useState('2br')
   const [hoveredOcc, setHovered  ] = useState<string | null>(null)
   const [liveHpi,    setLiveHpi  ] = useState<number | null>(null)
   const [priceData,  setPriceData] = useState<PriceAggregate[]>([])
   const [priceReady, setPriceReady] = useState(false)
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search)
-    setOcc(p.get('occupation') ?? 'electrician')
-  }, [])
 
   useEffect(() => {
     const pt = PROP_TYPES.find(p => p.id === propType)!
@@ -587,7 +583,11 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   const adjScore   = getAdjScore(fit, pt.priceMult, pt.rentMult, city.tai, city.eoi, city.hai, city.eqi, city.tci, city.psi)
   const vMain      = getVerdict(adjScore, hpiYears, adjRpi)
 
-  const altSlug    = slug === 'vancouver' || slug === 'toronto' ? 'calgary' : 'vancouver'
+  const US_SLUGS = new Set(['seattle','san-francisco','new-york','boston','austin','chicago','los-angeles','denver','miami','dallas','atlanta','phoenix','washington-dc','houston','nashville'])
+  const isUSCity = US_SLUGS.has(slug)
+  const altSlug  = isUSCity
+    ? (slug === 'austin' ? 'seattle' : 'austin')
+    : (slug === 'toronto' ? 'vancouver' : 'toronto')
   const altCity    = CITY_BASE[altSlug].name
   const isHighCost = hpiYears > 10 || adjRpi > 38
   const verdictLine = (() => {
