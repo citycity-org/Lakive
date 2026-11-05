@@ -11,15 +11,33 @@ const COUNTRIES = [
 ]
 
 const ALL_CITIES = [
-  { id: 'vancouver',     label: 'Vancouver',      country: 'CA' as ItemCountry },
-  { id: 'toronto',       label: 'Toronto',         country: 'CA' as ItemCountry },
-  { id: 'calgary',       label: 'Calgary',         country: 'CA' as ItemCountry },
-  { id: 'montreal',      label: 'Montréal',        country: 'CA' as ItemCountry },
-  { id: 'ottawa',        label: 'Ottawa',          country: 'CA' as ItemCountry },
-  { id: 'seattle',       label: 'Seattle',         country: 'US' as ItemCountry },
-  { id: 'san-francisco', label: 'San Francisco',   country: 'US' as ItemCountry },
-  { id: 'new-york',      label: 'New York',        country: 'US' as ItemCountry },
-  { id: 'boston',        label: 'Boston',          country: 'US' as ItemCountry },
+  { id: 'vancouver',          label: 'Vancouver',          country: 'CA' as ItemCountry },
+  { id: 'toronto',            label: 'Toronto',            country: 'CA' as ItemCountry },
+  { id: 'calgary',            label: 'Calgary',            country: 'CA' as ItemCountry },
+  { id: 'montreal',           label: 'Montréal',           country: 'CA' as ItemCountry },
+  { id: 'ottawa',             label: 'Ottawa',             country: 'CA' as ItemCountry },
+  { id: 'edmonton',           label: 'Edmonton',           country: 'CA' as ItemCountry },
+  { id: 'winnipeg',           label: 'Winnipeg',           country: 'CA' as ItemCountry },
+  { id: 'halifax',            label: 'Halifax',            country: 'CA' as ItemCountry },
+  { id: 'quebec-city',        label: 'Québec City',        country: 'CA' as ItemCountry },
+  { id: 'hamilton',           label: 'Hamilton',           country: 'CA' as ItemCountry },
+  { id: 'kitchener-waterloo', label: 'Kitchener-Waterloo', country: 'CA' as ItemCountry },
+  { id: 'victoria',           label: 'Victoria',           country: 'CA' as ItemCountry },
+  { id: 'seattle',            label: 'Seattle',            country: 'US' as ItemCountry },
+  { id: 'san-francisco',      label: 'San Francisco',      country: 'US' as ItemCountry },
+  { id: 'new-york',           label: 'New York',           country: 'US' as ItemCountry },
+  { id: 'boston',             label: 'Boston',             country: 'US' as ItemCountry },
+  { id: 'austin',             label: 'Austin',             country: 'US' as ItemCountry },
+  { id: 'chicago',            label: 'Chicago',            country: 'US' as ItemCountry },
+  { id: 'los-angeles',        label: 'Los Angeles',        country: 'US' as ItemCountry },
+  { id: 'denver',             label: 'Denver',             country: 'US' as ItemCountry },
+  { id: 'miami',              label: 'Miami',              country: 'US' as ItemCountry },
+  { id: 'dallas',             label: 'Dallas',             country: 'US' as ItemCountry },
+  { id: 'atlanta',            label: 'Atlanta',            country: 'US' as ItemCountry },
+  { id: 'phoenix',            label: 'Phoenix',            country: 'US' as ItemCountry },
+  { id: 'washington-dc',      label: 'Washington DC',      country: 'US' as ItemCountry },
+  { id: 'houston',            label: 'Houston',            country: 'US' as ItemCountry },
+  { id: 'nashville',          label: 'Nashville',          country: 'US' as ItemCountry },
 ]
 
 const CATEGORIES = [
@@ -136,6 +154,7 @@ function PriceSubmitContent() {
   const params = useSearchParams()
   const initialCity    = params.get('city') || ''
   const initialCountry = getCityCountry(initialCity)
+  const lockedToCity   = initialCity !== '' && initialCountry !== ''
 
   const [country,      setCountry]      = useState<ItemCountry | ''>(initialCountry)
   const [city,         setCity]         = useState(initialCity)
@@ -245,53 +264,68 @@ function PriceSubmitContent() {
 
           <form onSubmit={handleSubmit} noValidate>
 
-            {/* Country */}
-            <div style={{ marginBottom: 32 }}>
-              <label style={labelStyle}>Country *</label>
-              <div style={{ display: 'flex', gap: 12 }}>
-                {COUNTRIES.map(c => (
-                  <button key={c.id} type="button" onClick={() => handleCountryChange(c.id)}
-                    style={{
-                      flex: 1, padding: '14px 16px', borderRadius: 10, border: '1px solid',
-                      borderColor: country === c.id ? '#14B8A6' : 'rgba(255,255,255,0.12)',
-                      background: country === c.id ? 'rgba(20,184,166,0.1)' : 'transparent',
-                      color: country === c.id ? '#14B8A6' : 'rgba(255,255,255,0.55)',
-                      fontWeight: country === c.id ? 700 : 500,
-                      fontSize: 15, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                    }}>
-                    <span style={{ fontSize: 20 }}>{c.flag}</span>
-                    <span>{c.label}</span>
-                    <span style={{ fontSize: 12, opacity: 0.6 }}>({c.currency})</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* City */}
-            {country && (
-              <div style={{ marginBottom: 32 }}>
-                <label style={labelStyle}>City *</label>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {cities.map(c => (
-                    <button key={c.id} type="button" onClick={() => setCity(c.id)}
-                      style={{
-                        padding: '9px 18px', borderRadius: 8, border: '1px solid',
-                        borderColor: city === c.id ? '#14B8A6' : 'rgba(255,255,255,0.12)',
-                        background: city === c.id ? 'rgba(20,184,166,0.12)' : 'transparent',
-                        color: city === c.id ? '#14B8A6' : 'rgba(255,255,255,0.55)',
-                        fontWeight: city === c.id ? 700 : 500,
-                        fontSize: 14, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
-                      }}>
-                      {c.label}
-                    </button>
-                  ))}
+            {/* City context banner (when arriving from a city page) */}
+            {lockedToCity ? (
+              <div style={{ marginBottom: 32, padding: '14px 18px', background: 'rgba(20,184,166,0.08)', border: '1px solid rgba(20,184,166,0.22)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Submitting for</div>
+                  <div style={{ color: '#14B8A6', fontWeight: 700, fontSize: 16 }}>
+                    {selectedCountry?.flag} {selectedCity?.label ?? initialCity} · {currencySymbol}
+                  </div>
                 </div>
+                <a href={`/city/${initialCity}`} style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, textDecoration: 'none' }}>← Back to city</a>
               </div>
+            ) : (
+              <>
+                {/* Country */}
+                <div style={{ marginBottom: 32 }}>
+                  <label style={labelStyle}>Country *</label>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    {COUNTRIES.map(c => (
+                      <button key={c.id} type="button" onClick={() => handleCountryChange(c.id)}
+                        style={{
+                          flex: 1, padding: '14px 16px', borderRadius: 10, border: '1px solid',
+                          borderColor: country === c.id ? '#14B8A6' : 'rgba(255,255,255,0.12)',
+                          background: country === c.id ? 'rgba(20,184,166,0.1)' : 'transparent',
+                          color: country === c.id ? '#14B8A6' : 'rgba(255,255,255,0.55)',
+                          fontWeight: country === c.id ? 700 : 500,
+                          fontSize: 15, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                        }}>
+                        <span style={{ fontSize: 20 }}>{c.flag}</span>
+                        <span>{c.label}</span>
+                        <span style={{ fontSize: 12, opacity: 0.6 }}>({c.currency})</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* City */}
+                {country && (
+                  <div style={{ marginBottom: 32 }}>
+                    <label style={labelStyle}>City *</label>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      {cities.map(c => (
+                        <button key={c.id} type="button" onClick={() => setCity(c.id)}
+                          style={{
+                            padding: '9px 18px', borderRadius: 8, border: '1px solid',
+                            borderColor: city === c.id ? '#14B8A6' : 'rgba(255,255,255,0.12)',
+                            background: city === c.id ? 'rgba(20,184,166,0.12)' : 'transparent',
+                            color: city === c.id ? '#14B8A6' : 'rgba(255,255,255,0.55)',
+                            fontWeight: city === c.id ? 700 : 500,
+                            fontSize: 14, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
+                          }}>
+                          {c.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             {/* Item */}
-            {city && (
+            {(city || lockedToCity) && (
               <div style={{ marginBottom: 32 }}>
                 <label style={labelStyle}>Item *</label>
                 <ItemDropdown value={itemId} onChange={setItemId} country={country} />
