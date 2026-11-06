@@ -248,7 +248,7 @@ export default function ReportsPage() {
 
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 32px' }}>
 
-        {/* ── Latest Report (newest first: Oct 28) ──────────────────────── */}
+        {/* ── Latest Report (newest first: Nov 5) ───────────────────────── */}
         <section style={{ padding: '52px 0 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
             <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>
@@ -257,31 +257,31 @@ export default function ReportsPage() {
             <span style={{ background: '#F97316', color: 'white', fontSize: 10, fontWeight: 800, letterSpacing: '0.07em', padding: '2px 8px', borderRadius: 4 }}>NEW</span>
           </div>
 
-          {/* Tax Policy & Migration — Oct 28, 2026 */}
-          <div style={{ background: 'linear-gradient(135deg,rgba(249,115,22,0.10),rgba(45,212,191,0.05))', border: '1px solid rgba(249,115,22,0.32)', borderRadius: 20, overflow: 'hidden', marginBottom: 12 }}>
+          {/* Monthly Report October 2026 — Nov 5, 2026 */}
+          <div style={{ background: 'linear-gradient(135deg,rgba(20,184,166,0.10),rgba(220,38,38,0.05))', border: '1px solid rgba(20,184,166,0.35)', borderRadius: 20, overflow: 'hidden', marginBottom: 12 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 0 }}>
-              <div style={{ width: 5, background: 'linear-gradient(to bottom,#F97316,#2DD4BF)', borderRadius: '4px 0 0 4px' }} />
+              <div style={{ width: 5, background: 'linear-gradient(to bottom,#14B8A6,#DC2626)', borderRadius: '4px 0 0 4px' }} />
               <div style={{ padding: '32px 36px 28px', display: 'flex', gap: 28, alignItems: 'flex-start' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' as const, marginBottom: 16 }}>
-                    <Tag label="Research Report" color="#F97316" bg="rgba(249,115,22,0.12)" />
-                    <Tag label="USA · Canada" color="#93C5FD" bg="rgba(79,142,247,0.08)" />
-                    <Tag label="Tax Policy · Migration" color="#FCD34D" bg="rgba(245,158,11,0.08)" />
+                    <Tag label="Monthly Report" color="#14B8A6" bg="rgba(20,184,166,0.12)" />
+                    <Tag label="8 Cities" color="#93C5FD" bg="rgba(79,142,247,0.08)" />
+                    <Tag label="Rate Hike · Labour Market" color="#FCA5A5" bg="rgba(220,38,38,0.08)" />
                   </div>
                   <h2 style={{ fontSize: 'clamp(18px,2.8vw,24px)', fontWeight: 900, lineHeight: 1.25, margin: '0 0 12px', letterSpacing: '-0.01em' }}>
-                    Tax Policy and Human Migration
+                    Canada — October 2026: The October Tension
                   </h2>
                   <p style={{ color: 'rgba(255,255,255,0.50)', fontSize: 14, lineHeight: 1.75, maxWidth: 600, margin: '0 0 22px' }}>
-                    Do taxes drive people to move? A review of five peer-reviewed studies — including Washington State&apos;s 2026 millionaires&apos; tax — shows the answer depends heavily on income level and occupation. With evidence comparison table and case study.
+                    BoC hiked +25 bps to 2.50%. Jobs fell 68K. Rents declined for a 24th consecutive month. The Prairie cost advantage over Toronto and Vancouver has never been wider. Lakive city scores for 8 cities.
                   </p>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' as const, alignItems: 'center' }}>
-                    <PubDate date="Oct 28, 2026" color="#F97316" />
-                    <ReadBtn href="/reports/tax-policy-and-migration-2026" />
-                    <PdfBtn href="/reports/pdf/Lakive_Tax_Policy_Migration_Report_2026.pdf" />
+                    <PubDate date="Nov 5, 2026" color="#14B8A6" />
+                    <ReadBtn href="/reports/monthly-report-october-2026" />
+                    <PdfBtn href="/reports/pdf/Lakive_Monthly_October_2026_V2.pdf" />
                   </div>
                 </div>
                 <div style={{ flexShrink: 0 }} className="lk-desktop-only">
-                  <ThumbTax />
+                  <ThumbMonthly color="#14B8A6" />
                 </div>
               </div>
             </div>
@@ -296,8 +296,35 @@ export default function ReportsPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
 
+            {/* Tax Policy & Migration — Oct 28, 2026 */}
+            <div style={{ background: 'linear-gradient(135deg,rgba(249,115,22,0.10),rgba(45,212,191,0.05))', border: '1px solid rgba(249,115,22,0.30)', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column' as const }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', flex: 1 }}>
+                <div style={{ width: 4, background: 'linear-gradient(to bottom,#F97316,#2DD4BF)' }} />
+                <div style={{ padding: '26px 26px 22px', display: 'flex', flexDirection: 'column' as const, gap: 12 }}>
+                  <ThumbTax />
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
+                    <Tag label="Research Report" color="#F97316" bg="rgba(249,115,22,0.12)" />
+                    <Tag label="USA · Canada" color="#93C5FD" bg="rgba(79,142,247,0.10)" />
+                  </div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, lineHeight: 1.3, margin: 0 }}>
+                    Tax Policy and Human Migration
+                  </h3>
+                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, lineHeight: 1.65, margin: 0 }}>
+                    Do taxes drive people to move? Five peer-reviewed studies including Washington State&apos;s 2026 millionaires&apos; tax. Evidence table and Canada vs. U.S. case study.
+                  </p>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const, alignItems: 'center', marginTop: 'auto' as const }}>
+                    <PubDate date="Oct 28, 2026" color="#F97316" />
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
+                    <ReadBtn href="/reports/tax-policy-and-migration-2026" />
+                    <PdfBtn href="/reports/pdf/Lakive_Tax_Policy_Migration_Report_2026.pdf" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Monthly Report September 2026 — Oct 5 */}
-            <div style={{ background: 'linear-gradient(135deg,rgba(20,184,166,0.10),rgba(245,158,11,0.04))', border: '1px solid rgba(20,184,166,0.30)', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column' as const }}>
+            <div style={{ background: 'linear-gradient(135deg,rgba(20,184,166,0.10),rgba(245,158,11,0.04))', border: '1px solid rgba(20,184,166,0.26)', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column' as const }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', flex: 1 }}>
                 <div style={{ width: 4, background: 'linear-gradient(to bottom,#14B8A6,#D97706)' }} />
                 <div style={{ padding: '26px 26px 22px', display: 'flex', flexDirection: 'column' as const, gap: 12 }}>
