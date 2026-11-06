@@ -97,9 +97,9 @@ function Callout({ label, text, color, bg }: { label: string; text: string; colo
 function KpiTable() {
   const rows = [
     { label: 'BoC Overnight Rate', value: '2.50%', change: '+25 bps (Oct 28 hike)', dir: 'up', note: 'First hike after period of cuts and extended hold; next decision Dec 9' },
-    { label: 'CPI Inflation', value: '3.1%', change: '+0.4 pp from Sep', dir: 'up', note: 'Core CPI 1.9% — tariff pass-through widening headline vs core gap' },
-    { label: 'Net Employment (Oct LFS)', value: '−68,000', change: 'Unemployment 6.5%', dir: 'down', note: 'Public sector education −70K dominated decline; private sector flat' },
-    { label: 'CREA National HPI', value: '−3.4% YoY', change: 'Avg price $666,538', dir: 'neutral', note: 'Slight deepening from Aug −3.0%; national benchmark prices stabilizing' },
+    { label: 'CPI (Sep, released Oct 16)', value: '3.0%', change: '+0.3 pp from Aug', dir: 'up', note: 'Core CPI 1.9% — tariff pass-through widening headline vs core gap' },
+    { label: 'Net Employment (Sep LFS, released Oct 9)', value: '−68,000', change: 'Unemployment 6.5%', dir: 'down', note: 'Public sector education −70K dominated decline; private sector flat' },
+    { label: 'CREA National HPI', value: '−3.4% YoY', change: 'Avg price $666,538', dir: 'neutral', note: 'Slight deepening from Aug −3.0%; stabilization signal from August data has moderated' },
     { label: 'Listing Rents (Rentals.ca)', value: '−4.2% YoY', change: '24th consecutive monthly decline', dir: 'down', note: 'What newcomers face; CPI rent component +2.8% (incumbent tenants)' },
   ]
   const dirColor = (d: string) => d === 'up' ? RED : d === 'down' ? GRN : AMBER
@@ -133,9 +133,9 @@ function KpiTable() {
 function ChangesTable() {
   const rows = [
     { area: 'BoC Rate', prev: '2.25% (hold)', now: '2.50% (+25 bps)', impact: 'Mortgage carrying costs rise; affordability tightens in high-HPI cities', dir: 'worse' },
-    { area: 'CPI', prev: '2.7% (Sep)', now: '3.1% (Oct)', impact: 'Tariff pass-through accelerating; real-wage erosion continues', dir: 'worse' },
-    { area: 'Employment', prev: '−42K (Aug LFS)', now: '−68K (Oct LFS)', impact: 'Public sector education dominated decline; private sector flat', dir: 'worse' },
-    { area: 'CREA HPI', prev: '−3.0% YoY (Aug)', now: '−3.4% YoY (Oct)', impact: 'Slight deepening; average price $666,538', dir: 'neutral' },
+    { area: 'CPI', prev: '2.7% (Aug)', now: '3.0% (Sep, released Oct 16)', impact: 'Tariff pass-through accelerating; real-wage erosion continues', dir: 'worse' },
+    { area: 'Employment', prev: '−42K (Aug LFS)', now: '−68K (Sep LFS, released Oct 9)', impact: 'Public sector education dominated decline; private sector flat', dir: 'worse' },
+    { area: 'CREA HPI', prev: '−3.0% YoY (Aug)', now: '−3.4% YoY (Sep, released Oct 16)', impact: 'Slight deepening; average price $666,538', dir: 'neutral' },
     { area: 'Listing Rents', prev: '−4.8% YoY (23rd month)', now: '−4.2% YoY (24th month)', impact: 'Pace of decline moderating; CPI rent +2.8% (incumbent tenants)', dir: 'neutral' },
   ]
   const col = (d: string) => d === 'worse' ? RED : d === 'better' ? GRN : AMBER
@@ -200,7 +200,7 @@ function CityScoreTable() {
         </tbody>
       </table>
       <p style={{ fontSize: 12, color: GREY, fontStyle: 'italic', marginTop: 8 }}>
-        Score = Lakive composite (0–100). EOI = Employment Opportunity Index. TAI = Tax Advantage Index. RPI = Rent Pressure Index (lower is better). HPI = years of median after-tax income to 20% down payment. Data version: Oct 2026 v2.
+        Score = Lakive composite (0–100). EOI = Employment Opportunity Index. TAI = Tax Advantage Index. RPI = Rent Pressure Index (lower is better). HPI = Housing Years Index (benchmark home price ÷ median annual gross household income; lower = more affordable). Data version: Oct 2026 v2.
       </p>
     </div>
   )
@@ -246,7 +246,7 @@ function OccTable() {
         </tbody>
       </table>
       <p style={{ fontSize: 12, color: GREY, fontStyle: 'italic', marginTop: 8 }}>
-        HPI = Housing Years Index (years of after-tax income to 20% down payment on 2BR). Full rankings at{' '}
+        HPI = Housing Years Index (benchmark home price ÷ median annual gross occupational income; lower = more affordable). Full rankings at{' '}
         <Link href="/ranking" style={{ color: BLUE }}>lakive.com/ranking</Link>
       </p>
     </div>
@@ -330,6 +330,9 @@ export default function MonthlyReportOctober2026() {
           <h2 style={{ fontSize: 18, fontWeight: 800, color: NAVY, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
             📋 What Changed This Month
           </h2>
+          <div style={{ background: '#F0FDFA', border: '1px solid #99F6E4', borderRadius: 8, padding: '10px 16px', marginBottom: 16, fontSize: 13, color: '#065F46' }}>
+            <strong>Data note:</strong> Published November 5, 2026. The BoC hike (October 28) is confirmed October data. All other macro indicators — LFS employment, CPI, CREA, rents — reflect September reference-period data released in October. October LFS releases November 6; October CPI releases November 16.
+          </div>
           <ChangesTable />
         </div>
 
@@ -337,10 +340,10 @@ export default function MonthlyReportOctober2026() {
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={1} title="Executive Summary" />
           <Body>
-            October 2026 broke the pattern. The Bank of Canada hiked its overnight rate by 25 basis points to 2.50% on October 28 — ending a period of rate cuts followed by an extended hold — citing tariff-driven inflation that has pushed headline CPI to 3.1%, the highest reading since early 2025. That decision landed in the same month that Canada shed 68,000 net jobs, with October&apos;s Labour Force Survey dominated by a loss of 70,000 positions in public sector education.
+            October 2026 broke the pattern. The Bank of Canada hiked its overnight rate by 25 basis points to 2.50% on October 28 — ending a period of rate cuts followed by an extended hold — citing tariff-driven inflation that has pushed headline CPI to 3.0% (September figure, released October 16). That decision arrived as the most recent Labour Force Survey — September&apos;s, released October 9 — reported Canada shedding 68,000 net jobs, dominated by a loss of 70,000 positions in public sector education. October LFS data releases November 6.
           </Body>
           <Body>
-            The result is a classic policy tension: a central bank tightening into a weakening labour market. The rate hike resolves nothing on affordability — it adds 20–30 basis points to variable mortgage costs at precisely the moment job security is declining. National listing rents fell for a 24th consecutive month, now −4.2% year-over-year. But that figure describes what a new renter sees; the CPI rent component, which tracks incumbent tenants, is up 2.8% — a distinction that matters for household cost planning.
+            The result is a classic policy tension: a central bank tightening into a weakening labour market. The rate hike resolves nothing on affordability — it adds directly to variable mortgage costs (approximately $70/month per $500K of variable-rate principal) at precisely the moment job security is declining. National listing rents fell for a 24th consecutive month, now −4.2% year-over-year (September data). But that figure describes what a new renter sees; the CPI rent component, which tracks incumbent tenants, is up 2.8% — a distinction that matters for household cost planning.
           </Body>
           <Body>
             The Prairie and Atlantic cost advantage against Ontario and British Columbia has never been wider on a post-hike basis. An electrician in Calgary reaches 20% down payment in 4.1 years; the same worker in Toronto needs 10.9 years, and Vancouver 11.7 years. With the rate hike adding to carrying costs in high-HPI cities, the structural case for mid-market relocation is the strongest it has been in this cycle.
@@ -350,7 +353,7 @@ export default function MonthlyReportOctober2026() {
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '24px 0 12px' }}>5 Actionable Takeaways</h3>
           {[
             'Trades workers: Calgary (Electrician 91) and Edmonton (88) are the clearest national opportunities. The rate hike adds to mortgage carrying costs everywhere, but its impact in Calgary — where HPI is 4.1 years — is a fraction of its impact in Toronto (HPI 10.9 years) or Vancouver (HPI 11.7 years). For an electrician household, the post-hike affordability gap between Calgary and the two major metros has never been wider.',
-            'Healthcare workers: Calgary (Nurse 86) and Ottawa (82) lead the national score table. Ottawa\'s federal healthcare employment base provides unusual insulation against the labour market weakness visible in October\'s LFS data. The inflation-indexed wage contract structure in federal health means real wages are not falling at the same rate as private-sector workers.',
+            'Healthcare workers: Calgary (Nurse 86) and Ottawa (82) lead the national score table. Ottawa\'s federal healthcare employment base provides unusual insulation against the labour market weakness visible in September\'s LFS data. The inflation-indexed wage contract structure in federal health means real wages are not falling at the same rate as private-sector workers.',
             'Tech professionals: Toronto (Software Eng. 88) holds its national lead. The October jobs losses were concentrated in public sector education — private sector employment was flat, and professional services hiring has been resilient through Q3. Kitchener-Waterloo (82) is worth serious consideration for tech workers: the same corridor, at materially lower housing cost.',
             'Renters: The 24th consecutive monthly decline in listing rents (−4.2% YoY) means the window to lock in a below-peak lease remains open. The pace of decline is moderating, however, and CPI rent (+2.8%) shows incumbent tenants are not sharing in the discount. Lock in now rather than waiting for further drops.',
             'Buyers: The rate hike adds 20–30 bps to variable mortgage costs immediately. The December 9 BoC decision is the next critical signal. If November CPI (releasing Nov 16) shows the inflation gap between headline and core narrowing, the Bank may hold in December. That would define whether October\'s hike was a one-off or the start of a new tightening cycle — a distinction worth waiting three weeks to see before committing to a purchase.',
@@ -366,10 +369,10 @@ export default function MonthlyReportOctober2026() {
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={2} title="National Overview: A Hike Without Relief" />
           <Body>
-            The Bank of Canada&apos;s October 28 decision to raise rates by 25 basis points was not unexpected — markets had been pricing approximately 60% probability of a hike heading into the meeting — but it marks a significant shift in the policy trajectory. The BoC cited tariff-driven cost pressure as the primary driver: headline CPI at 3.1% is now meaningfully above the 2% target, and the Bank characterized the gap between headline (3.1%) and core (1.9%) inflation as a signal of tariff pass-through rather than demand-driven inflation. That distinction matters: it means the Bank is hiking despite, not because of, strong economic conditions.
+            The Bank of Canada&apos;s October 28 decision to raise rates by 25 basis points was not unexpected — markets had been pricing approximately 60% probability of a hike as of late October — but it marks a significant shift in the policy trajectory. The BoC cited tariff-driven cost pressure as the primary driver: headline CPI at 3.0% (September, released October 16) is above the 2% target, and the Bank characterized the gap between headline (3.0%) and core (1.9%) inflation as a signal of tariff pass-through rather than demand-driven inflation. That distinction matters: it means the Bank is hiking despite, not because of, strong economic conditions.
           </Body>
           <Body>
-            The employment picture adds complexity. October&apos;s LFS reported a loss of 68,000 net jobs — dominated by a decline of 70,000 in public sector education, reflecting a timing anomaly in how education employment is counted in the fall. Private sector employment was essentially flat. The Bank will have November&apos;s LFS data (November 6) before the December 9 decision, which will clarify whether October&apos;s weakness is a one-month statistical pattern or the start of a broader deterioration.
+            The employment picture adds complexity. September&apos;s LFS (released October 9) reported a loss of 68,000 net jobs — dominated by a decline of 70,000 in public sector education, reflecting a timing anomaly in how education employment is counted in the fall. Private sector employment was essentially flat. The Bank will have October&apos;s LFS data (November 6) before the December 9 decision, which will clarify whether September&apos;s weakness is a one-month statistical pattern or the start of a broader deterioration.
           </Body>
           <Body>
             Population growth has stabilized at approximately 0.6% year-over-year — still below the 2024 pace but no longer decelerating sharply. This matters for the rental market: the demand deceleration that drove 24 consecutive months of listing rent declines may be approaching a floor, particularly in cities with active in-migration from other provinces.
@@ -384,9 +387,9 @@ export default function MonthlyReportOctober2026() {
         {/* Rental */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={3} title="National Rental Market" />
-          <Source text="Source: Rentals.ca × Urbanation National Rent Report, October 2026. CPI rent component: Statistics Canada, October 2026." />
+          <Source text="Source: Rentals.ca × Urbanation National Rent Report, October 2026 (September asking rents). CPI rent component: Statistics Canada CPI, September 2026 (released October 2026)." />
           <Body>
-            National average asking rents fell for a 24th consecutive month in October, now −4.2% year-over-year. The pace of decline has moderated from September&apos;s −4.8% — a pattern consistent with seasonal demand stabilization and an approaching floor as population growth stabilizes around 0.6% year-over-year.
+            National average asking rents fell for a 24th consecutive month, now −4.2% year-over-year (September data, released early October). The pace of decline has moderated from August&apos;s −4.8% — a pattern consistent with seasonal demand stabilization and an approaching floor as population growth stabilizes around 0.6% year-over-year.
           </Body>
           <Body>
             There is a critical distinction that the aggregate headline obscures: the Rentals.ca figure (−4.2%) represents what new renters face when signing a lease today. The Statistics Canada CPI rent component (+2.8%) represents what incumbent tenants are paying relative to a year ago, as their existing leases renew at higher rates. These two numbers are not contradictory — they describe different populations at different points in their rental tenure. For a household deciding whether to move, the −4.2% listing market is the operative figure. For a household budgeting annual cost increases, the +2.8% CPI component is the operative figure.
@@ -399,7 +402,7 @@ export default function MonthlyReportOctober2026() {
           />
           <Callout
             label="⚠ Rate hike impact:"
-            text="The 25 bps rate hike adds directly to variable mortgage carrying costs — by approximately $80–120/month on a $500K mortgage — which maintains rental demand pressure in high-HPI cities where the buy vs. rent calculus has shifted further toward renting. In Calgary and Edmonton, where the rent-to-ownership ratio is narrower, the impact on rent demand is more muted."
+            text="The 25 bps rate hike adds directly to variable mortgage carrying costs — by approximately $70/month on a $500K variable-rate mortgage — which maintains rental demand pressure in high-HPI cities where the buy vs. rent calculus has shifted further toward renting. In Calgary and Edmonton, where the rent-to-ownership ratio is narrower, the impact on rent demand is more muted."
             color={AMBER} bg="#FFFBEB"
           />
         </div>
@@ -407,12 +410,12 @@ export default function MonthlyReportOctober2026() {
         {/* Housing */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={4} title="Housing Market: Rate Hike Stalls the Recovery Signal" />
-          <Source text="Source: CREA National Statistics, October 2026. Lakive Housing Years Index (HPI) reflects current model calculations, data version Oct 2026 v2." />
+          <Source text="Source: CREA National Statistics, September 2026 (released October 16, 2026). Lakive Housing Years Index (HPI) reflects current model calculations, data version Oct 2026 v2." />
           <Body>
-            CREA&apos;s October 2026 data shows a national benchmark HPI of −3.4% year-over-year — a slight deepening from August&apos;s −3.0% and a reversal of the stabilization signal that September&apos;s data appeared to offer. The national average sale price was $666,538. The rate hike on October 28 is not yet reflected in CREA transaction data, but its psychological impact — buyer hesitation ahead of a decision that many had expected to be a hold — is likely visible in October&apos;s volume figures.
+            CREA&apos;s September 2026 data (released October 16) shows a national benchmark HPI of −3.4% year-over-year — a slight deepening from August&apos;s −3.0% and a reversal of the stabilization signal that August&apos;s data appeared to offer. The national average sale price was $666,538. The rate hike on October 28 is not reflected in this CREA data; its impact on transaction volumes will appear in CREA&apos;s October figures (releasing mid-November).
           </Body>
           <Body>
-            City benchmarks: Vancouver $1,068,000, Toronto $920,000, Calgary $575,000, Edmonton $428,000. The Prairie-to-major-metro gap has widened further on a carrying-cost basis post-hike: a $575,000 Calgary purchase at 2.50% (5-year variable) carries approximately $2,890/month on a 25-year amortization. The equivalent Toronto purchase at $920,000 carries approximately $4,620/month — a $1,730 monthly gap that has grown by approximately $200 since October&apos;s hike.
+            City benchmarks: Vancouver $1,068,000, Toronto $920,000, Calgary $575,000, Edmonton $428,000. The Prairie-to-major-metro gap has widened further on a carrying-cost basis post-hike: a $575,000 Calgary purchase at 2.50% policy rate carries approximately $2,580/month on a 25-year amortization (actual variable mortgage rates are prime-linked, currently ~4.45%, and will be higher). The equivalent Toronto purchase at $920,000 carries approximately $4,127/month — a $1,547 monthly gap. Each 25 bps move in the overnight rate adds approximately $70/month per $500K of variable-rate principal.
           </Body>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '20px 0 12px' }}>Lakive City Scores — October 2026</h3>
           <p style={{ fontSize: 11, color: GREY, margin: '-4px 0 10px', fontStyle: 'italic' }}>Scores reflect the Oct 2026 v2 data snapshot. Current values on <a href="/ranking" style={{ color: NAVY }}>lakive.com/ranking</a> may differ as data is updated.</p>
@@ -427,9 +430,9 @@ export default function MonthlyReportOctober2026() {
         {/* Employment */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', marginBottom: 24, border: '1px solid #E5E7EB' }}>
           <SectionHeading num={5} title="Employment Snapshot" />
-          <Source text="Source: Statistics Canada LFS, October 2026 (released November 6, 2026). Next release: LFS November, releasing December 5." />
+          <Source text="Source: Statistics Canada LFS, September 2026 (released October 9, 2026). Next release: LFS October, releasing November 6, 2026." />
           <Body>
-            Canada&apos;s labour market shed 68,000 net jobs in October. The headline number is dominated by a loss of 70,000 positions in public sector education — a statistical pattern reflecting how fall education employment is counted, and not representative of private sector conditions, which were essentially flat. The unemployment rate rose to 6.5%. Wage growth continued at approximately +2.1% year-over-year, still below headline CPI (3.1%), meaning real wages continue to erode.
+            Canada&apos;s labour market shed 68,000 net jobs in September (Statistics Canada LFS, released October 9). The headline number is dominated by a loss of 70,000 positions in public sector education — a statistical pattern reflecting how fall education employment is counted, and not representative of private sector conditions, which were essentially flat. The unemployment rate rose to 6.5%. Wage growth continued at approximately +2.3% year-over-year ($37.64/hr average), still below headline CPI (3.0%), meaning real wages continue to erode.
           </Body>
           <div style={{ paddingLeft: 16 }}>
             {[
@@ -437,7 +440,7 @@ export default function MonthlyReportOctober2026() {
               'Unemployment rate: 6.5% (▲ from 6.4% in September)',
               'Public sector: Education −70,000 (timing/classification effect); healthcare and public admin stable',
               'Private sector: Approximately flat overall; professional services holding; construction slightly negative',
-              'Wages: average hourly earnings +2.1% YoY — below CPI 3.1% · real wages declining for third consecutive month',
+              'Wages: average hourly earnings +2.3% YoY ($37.64/hr) — below CPI 3.0% · real wages declining for third consecutive month',
               'Participation rate: Held approximately flat — unemployment rise reflects actual job losses, not participation changes',
             ].map(t => (
               <div key={t} style={{ display: 'flex', gap: 10, margin: '6px 0' }}>
@@ -448,7 +451,7 @@ export default function MonthlyReportOctober2026() {
           </div>
           <Callout
             label="Lakive Interpretation:"
-            text="October's −68K figure is likely worse-looking than the underlying trend: public sector education employment often shows sharp October changes due to classification timing. The November 6 LFS release, which arrives before the December 9 BoC decision, will provide the more reliable signal. If November shows a rebound in education employment and stable private sector conditions, the Bank will likely hold in December. If private sector weakness emerges, the December decision becomes more complex. Watch November LFS as the key indicator for Q1 2027 city score revisions."
+            text="September's −68K figure is likely worse-looking than the underlying trend: public sector education employment often shows sharp September/October changes due to classification timing. The November 6 LFS release (October employment), which arrives before the December 9 BoC decision, will provide the more reliable signal. If October shows a rebound in education employment and stable private sector conditions, the Bank will likely hold in December. If private sector weakness emerges, the December decision becomes more complex. Watch October LFS (Nov 6) as the key indicator for Q1 2027 city score revisions."
             color={RED} bg="#FEF2F2"
           />
         </div>
@@ -458,19 +461,19 @@ export default function MonthlyReportOctober2026() {
           <SectionHeading num={6} title="Interest Rates & Tariff Exposure" />
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '4px 0 10px' }}>Bank of Canada — 2.50% (+25 bps, October 28)</h3>
           <Body>
-            The Bank of Canada raised its overnight rate by 25 basis points to 2.50% at its October 28 meeting — the first hike since the period of rate cuts ended. The decision was driven primarily by the gap between headline CPI (3.1%) and core CPI (1.9%): the Bank characterized the headline inflation as tariff-driven cost pressure rather than demand-driven, but concluded that allowing headline to run this far above target risked de-anchoring inflation expectations.
+            The Bank of Canada raised its overnight rate by 25 basis points to 2.50% at its October 28 meeting — the first hike since the period of rate cuts ended. The decision was driven primarily by the gap between headline CPI (3.0% September, released October 16) and core CPI (1.9%): the Bank characterized the headline inflation as tariff-driven cost pressure rather than demand-driven, but concluded that allowing headline to run this far above target risked de-anchoring inflation expectations.
           </Body>
           <Body>
             The December 9 decision will depend heavily on two data releases: the November CPI (releasing November 16) and the November LFS (releasing December 5). If headline inflation shows signs of the tariff pass-through peaking — particularly if core CPI remains contained near 2% — the Bank may characterize October&apos;s hike as a one-time adjustment and hold in December. That scenario would limit the damage to affordability. If headline continues to accelerate, further tightening becomes possible.
           </Body>
           <Callout
             label="Lakive Interpretation:"
-            text="The hike adds directly to variable mortgage carrying costs. For workers in high-HPI cities — Toronto, Vancouver — the monthly increase is $80–200 depending on mortgage size. For workers in low-HPI cities — Calgary, Edmonton — the same rate applies to a smaller principal, so the absolute impact is lower. The hike widens the already-significant cost gap between mid-market and high-cost cities. Workers currently undecided between Toronto and Calgary should run the carrying-cost comparison at 2.50% before making a commitment."
+            text="The hike adds approximately $70/month per $500,000 of variable-rate principal. For workers in high-HPI cities — Toronto, Vancouver — the monthly increase is larger in absolute terms because the principal is larger (~$920K–$1,068K benchmarks). For workers in low-HPI cities — Calgary, Edmonton — the same 25 bps applies to a smaller principal ($428K–$575K benchmarks), so the absolute impact is lower. The hike widens the already-significant carrying-cost gap between mid-market and high-cost cities. Workers deciding between Toronto and Calgary should run the carrying-cost comparison at current variable rates (prime approximately 4.45% post-hike) before making a commitment."
             color={TEAL} bg="#F0FDFA"
           />
           <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: '20px 0 10px' }}>Tariff Context</h3>
           <Body>
-            The tariff-inflation dynamic continues to drive the monetary policy tension. The BoC&apos;s own models suggest the tariff contribution to headline CPI is approximately 0.8–1.2 percentage points — meaning underlying demand-driven inflation remains near target. The Bank has chosen to respond to the headline nonetheless, citing anchoring risk. This means the current hiking cycle, if it extends, would be driven by external cost pressure rather than domestic overheating — an unusual condition that makes the conventional rate-hike affordability analysis more pessimistic than typical: higher rates without demand-side strength mean the labour market bears the full cost of the adjustment without the wage growth that normally accompanies tightening cycles.
+            The tariff-inflation dynamic continues to drive the monetary policy tension. The BoC&apos;s October Monetary Policy Report estimates the tariff contribution to headline CPI at approximately 0.8–1.2 percentage points — meaning underlying demand-driven inflation remains near target. The Bank has chosen to respond to the headline nonetheless, citing anchoring risk. This means the current hiking cycle, if it extends, would be driven by external cost pressure rather than domestic overheating — an unusual condition that makes the conventional rate-hike affordability analysis more pessimistic than typical: higher rates without demand-side strength mean the labour market bears the full cost of the adjustment without the wage growth that normally accompanies tightening cycles.
           </Body>
           <Callout
             label="City exposure note:"
@@ -490,7 +493,7 @@ export default function MonthlyReportOctober2026() {
               signal: 'Rate hike + Weak jobs (policy vs. reality)',
               up: 'BoC hikes (tightening)',
               down: 'Jobs −68K (weakening)',
-              explanation: 'The hike was driven by tariff-induced headline inflation (3.1%), not by a strong economy. The Bank is tightening against external cost pressure rather than domestic overheating — an unusual combination that means higher rates without the wage growth that normally accompanies them. Workers and borrowers bear the cost; inflation relief is not guaranteed.',
+              explanation: 'The hike was driven by tariff-induced headline inflation (3.0% September CPI), not by a strong economy. The Bank is tightening against external cost pressure rather than domestic overheating — an unusual combination that means higher rates without the wage growth that normally accompanies them. Workers and borrowers bear the cost; inflation relief is not guaranteed.',
             },
             {
               signal: 'Listing rents ↓ + CPI rent ↑ (two markets)',
@@ -517,7 +520,7 @@ export default function MonthlyReportOctober2026() {
             The October Tension
           </h2>
           <p style={{ fontSize: 15, color: '#CBD5E1', lineHeight: 1.75, margin: 0 }}>
-            October 2026 is a month of genuine policy tension. The Bank of Canada hiked into a weakening labour market — not because the economy was overheating, but because tariff-driven inflation threatened to de-anchor expectations. The rate hike does not resolve affordability. It tightens it. National listing rents fell for a 24th month. But the CPI rent component is up 2.8% — incumbents are still paying more. Jobs fell 68,000 — but public sector education dominated, and private sector conditions were flat. The data contains contradictions that are not contradictions: they are different measurements of different populations at different points in time. What is not ambiguous is the direction of the city-level divergence. Calgary and Edmonton are more affordable relative to Toronto and Vancouver today than at any point in this cycle, and the October rate hike has widened that gap further. For workers making relocation decisions, October 2026 is not a month to wait and see. It is a month where the structural case for mid-market Canada became measurably stronger.
+            October 2026 is a month of genuine policy tension. The Bank of Canada hiked into a weakening labour market — not because the economy was overheating, but because tariff-driven inflation (September CPI 3.0%, released October 16) threatened to de-anchor expectations. The rate hike does not resolve affordability. It tightens it. National listing rents fell for a 24th month (September data). But the CPI rent component is up 2.8% — incumbents are still paying more. September jobs fell 68,000 — but public sector education dominated, and private sector conditions were flat. The data contains contradictions that are not contradictions: they are different measurements of different populations at different points in time. What is not ambiguous is the direction of the city-level divergence. Calgary and Edmonton are more affordable relative to Toronto and Vancouver today than at any point in this cycle, and the October rate hike has widened that gap further. For workers making relocation decisions, October 2026 is not a month to wait and see. It is a month where the structural case for mid-market Canada became measurably stronger.
           </p>
         </div>
 
@@ -534,7 +537,7 @@ export default function MonthlyReportOctober2026() {
               score: '76 / 74',
               label: 'Cost Advantage',
               labelColor: GRN,
-              text: 'The Prairie cost advantage over Toronto and Vancouver has never been wider on a post-rate-hike carrying-cost basis. Calgary\'s CREA benchmark of $575,000 at 2.50% variable generates carrying costs approximately $1,730/month lower than Toronto\'s $920,000 benchmark — a gap that has grown by roughly $200 since the October hike. Edmonton at $428,000 is even more pronounced. For trades workers and healthcare professionals, where salary ranges are largely comparable across these markets, the Calgary/Edmonton scenario generates materially higher disposable income. The no-PST advantage adds an additional layer for higher-income earners.',
+              text: 'The Prairie cost advantage over Toronto and Vancouver has never been wider on a post-rate-hike carrying-cost basis. Calgary\'s CREA benchmark of $575,000 at 2.50% policy rate generates carrying costs approximately $1,547/month lower than Toronto\'s $920,000 benchmark (at the same rate). Actual variable mortgage rates are prime-linked (~4.45% post-hike), increasing absolute costs in both cities — but the gap remains in Calgary\'s favour. Edmonton at $428,000 is even more pronounced. For trades workers and healthcare professionals, where salary ranges are largely comparable across these markets, the Calgary/Edmonton scenario generates materially higher disposable income. The no-PST advantage adds an additional layer for higher-income earners.',
             },
             {
               city: 'Ottawa',
@@ -548,7 +551,7 @@ export default function MonthlyReportOctober2026() {
               score: '57',
               label: 'Mixed',
               labelColor: AMBER,
-              text: 'Toronto\'s October picture is mixed at the headline but challenging at the household level. Tech employment (EOI: High) has held through Q3, with US-linked firms maintaining Canadian hiring plans. But the rate hike adds directly to carrying costs on a $920K benchmark — a household committed to Toronto homeownership is now servicing that at 2.50%, not 2.25%. The jobs loss in October was dominated by education, not tech, so the occupational outlook for the city\'s highest-scoring sectors remains intact. The watch for Q4 is whether November LFS shows private sector deterioration. If it does, Toronto\'s EOI signal will come under pressure.',
+              text: 'Toronto\'s October picture is mixed at the headline but challenging at the household level. Tech employment (EOI: High) has held through Q3, with US-linked firms maintaining Canadian hiring plans. But the rate hike adds ~$130/month to carrying costs on a $920K benchmark (at 25 bps on prime-linked variable rate). The September jobs loss was dominated by education, not tech, so the occupational outlook for the city\'s highest-scoring sectors remains intact. The watch for Q4 is whether October LFS (Nov 6) shows private sector deterioration. If it does, Toronto\'s EOI signal will come under pressure.',
             },
             {
               city: 'Vancouver',
